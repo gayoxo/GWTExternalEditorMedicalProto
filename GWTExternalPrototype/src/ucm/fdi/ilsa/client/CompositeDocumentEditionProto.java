@@ -111,6 +111,18 @@ public class CompositeDocumentEditionProto{
 	
 		
 		
+		for (GrammarJSON Gr : Documento.getGramatica()) {
+			
+			StructureJSON SS=gotContext(Gr.getListaS(), ContextId);
+			if (SS!=null)
+				{
+				Label T4 = new Label();
+	//			T.setSize(Width+"px", Heigh+"px");
+				T4.setText(SS.getName());
+				VP.add(T4);
+				}
+		}
+		
 	}
 	
 
