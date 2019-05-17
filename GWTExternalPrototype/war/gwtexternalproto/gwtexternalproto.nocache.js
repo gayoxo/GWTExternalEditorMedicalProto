@@ -1,5 +1,5 @@
-function gwtexternaldummy(){
-  var $intern_0 = 'bootstrap', $intern_1 = 'begin', $intern_2 = 'gwt.codesvr.gwtexternaldummy=', $intern_3 = 'gwt.codesvr=', $intern_4 = 'gwtexternaldummy', $intern_5 = 'startup', $intern_6 = 'DUMMY', $intern_7 = 0, $intern_8 = 1, $intern_9 = 'iframe', $intern_10 = 'javascript:""', $intern_11 = 'position:absolute; width:0; height:0; border:none; left: -1000px;', $intern_12 = ' top: -1000px;', $intern_13 = 'CSS1Compat', $intern_14 = '<!doctype html>', $intern_15 = '', $intern_16 = '<html><head><\/head><body><\/body><\/html>', $intern_17 = 'undefined', $intern_18 = 'DOMContentLoaded', $intern_19 = 50, $intern_20 = 'script', $intern_21 = 'javascript', $intern_22 = 'Failed to load ', $intern_23 = 'moduleStartup', $intern_24 = 'scriptTagAdded', $intern_25 = 'moduleRequested', $intern_26 = 'meta', $intern_27 = 'name', $intern_28 = 'gwtexternaldummy::', $intern_29 = '::', $intern_30 = 'gwt:property', $intern_31 = 'content', $intern_32 = '=', $intern_33 = 'gwt:onPropertyErrorFn', $intern_34 = 'Bad handler "', $intern_35 = '" for "gwt:onPropertyErrorFn"', $intern_36 = 'gwt:onLoadErrorFn', $intern_37 = '" for "gwt:onLoadErrorFn"', $intern_38 = '#', $intern_39 = '?', $intern_40 = '/', $intern_41 = 'img', $intern_42 = 'clear.cache.gif', $intern_43 = 'baseUrl', $intern_44 = 'gwtexternaldummy.nocache.js', $intern_45 = 'base', $intern_46 = '//', $intern_47 = 'user.agent', $intern_48 = 'webkit', $intern_49 = 'safari', $intern_50 = 'msie', $intern_51 = 10, $intern_52 = 11, $intern_53 = 'ie10', $intern_54 = 9, $intern_55 = 'ie9', $intern_56 = 8, $intern_57 = 'ie8', $intern_58 = 'gecko', $intern_59 = 'gecko1_8', $intern_60 = 2, $intern_61 = 3, $intern_62 = 4, $intern_63 = 'selectingPermutation', $intern_64 = 'gwtexternaldummy.devmode.js', $intern_65 = '0FB49AD13C295A135FB86783EB19E791', $intern_66 = '3BDE0C600AD1042AE12AE8FC2657D5FD', $intern_67 = '46FA2FCF39FD409A7F29E2A5969C17A1', $intern_68 = '7052F34CA47F61E6D270AB25E1B31F2E', $intern_69 = 'C197B1D26A0F3E47F0AE72B17BF21F5C', $intern_70 = ':', $intern_71 = '.cache.js', $intern_72 = 'link', $intern_73 = 'rel', $intern_74 = 'stylesheet', $intern_75 = 'href', $intern_76 = 'head', $intern_77 = 'loadExternalRefs', $intern_78 = 'gwt/clean/clean.css', $intern_79 = 'end', $intern_80 = 'http:', $intern_81 = 'file:', $intern_82 = '_gwt_dummy_', $intern_83 = '__gwtDevModeHook:gwtexternaldummy', $intern_84 = 'Ignoring non-whitelisted Dev Mode URL: ', $intern_85 = ':moduleBase';
+function gwtexternalproto(){
+  var $intern_0 = 'bootstrap', $intern_1 = 'begin', $intern_2 = 'gwt.codesvr.gwtexternalproto=', $intern_3 = 'gwt.codesvr=', $intern_4 = 'gwtexternalproto', $intern_5 = 'startup', $intern_6 = 'DUMMY', $intern_7 = 0, $intern_8 = 1, $intern_9 = 'iframe', $intern_10 = 'javascript:""', $intern_11 = 'position:absolute; width:0; height:0; border:none; left: -1000px;', $intern_12 = ' top: -1000px;', $intern_13 = 'CSS1Compat', $intern_14 = '<!doctype html>', $intern_15 = '', $intern_16 = '<html><head><\/head><body><\/body><\/html>', $intern_17 = 'undefined', $intern_18 = 'DOMContentLoaded', $intern_19 = 50, $intern_20 = 'script', $intern_21 = 'javascript', $intern_22 = 'Failed to load ', $intern_23 = 'moduleStartup', $intern_24 = 'scriptTagAdded', $intern_25 = 'moduleRequested', $intern_26 = 'meta', $intern_27 = 'name', $intern_28 = 'gwtexternalproto::', $intern_29 = '::', $intern_30 = 'gwt:property', $intern_31 = 'content', $intern_32 = '=', $intern_33 = 'gwt:onPropertyErrorFn', $intern_34 = 'Bad handler "', $intern_35 = '" for "gwt:onPropertyErrorFn"', $intern_36 = 'gwt:onLoadErrorFn', $intern_37 = '" for "gwt:onLoadErrorFn"', $intern_38 = '#', $intern_39 = '?', $intern_40 = '/', $intern_41 = 'img', $intern_42 = 'clear.cache.gif', $intern_43 = 'baseUrl', $intern_44 = 'gwtexternalproto.nocache.js', $intern_45 = 'base', $intern_46 = '//', $intern_47 = 'user.agent', $intern_48 = 'webkit', $intern_49 = 'safari', $intern_50 = 'msie', $intern_51 = 10, $intern_52 = 11, $intern_53 = 'ie10', $intern_54 = 9, $intern_55 = 'ie9', $intern_56 = 8, $intern_57 = 'ie8', $intern_58 = 'gecko', $intern_59 = 'gecko1_8', $intern_60 = 2, $intern_61 = 3, $intern_62 = 4, $intern_63 = 'selectingPermutation', $intern_64 = 'gwtexternalproto.devmode.js', $intern_65 = '128BE5FE8B8677C0DC34E0088CE0DE68', $intern_66 = '79AB2CC58ED9226CB65FEE77A0C84940', $intern_67 = '81D0020B84349DFE0D915699F71160B1', $intern_68 = 'CEC26E04E9D8459E6010FA2537EAF2DB', $intern_69 = 'E05ED647968B578D0E4B137845789A79', $intern_70 = ':', $intern_71 = '.cache.js', $intern_72 = 'link', $intern_73 = 'rel', $intern_74 = 'stylesheet', $intern_75 = 'href', $intern_76 = 'head', $intern_77 = 'loadExternalRefs', $intern_78 = 'gwt/clean/clean.css', $intern_79 = 'end', $intern_80 = 'http:', $intern_81 = 'file:', $intern_82 = '_gwt_dummy_', $intern_83 = '__gwtDevModeHook:gwtexternalproto', $intern_84 = 'Ignoring non-whitelisted Dev Mode URL: ', $intern_85 = ':moduleBase';
   var $wnd = window;
   var $doc = document;
   sendStats($intern_0, $intern_1);
@@ -14,36 +14,36 @@ function gwtexternaldummy(){
     }
   }
 
-  gwtexternaldummy.__sendStats = sendStats;
-  gwtexternaldummy.__moduleName = $intern_4;
-  gwtexternaldummy.__errFn = null;
-  gwtexternaldummy.__moduleBase = $intern_6;
-  gwtexternaldummy.__softPermutationId = $intern_7;
-  gwtexternaldummy.__computePropValue = null;
-  gwtexternaldummy.__getPropMap = null;
-  gwtexternaldummy.__installRunAsyncCode = function(){
+  gwtexternalproto.__sendStats = sendStats;
+  gwtexternalproto.__moduleName = $intern_4;
+  gwtexternalproto.__errFn = null;
+  gwtexternalproto.__moduleBase = $intern_6;
+  gwtexternalproto.__softPermutationId = $intern_7;
+  gwtexternalproto.__computePropValue = null;
+  gwtexternalproto.__getPropMap = null;
+  gwtexternalproto.__installRunAsyncCode = function(){
   }
   ;
-  gwtexternaldummy.__gwtStartLoadingFragment = function(){
+  gwtexternalproto.__gwtStartLoadingFragment = function(){
     return null;
   }
   ;
-  gwtexternaldummy.__gwt_isKnownPropertyValue = function(){
+  gwtexternalproto.__gwt_isKnownPropertyValue = function(){
     return false;
   }
   ;
-  gwtexternaldummy.__gwt_getMetaProperty = function(){
+  gwtexternalproto.__gwt_getMetaProperty = function(){
     return null;
   }
   ;
   var __propertyErrorFunction = null;
   var activeModules = $wnd.__gwt_activeModules = $wnd.__gwt_activeModules || {};
   activeModules[$intern_4] = {moduleName:$intern_4};
-  gwtexternaldummy.__moduleStartupDone = function(permProps){
+  gwtexternalproto.__moduleStartupDone = function(permProps){
     var oldBindings = activeModules[$intern_4].bindings;
     activeModules[$intern_4].bindings = function(){
       var props = oldBindings?oldBindings():{};
-      var embeddedProps = permProps[gwtexternaldummy.__softPermutationId];
+      var embeddedProps = permProps[gwtexternalproto.__softPermutationId];
       for (var i = $intern_7; i < embeddedProps.length; i++) {
         var pair = embeddedProps[i];
         props[pair[$intern_7]] = pair[$intern_8];
@@ -123,9 +123,9 @@ function gwtexternaldummy(){
       var script = doc.createElement($intern_20);
       script.language = $intern_21;
       script.src = code_0;
-      if (gwtexternaldummy.__errFn) {
+      if (gwtexternalproto.__errFn) {
         script.onerror = function(){
-          gwtexternaldummy.__errFn($intern_4, new Error($intern_22 + code_0));
+          gwtexternalproto.__errFn($intern_4, new Error($intern_22 + code_0));
         }
         ;
       }
@@ -140,11 +140,11 @@ function gwtexternaldummy(){
     );
   }
 
-  gwtexternaldummy.__startLoadingFragment = function(fragmentFile){
+  gwtexternalproto.__startLoadingFragment = function(fragmentFile){
     return computeUrlForResource(fragmentFile);
   }
   ;
-  gwtexternaldummy.__installRunAsyncCode = function(code_0){
+  gwtexternalproto.__installRunAsyncCode = function(code_0){
     var doc = getInstallLocationDoc();
     var docbody = doc.body;
     var script = doc.createElement($intern_20);
@@ -210,7 +210,7 @@ function gwtexternaldummy(){
     }
     ;
     __propertyErrorFunction = propertyErrorFunc;
-    gwtexternaldummy.__errFn = onLoadErrorFunc;
+    gwtexternalproto.__errFn = onLoadErrorFunc;
   }
 
   function computeScriptBase(){
@@ -290,7 +290,7 @@ function gwtexternaldummy(){
     if (resource.match(/^[a-zA-Z]+:\/\//)) {
       return resource;
     }
-    return gwtexternaldummy.__moduleBase + resource;
+    return gwtexternalproto.__moduleBase + resource;
   }
 
   function getCompiledCodeFilename(){
@@ -357,7 +357,7 @@ function gwtexternaldummy(){
       return propValue in values[propName];
     }
     ;
-    gwtexternaldummy.__getPropMap = function(){
+    gwtexternalproto.__getPropMap = function(){
       var result = {};
       for (var key in values) {
         if (values.hasOwnProperty(key)) {
@@ -367,19 +367,19 @@ function gwtexternaldummy(){
       return result;
     }
     ;
-    gwtexternaldummy.__computePropValue = computePropValue;
-    $wnd.__gwt_activeModules[$intern_4].bindings = gwtexternaldummy.__getPropMap;
+    gwtexternalproto.__computePropValue = computePropValue;
+    $wnd.__gwt_activeModules[$intern_4].bindings = gwtexternalproto.__getPropMap;
     sendStats($intern_0, $intern_63);
     if (isHostedMode()) {
       return computeUrlForResource($intern_64);
     }
     var strongName;
     try {
-      unflattenKeylistIntoAnswers([$intern_55], $intern_65);
+      unflattenKeylistIntoAnswers([$intern_57], $intern_65);
       unflattenKeylistIntoAnswers([$intern_59], $intern_66);
-      unflattenKeylistIntoAnswers([$intern_49], $intern_67);
-      unflattenKeylistIntoAnswers([$intern_53], $intern_68);
-      unflattenKeylistIntoAnswers([$intern_57], $intern_69);
+      unflattenKeylistIntoAnswers([$intern_53], $intern_67);
+      unflattenKeylistIntoAnswers([$intern_49], $intern_68);
+      unflattenKeylistIntoAnswers([$intern_55], $intern_69);
       strongName = answers[computePropValue($intern_47)];
       var idx = strongName.indexOf($intern_70);
       if (idx != -1) {
@@ -389,7 +389,7 @@ function gwtexternaldummy(){
     }
      catch (e) {
     }
-    gwtexternaldummy.__softPermutationId = softPermutationId;
+    gwtexternalproto.__softPermutationId = softPermutationId;
     return computeUrlForResource(strongName + $intern_71);
   }
 
@@ -413,8 +413,8 @@ function gwtexternaldummy(){
   }
 
   processMetas();
-  gwtexternaldummy.__moduleBase = computeScriptBase();
-  activeModules[$intern_4].moduleBase = gwtexternaldummy.__moduleBase;
+  gwtexternalproto.__moduleBase = computeScriptBase();
+  activeModules[$intern_4].moduleBase = gwtexternalproto.__moduleBase;
   var filename = getCompiledCodeFilename();
   if ($wnd) {
     var devModePermitted = !!($wnd.location.protocol == $intern_80 || $wnd.location.protocol == $intern_81);
@@ -457,4 +457,4 @@ function gwtexternaldummy(){
   return true;
 }
 
-gwtexternaldummy.succeeded = gwtexternaldummy();
+gwtexternalproto.succeeded = gwtexternalproto();

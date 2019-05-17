@@ -7,16 +7,16 @@ import com.google.gwt.core.client.GWT;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class GWTExternalDummy implements EntryPoint {
+public class GWTExternalProto implements EntryPoint {
 	
-	private static CompositeDocumentEditionDummy Actual;
+	private static CompositeDocumentEditionProto Actual;
 
 
 	static {
         export();
     }
 	
-	public GWTExternalDummy() {
+	public GWTExternalProto() {
 		
 	}
 	
@@ -26,12 +26,12 @@ public class GWTExternalDummy implements EntryPoint {
      */
     private static native void export() /*-{
     	
-    	$wnd.DummySetContext = @ucm.fdi.ilsa.client.GWTExternalDummy::setContext(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZ)
-    	$wnd.DummyGetIcon = @ucm.fdi.ilsa.client.GWTExternalDummy::getIcon()
-    	$wnd.DummyPersist = @ucm.fdi.ilsa.client.GWTExternalDummy::getPersist()
-    	$wnd.DummyisWaitingUpdate = @ucm.fdi.ilsa.client.GWTExternalDummy::isWaitingUpdate()
-    	$wnd.DummyupdateContext = @ucm.fdi.ilsa.client.GWTExternalDummy::updateContext()
-    	$wnd.DummysetWaitingUpdate =  @ucm.fdi.ilsa.client.GWTExternalDummy::setWaitingUpdate(Z)
+    	$wnd.ProtoSetContext = @ucm.fdi.ilsa.client.GWTExternalProto::setContext(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZ)
+    	$wnd.ProtoGetIcon = @ucm.fdi.ilsa.client.GWTExternalProto::getIcon()
+    	$wnd.ProtoPersist = @ucm.fdi.ilsa.client.GWTExternalProto::getPersist()
+    	$wnd.ProtoisWaitingUpdate = @ucm.fdi.ilsa.client.GWTExternalProto::isWaitingUpdate()
+    	$wnd.ProtoupdateContext = @ucm.fdi.ilsa.client.GWTExternalProto::updateContext()
+    	$wnd.ProtosetWaitingUpdate =  @ucm.fdi.ilsa.client.GWTExternalProto::setWaitingUpdate(Z)
     	
     }-*/;
 
@@ -40,9 +40,9 @@ public class GWTExternalDummy implements EntryPoint {
 			Long contLong=Long.parseLong(contextId);
 			Integer heiInteger=Integer.parseInt(Height);
 			if (edit)
-				Actual=new CompositeDocumentEditionDummy(IdVentana, contLong, heiInteger, isgrammar);
+				Actual=new CompositeDocumentEditionProto(IdVentana, contLong, heiInteger, isgrammar);
 			else
-				Actual=new CompositeDocumentDescriptionDummy(IdVentana, contLong, heiInteger, CompleteView, isgrammar, views);
+				Actual=new CompositeDocumentDescriptionProto(IdVentana, contLong, heiInteger, CompleteView, isgrammar, views);
 //		} catch (Exception e) {
 //			Window.alert(e.getMessage());
 //			Window.
@@ -53,7 +53,7 @@ public class GWTExternalDummy implements EntryPoint {
 	}
     
     public static String getIcon() {
-    	return CompositeDocumentDescriptionDummy.getIcon();
+    	return CompositeDocumentDescriptionProto.getIcon();
 		
 		
 	}
@@ -84,7 +84,7 @@ public class GWTExternalDummy implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		GWT.log("Dummy Load");
+		GWT.log("Proto Load");
 		
 	}
 }

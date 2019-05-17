@@ -1,0 +1,2 @@
+# Module gwtexternalproto
+# RPC service class, partial path of RPC policy file

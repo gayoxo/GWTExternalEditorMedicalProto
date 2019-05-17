@@ -22,7 +22,7 @@ import fdi.ucm.server.interconect.model.StructureJSON;
  * @author Joaquin Gayoso-Cabada
  *
  */
-public class CompositeDocumentEditionDummy{
+public class CompositeDocumentEditionProto{
 
 
 	private static final String ERROR_GRAMMAR = "Error Context can be applied to a grammar";
@@ -32,13 +32,13 @@ public class CompositeDocumentEditionDummy{
 	private String RandomIdVars;
 	private int Heigh;
 	private int Width;
-	private CompositeDocumentEditionDummy Yo;
+	private CompositeDocumentEditionProto Yo;
 	private Long ContextId;
 	private Panel PanelPrincipal;
 	private DocumentCompleteJSON Documento;
 	private StructureJSON SuperS;
 
-	public CompositeDocumentEditionDummy(String randomIdVars, Long contextId, int Height, boolean Grammar) {
+	public CompositeDocumentEditionProto(String randomIdVars, Long contextId, int Height, boolean Grammar) {
 		RandomIdVars=randomIdVars;
 		this.Heigh=Height-32;
 		
@@ -195,7 +195,7 @@ eval($wnd.daletmp)
 }-*/;
 
 	public static String getIcon() {
-		return "dummy.png";
+		return "proto.png";
 		
 	}
 
