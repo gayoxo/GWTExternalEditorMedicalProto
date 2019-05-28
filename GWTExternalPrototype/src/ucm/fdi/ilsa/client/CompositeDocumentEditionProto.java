@@ -123,6 +123,36 @@ public class CompositeDocumentEditionProto{
 				}
 		}
 		
+		
+		StructureJSON SS=null;
+		for (GrammarJSON Gr : Documento.getGramatica()) 	
+		{
+			SS=gotContext(Gr.getListaS(), ContextId);
+			if (SS!=null)
+				break;
+		}		
+		
+		if (SS==null)
+		{
+			Label T4 = new Label();
+			T4.setText("Context not found");
+			VP.add(T4);
+		}else
+			if (!test(SS))
+			{
+				Label T4 = new Label();
+				T4.setText("Context not match with requiered structure");
+				VP.add(T4);
+				
+			}else
+				{
+				//TODO AQUI DARLE CAÑA
+				//AQUI SABEMOS QUE ES VALIDO
+				}
+				
+		
+		
+
 	}
 	
 
@@ -131,6 +161,17 @@ public class CompositeDocumentEditionProto{
 	
 	
 	
+	private boolean test(StructureJSON sS) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+
+
+
+
 	private StructureJSON gotContext(List<StructureJSON> listaS, Long contextId) {
 		for (StructureJSON structterJSON : listaS) {
 			if (structterJSON.getId().get(0).equals(contextId))
