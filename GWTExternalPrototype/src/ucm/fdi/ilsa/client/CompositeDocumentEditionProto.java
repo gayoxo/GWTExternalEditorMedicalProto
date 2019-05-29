@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fdi.ucm.server.interconect.model.DocumentCompleteJSON;
 import fdi.ucm.server.interconect.model.GrammarJSON;
+import fdi.ucm.server.interconect.model.OperationalValueTypeJSON;
 import fdi.ucm.server.interconect.model.StructureJSON;
 
 /**
@@ -138,20 +139,32 @@ public class CompositeDocumentEditionProto{
 			T4.setText("Context not found");
 			VP.add(T4);
 		}else
-			if (!test(SS))
+			{
+			List<String> Errores = test(SS);
+			if (!Errores.isEmpty())
 			{
 				Label T4 = new Label();
 				T4.setText("Context not match with requiered structure");
 				VP.add(T4);
 				
+				for (String string : Errores) {
+					Label T5 = new Label();
+					T5.setText(string);
+					VP.add(T5);
+				}
+				
+				
 			}else
 				{
+				
+				
+				
 				//TODO AQUI DARLE CAÑA
 				//AQUI SABEMOS QUE ES VALIDO
 				}
 				
 		
-		
+			}
 
 	}
 	
@@ -161,9 +174,74 @@ public class CompositeDocumentEditionProto{
 	
 	
 	
-	private boolean test(StructureJSON sS) {
-		// TODO Auto-generated method stub
-		return false;
+	private List<String> test(StructureJSON sS) {
+		ArrayList<String> Errores = new ArrayList<String>();
+		List<StructureJSON> ZonaBUsqueda=null;
+		Long SSPadre = sS.getFather();
+		if (SSPadre!=null)
+			{
+			//CASO GRAMATICA
+			StructureJSON SSFin=null;
+				for (GrammarJSON Gr : Documento.getGramatica()) {
+					
+					SSFin=gotContext(Gr.getListaS(), SSPadre);
+					if (SSFin!=null)
+						break;
+				}
+			
+			if (SSFin!=null)
+				ZonaBUsqueda=SSFin.getSons();
+				
+			}else
+			{
+				GrammarJSON GSFin=null;
+				for (GrammarJSON Gr : Documento.getGramatica()) {
+					
+					StructureJSON SSFin=gotContext(Gr.getListaS(), SSPadre);
+					if (SSFin!=null)
+						{
+						GSFin=Gr;
+						break;
+						}
+				}
+				
+				if (GSFin!=null)
+					ZonaBUsqueda=GSFin.getListaS();
+				
+			}
+		
+		
+		if (ZonaBUsqueda==null)
+			Errores.add("I cant found the context correct father");
+		
+		boolean TermBien = false;
+		boolean SourceAutoBien = false;
+		for (OperationalValueTypeJSON OperaValTyJSON : sS.getShows()) {
+			//REvisa las cosas de la vista, basicamente que pone term y auto
+			if (OperaValTyJSON.getView().toLowerCase().equals("proto")&&OperaValTyJSON.getName().toLowerCase().equals("type")&&OperaValTyJSON.getDefault().toLowerCase().equals("term"))
+				TermBien = true;
+			
+			if (OperaValTyJSON.getView().toLowerCase().equals("proto")&&OperaValTyJSON.getName().toLowerCase().equals("source")&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+				SourceAutoBien = true;
+			
+			if (TermBien&&SourceAutoBien)
+				break;
+				
+		}
+		
+		if (!TermBien)
+			Errores.add("I cant found term view in this context");
+		
+		if (!SourceAutoBien)
+			Errores.add("I cant found term view where type of source auto in this context");
+
+		//Ahora ya tengo la lista y de to. Ademas se que el objeto termino existe que es lo primero que voy a ver
+		
+		
+	
+		
+		return Errores;
+		
 	}
 
 
