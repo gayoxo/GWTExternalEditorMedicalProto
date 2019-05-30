@@ -168,7 +168,9 @@ public class CompositeDocumentEditionProto{
 			}else
 				{
 				
-				
+				Label T4 = new Label();
+				T4.setText("Ahora mismo hay que empezar a meter la informacion poco a poco");
+				VP.add(T4);
 				
 				//TODO AQUI DARLE CAÑA
 				//AQUI SABEMOS QUE ES VALIDO
