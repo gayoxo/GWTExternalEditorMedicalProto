@@ -4,7 +4,11 @@
 package ucm.fdi.ilsa.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
@@ -18,6 +22,7 @@ import fdi.ucm.server.interconect.model.DocumentCompleteJSON;
 import fdi.ucm.server.interconect.model.GrammarJSON;
 import fdi.ucm.server.interconect.model.OperationalValueTypeJSON;
 import fdi.ucm.server.interconect.model.StructureJSON;
+import fdi.ucm.server.interconect.model.StructureJSON.TypeOfStructureEnum;
 
 /**
  * @author Joaquin Gayoso-Cabada
@@ -38,6 +43,12 @@ public class CompositeDocumentEditionProto{
 	private Panel PanelPrincipal;
 	private DocumentCompleteJSON Documento;
 	private StructureJSON SuperS;
+	private HashMap<StructureJSON, List<StructureJSON>> Termino_Posicion;
+	private HashMap<StructureJSON, List<StructureJSON>> Termino_CUI;
+	private LinkedList<StructureJSON> TermElements;
+	private LinkedList<StructureJSON> UteranciasBien;
+	private LinkedList<StructureJSON> ImagenesBien;
+	private HashMap<StructureJSON, List<StructureJSON>> Termino_Seman;
 
 	public CompositeDocumentEditionProto(String randomIdVars, Long contextId, int Height, boolean Grammar) {
 		RandomIdVars=randomIdVars;
@@ -214,6 +225,16 @@ public class CompositeDocumentEditionProto{
 		if (ZonaBUsqueda==null)
 			Errores.add("I cant found the context correct father");
 		
+		
+		
+		
+		
+		if (!sS.isMultivalued())
+			Errores.add("Term element should be multivalued");
+		
+		if (sS.getTypeOfStructure()!= TypeOfStructureEnum.Text)
+			Errores.add("term context shoud be text");
+		
 		boolean TermBien = false;
 		boolean SourceAutoBien = false;
 		for (OperationalValueTypeJSON OperaValTyJSON : sS.getShows()) {
@@ -237,9 +258,127 @@ public class CompositeDocumentEditionProto{
 
 		//Ahora ya tengo la lista y de to. Ademas se que el objeto termino existe que es lo primero que voy a ver
 		
-		
 	
 		
+		TermElements=new LinkedList<StructureJSON>();
+		UteranciasBien=new LinkedList<StructureJSON>();
+		ImagenesBien=new LinkedList<StructureJSON>();
+		
+		for (StructureJSON structureJSON : ZonaBUsqueda){ 
+			if (structureJSON.getId().equals(sS.getClaseOf())||structureJSON.getClaseOf().equals(sS.getClaseOf()))
+				TermElements.add(structureJSON);
+
+			if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Text)
+				for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
+					if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+					ViewstructureJSON.getDefault().toLowerCase().equals("utterance"))
+						UteranciasBien.add(structureJSON);
+				}
+
+				
+			if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Resource)
+				for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
+					if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+					ViewstructureJSON.getDefault().toLowerCase().equals("image"))
+						ImagenesBien.add(structureJSON);
+				}
+			
+		}
+		
+		
+		
+		if (UteranciasBien.isEmpty())
+			Errores.add("I cant found utterances element in this context father");
+		
+		if (ImagenesBien.isEmpty())
+			Errores.add("I cant found Images element in this context father");
+			
+		if (!UteranciasBien.isEmpty()&&!UteranciasBien.get(0).isMultivalued())
+			Errores.add("Utterances element should be multivalued");
+		
+		if (!ImagenesBien.isEmpty()&&!ImagenesBien.get(0).isMultivalued())
+			Errores.add("Imagenes element should be multivalued");
+		
+		
+		Termino_Posicion=new HashMap<StructureJSON, List<StructureJSON>>();
+		
+		Termino_Seman=new HashMap<StructureJSON, List<StructureJSON>>();
+		
+		for (StructureJSON termElem : TermElements) {
+			
+			List<StructureJSON> PositionsList = new LinkedList<StructureJSON>();
+			for (StructureJSON structureJSON : termElem.getSons()) {
+				if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Text)
+					for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
+						if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+						ViewstructureJSON.getDefault().toLowerCase().equals("position"))
+							PositionsList.add(structureJSON);
+					}
+			}
+			
+			List<StructureJSON> SemanticList = new LinkedList<StructureJSON>();
+			for (StructureJSON structureJSON : termElem.getSons()) {
+				if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Text)
+					for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
+						if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+						ViewstructureJSON.getDefault().toLowerCase().equals("Semantic"))
+							SemanticList.add(structureJSON);
+					}
+			}
+			
+			
+			
+			Termino_Posicion.put(termElem, PositionsList);
+			Termino_Seman.put(termElem, SemanticList);
+		}
+		
+		
+		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).isEmpty())
+				&&(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).get(0).getValue().isEmpty()))
+			Errores.add("Term element should have almost one Position element");
+
+		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).isEmpty())
+				&&(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().isEmpty()))
+			Errores.add("Term element should have almost one Semantic element");
+		
+		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).isEmpty())
+				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).get(0).getValue().isEmpty())
+				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).get(0).getValue().get(0).isMultivalued())
+						)
+				Errores.add("Position element should be multivalued");
+			
+		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).isEmpty())
+				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().isEmpty())
+				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().get(0).isMultivalued())
+						)
+				Errores.add("Semantic element should be multivalued");
+			
+		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).isEmpty())
+				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().isEmpty())
+				&&(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().get(0).getSons().isEmpty())
+						)
+			Errores.add("Semantic element should have a CUI element");
+		else
+			{
+			
+				
+			
+				boolean CUIBoo = false;
+				for (OperationalValueTypeJSON ViewstructureJSON : new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().get(0).getSons().get(0).getShows()) {
+					if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+							ViewstructureJSON.getDefault().toLowerCase().equals("CUI"))
+						CUIBoo=true;
+				}
+				
+				if (CUIBoo)
+					if (new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().get(0).getSons().get(0).getTypeOfStructure()!=TypeOfStructureEnum.Text)
+						Errores.add("Semantic element should have a CUI element with Text Type");
+					else;
+				else
+					Errores.add("Semantic element should have a CUI element");
+				
+			}
+			
 		return Errores;
 		
 	}
