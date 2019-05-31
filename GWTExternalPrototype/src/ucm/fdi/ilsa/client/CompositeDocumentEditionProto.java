@@ -281,10 +281,10 @@ public class CompositeDocumentEditionProto{
 
 		//Ahora ya tengo la lista y de to. Ademas se que el objeto termino existe que es lo primero que voy a ver
 		
-		for (String err : Errores) {
-			console("E:"+err);
-		}
 		
+		for (String err : Errores) {
+			console("E1:"+err);
+		}
 	
 		
 		TermElements=new LinkedList<StructureJSON>();
@@ -330,6 +330,13 @@ public class CompositeDocumentEditionProto{
 		Termino_Posicion=new HashMap<StructureJSON, List<StructureJSON>>();
 		
 		Termino_Seman=new HashMap<StructureJSON, List<StructureJSON>>();
+		
+		
+		console("TE:"+TermElements.size());
+		
+		for (String err : Errores) {
+			console("E2:"+err);
+		}
 		
 		for (StructureJSON termElem : TermElements) {
 			
