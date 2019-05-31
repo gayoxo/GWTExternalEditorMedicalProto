@@ -98,18 +98,24 @@ public class CompositeDocumentEditionProto{
 //			JSOSucion=JSOSucionV.isObject();
 		
 
-		
+	/**	
 		String Mostar2=JSOSucion.toString();
+		*/
 		
 		Documento=CreateJSONObject.create(JSOSucion);
 
+		/**	
 		String Mostar3=CreateJSONObject.create(Documento).toString();
+		*/
+		
 		
 //		Label T = new Label();
 ////		T.setSize(Width+"px", Heigh+"px");
 //		T.setText(Mostar);
 //		VP.add(T);
 		
+		
+		/**
 		Label T2 = new Label();
 //		T.setSize(Width+"px", Heigh+"px");
 		T2.setText(Mostar2);
@@ -119,7 +125,7 @@ public class CompositeDocumentEditionProto{
 //		T.setSize(Width+"px", Heigh+"px");
 		T3.setText(Mostar3);
 		VP.add(T3);
-		
+		*/
 	
 		
 		
@@ -132,6 +138,7 @@ public class CompositeDocumentEditionProto{
 	//			T.setSize(Width+"px", Heigh+"px");
 				T4.setText(SS.getName());
 				VP.add(T4);
+				console(SS.getName());
 				}
 		}
 		
@@ -141,8 +148,12 @@ public class CompositeDocumentEditionProto{
 		{
 			SS=gotContext(Gr.getListaS(), ContextId);
 			if (SS!=null)
-				break;
+				break;	
+			
 		}		
+		
+		
+				
 		
 		if (SS==null)
 		{
@@ -151,6 +162,9 @@ public class CompositeDocumentEditionProto{
 			VP.add(T4);
 		}else
 			{
+			
+			console("1:"+SS.getName());
+
 			List<String> Errores = test(SS);
 			if (!Errores.isEmpty())
 			{
@@ -202,21 +216,27 @@ public class CompositeDocumentEditionProto{
 						break;
 				}
 			
+				
 			if (SSFin!=null)
 				ZonaBUsqueda=SSFin.getSons();
+			
+			
+			
 				
 			}else
 			{
+				
 				GrammarJSON GSFin=null;
 				for (GrammarJSON Gr : Documento.getGramatica()) {
 					
-					StructureJSON SSFin=gotContext(Gr.getListaS(), SSPadre);
+					StructureJSON SSFin=gotContext(Gr.getListaS(), sS.getId().get(0));
 					if (SSFin!=null)
 						{
 						GSFin=Gr;
 						break;
 						}
 				}
+				
 				
 				if (GSFin!=null)
 					ZonaBUsqueda=GSFin.getListaS();
@@ -227,8 +247,7 @@ public class CompositeDocumentEditionProto{
 		if (ZonaBUsqueda==null)
 			Errores.add("I cant found the context correct father");
 		
-		
-		
+	
 		
 		
 		if (!sS.isMultivalued())
@@ -252,6 +271,8 @@ public class CompositeDocumentEditionProto{
 				
 		}
 		
+		
+		
 		if (!TermBien)
 			Errores.add("I cant found term view in this context");
 		
@@ -259,6 +280,10 @@ public class CompositeDocumentEditionProto{
 			Errores.add("I cant found term view where type of source auto in this context");
 
 		//Ahora ya tengo la lista y de to. Ademas se que el objeto termino existe que es lo primero que voy a ver
+		
+		for (String err : Errores) {
+			console("E:"+err);
+		}
 		
 	
 		
@@ -537,5 +562,8 @@ eval($wnd.daletmp)
 	}
 
 
-	
+	public static native void console(String text)
+	/*-{
+	    console.log(text);
+	}-*/;
 }
