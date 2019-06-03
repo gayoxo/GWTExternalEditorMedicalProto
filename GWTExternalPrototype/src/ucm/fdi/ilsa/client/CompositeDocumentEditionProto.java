@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -125,7 +126,7 @@ public class CompositeDocumentEditionProto{
 //		T.setSize(Width+"px", Heigh+"px");
 		T3.setText(Mostar3);
 		VP.add(T3);
-		*/
+		
 	
 		
 		
@@ -142,6 +143,7 @@ public class CompositeDocumentEditionProto{
 				}
 		}
 		
+		*/
 		
 		StructureJSON SS=null;
 		for (GrammarJSON Gr : Documento.getGramatica()) 	
@@ -151,7 +153,6 @@ public class CompositeDocumentEditionProto{
 				break;	
 			
 		}		
-		
 		
 				
 		
@@ -251,10 +252,10 @@ public class CompositeDocumentEditionProto{
 		
 		
 		if (!sS.isMultivalued())
-			Errores.add("Term element should be multivalued");
+			Errores.add("Term structure element should be multivalued");
 		
 		if (sS.getTypeOfStructure()!= TypeOfStructureEnum.Text)
-			Errores.add("term context shoud be text");
+			Errores.add("Term structure element should be text type");
 		
 		boolean TermBien = false;
 		boolean SourceAutoBien = false;
@@ -274,19 +275,12 @@ public class CompositeDocumentEditionProto{
 		
 		
 		if (!TermBien)
-			Errores.add("I cant found term view in this context");
+			Errores.add("Term structure element view should have term type proto->type->term");
 		
 		if (!SourceAutoBien)
-			Errores.add("I cant found term view where type of source auto in this context");
+			Errores.add("Term structure element view should have term type proto->source->auto");
 
-		//Ahora ya tengo la lista y de to. Ademas se que el objeto termino existe que es lo primero que voy a ver
-		
-		
-		for (String err : Errores) {
-			console("E1:"+err);
-		}
-	
-		
+
 		TermElements=new LinkedList<StructureJSON>();
 		UteranciasBien=new LinkedList<StructureJSON>();
 		ImagenesBien=new LinkedList<StructureJSON>();
@@ -315,16 +309,16 @@ public class CompositeDocumentEditionProto{
 		
 		
 		if (UteranciasBien.isEmpty())
-			Errores.add("I cant found utterances element in this context father");
+			Errores.add("I cant found Utterances structure element in this context father with view proto->type->utterance");
 		
 		if (ImagenesBien.isEmpty())
-			Errores.add("I cant found Images element in this context father");
+			Errores.add("I cant found Images structure element in this context fathe with view proto->type->image");
 			
 		if (!UteranciasBien.isEmpty()&&!UteranciasBien.get(0).isMultivalued())
-			Errores.add("Utterances element should be multivalued");
+			Errores.add("Utterances structure element should be multivalued");
 		
 		if (!ImagenesBien.isEmpty()&&!ImagenesBien.get(0).isMultivalued())
-			Errores.add("Imagenes element should be multivalued");
+			Errores.add("Images structure element should be multivalued");
 		
 		
 		Termino_Posicion=new HashMap<StructureJSON, List<StructureJSON>>();
@@ -332,11 +326,9 @@ public class CompositeDocumentEditionProto{
 		Termino_Seman=new HashMap<StructureJSON, List<StructureJSON>>();
 		
 		
-		console("TE:"+TermElements.size());
 		
-		for (String err : Errores) {
-			console("E2:"+err);
-		}
+		
+		
 		
 		for (StructureJSON termElem : TermElements) {
 			
@@ -355,10 +347,12 @@ public class CompositeDocumentEditionProto{
 				if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Text)
 					for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
 						if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
-						ViewstructureJSON.getDefault().toLowerCase().equals("Semantic"))
+						ViewstructureJSON.getDefault().toLowerCase().equals("semantic"))
 							SemanticList.add(structureJSON);
 					}
 			}
+			
+			
 			
 			
 			
@@ -367,52 +361,94 @@ public class CompositeDocumentEditionProto{
 		}
 		
 		
-		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).isEmpty())
-				&&(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).get(0).getValue().isEmpty()))
-			Errores.add("Term element should have almost one Position element");
-
-		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).isEmpty())
-				&&(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().isEmpty()))
-			Errores.add("Term element should have almost one Semantic element");
+		for (String err : Errores) {
+			console("E2:"+err);
+		}
 		
-		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).isEmpty())
-				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).get(0).getValue().isEmpty())
-				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet()).get(0).getValue().get(0).isMultivalued())
+		console("TP:"+Termino_Posicion.size());
+		console("TS:"+Termino_Posicion.size());
+		
+		
+		LinkedList<Entry<StructureJSON, List<StructureJSON>>> ListSemantic = new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet());
+		LinkedList<Entry<StructureJSON, List<StructureJSON>>> ListPosition = new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Posicion.entrySet());
+		
+		
+		if (!(ListPosition.isEmpty())
+				&&(ListPosition.get(0).getValue().isEmpty()))
+			Errores.add("Term structure element should have almost one Position structure element with position view proto->type->position");
+
+		
+		
+		if (!(ListPosition.isEmpty())
+				&&!(ListPosition.get(0).getValue().isEmpty())
+				&&!(ListPosition.get(0).getValue().get(0).isMultivalued())
 						)
-				Errores.add("Position element should be multivalued");
-			
-		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).isEmpty())
-				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().isEmpty())
-				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().get(0).isMultivalued())
+				Errores.add("Position structure element should be multivalued");
+		
+		
+		
+		if (!(ListSemantic.isEmpty())
+				&&(ListSemantic.get(0).getValue().isEmpty()))
+			Errores.add("Term element should have almost one Semantic element with semantic view proto->type->semantic");
+		
+		
+		if (!(ListSemantic.isEmpty())
+				&&!(ListSemantic.get(0).getValue().isEmpty())
+				&&!(ListSemantic.get(0).getValue().get(0).isMultivalued())
 						)
-				Errores.add("Semantic element should be multivalued");
+				Errores.add("Semantic structure element should be multivalued");
 			
-		if (!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).isEmpty())
-				&&!(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().isEmpty())
-				&&(new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().get(0).getSons().isEmpty())
+		
+		
+		
+		/**
+		
+		if (!(ListSemantic.isEmpty())
+				&&!(ListSemantic.get(0).getValue().isEmpty())
+				&&(ListSemantic.get(0).getValue().get(0).getSons().isEmpty())
 						)
 			Errores.add("Semantic element should have a CUI element");
-		else
+		
+		*/
+		
+		
+		
+		
+		if(!(ListSemantic.isEmpty())
+				&&
+				!(ListSemantic.get(0).getValue().isEmpty())
+				&&
+				!(ListSemantic.get(0).getValue().get(0).getSons().isEmpty()))
 			{
 			
-				
+			
+			console("TP1: "+ ListSemantic.size() );
+			console("TP2: "+ ListSemantic.get(0).getValue().size() );
+			console("TP3: "+ ListSemantic.get(0).getValue().get(0).getSons().size() );
+			console("TP4: "+ ListSemantic.get(0).getValue().get(0).getSons().get(0).getShows().size() );
 			
 				boolean CUIBoo = false;
-				for (OperationalValueTypeJSON ViewstructureJSON : new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().get(0).getSons().get(0).getShows()) {
+				for (OperationalValueTypeJSON ViewstructureJSON : ListSemantic.get(0).getValue().get(0).getSons().get(0).getShows()) {
 					if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
-							ViewstructureJSON.getDefault().toLowerCase().equals("CUI"))
+							ViewstructureJSON.getDefault().toLowerCase().equals("cui"))
 						CUIBoo=true;
 				}
 				
 				if (CUIBoo)
-					if (new LinkedList<Map.Entry<StructureJSON,List<StructureJSON>>>(Termino_Seman.entrySet()).get(0).getValue().get(0).getSons().get(0).getTypeOfStructure()!=TypeOfStructureEnum.Text)
+					if (ListSemantic.get(0).getValue().get(0).getSons().get(0).getTypeOfStructure()!=TypeOfStructureEnum.Text)
 						Errores.add("Semantic element should have a CUI element with Text Type");
 					else;
 				else
-					Errores.add("Semantic element should have a CUI element");
+					Errores.add("Semantic structure element should have a CUI element with CUI view proto->type->cui");
 				
 			}
 			
+		
+		for (String err : Errores) {
+			console("E2:"+err);
+		}
+		
+		
 		return Errores;
 		
 	}
