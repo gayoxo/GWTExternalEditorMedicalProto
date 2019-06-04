@@ -12,11 +12,16 @@ import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fdi.ucm.server.interconect.model.DocumentCompleteJSON;
@@ -50,6 +55,29 @@ public class CompositeDocumentEditionProto{
 	private LinkedList<StructureJSON> UteranciasBien;
 	private LinkedList<StructureJSON> ImagenesBien;
 	private HashMap<StructureJSON, List<StructureJSON>> Termino_Seman;
+	private VerticalPanel PanelPhrases;
+	private Image LoadPH;
+	private VerticalPanel PanelAuto;
+	private Image LoadAUTO;
+	private VerticalPanel PanelManual;
+	private Image LoadMAN;
+	private VerticalPanel PanelRemDocu;
+	private VerticalPanel PanelRemGlob;
+	private Image LoadREMDocu;
+	private VerticalPanel PanelMetamap;
+	private Image LoadREMGlob;
+	private Image LoadMeta;
+	private VerticalPanel PanelUsed;
+	private Image LoadUsed;
+	private VerticalPanel PanelImgTra;
+	private VerticalPanel PanelImg;
+	private Image LoadIMG;
+	private VerticalPanel PanelTra;
+	private Image LoadTra;
+	
+	
+	private static final String LOADINGGEN = "Loader.gif";
+	
 
 	public CompositeDocumentEditionProto(String randomIdVars, Long contextId, int Height, boolean Grammar) {
 		RandomIdVars=randomIdVars;
@@ -183,9 +211,12 @@ public class CompositeDocumentEditionProto{
 			}else
 				{
 				
-				Label T4 = new Label();
-				T4.setText("Ahora mismo hay que empezar a meter la informacion poco a poco");
-				VP.add(T4);
+//				Label T4 = new Label();
+//				T4.setText("Ahora mismo hay que empezar a meter la informacion poco a poco");
+//				VP.add(T4);
+				
+				CreaLosPaneles();
+				
 				
 				//TODO AQUI DARLE CAÑA
 				//AQUI SABEMOS QUE ES VALIDO
@@ -202,6 +233,116 @@ public class CompositeDocumentEditionProto{
 	
 	
 	
+	private void CreaLosPaneles() {
+		ScrollPanel SP=new ScrollPanel();
+		PanelPrincipal.add(SP);
+		
+		
+		HorizontalPanel PanelCentral=new HorizontalPanel();
+		SP.add(PanelCentral);
+		PanelCentral.setHeight("100%");
+		
+//		PanelCentral.setSize("100%", "100%");
+		
+		VerticalPanel PanelLabelTag=new VerticalPanel();
+		PanelCentral.add(PanelLabelTag);
+		PanelLabelTag.setSize("100%", "100%");
+		
+		PanelPhrases=new VerticalPanel();
+		PanelLabelTag.add(PanelPhrases);
+		PanelPhrases.addStyleName("panelPhrases");
+		PanelPhrases.setSize("100%", "100%");
+		LoadPH=new Image(LOADINGGEN);
+		
+		
+		PanelAuto=new VerticalPanel();
+		PanelLabelTag.add(PanelAuto);
+		PanelAuto.addStyleName("panelAuto");
+		PanelAuto.setSize("100%", "100%");
+		LoadAUTO=new Image(LOADINGGEN);
+		
+		
+		PanelManual=new VerticalPanel();
+		PanelLabelTag.add(PanelManual);
+		PanelManual.addStyleName("panelManual");
+		PanelManual.setSize("100%", "100%");
+		LoadMAN=new Image(LOADINGGEN);
+
+		HorizontalPanel PanelRemovedT = new HorizontalPanel();
+		PanelLabelTag.add(PanelRemovedT);
+		PanelRemovedT.addStyleName("panelRemoved");
+		PanelRemovedT.setSize("100%", "100%");
+		
+		PanelRemDocu=new VerticalPanel();
+		PanelRemovedT.add(PanelRemDocu);
+		PanelRemDocu.addStyleName("panelRemD");
+		PanelRemDocu.setSize("100%", "100%");
+		
+		PanelRemGlob=new VerticalPanel();
+		PanelRemovedT.add(PanelRemGlob);
+		PanelRemGlob.addStyleName("panelRemI");
+		PanelRemGlob.setSize("100%", "100%");
+		
+		LoadREMDocu=new Image(LOADINGGEN);
+		LoadREMGlob=new Image(LOADINGGEN);
+		
+		VerticalPanel PanelMetaUsed=new VerticalPanel();
+		PanelCentral.add(PanelMetaUsed);
+		PanelMetaUsed.setHeight("100%");
+		
+		PanelMetamap=new VerticalPanel();
+		PanelMetaUsed.add(PanelMetamap);
+		PanelMetamap.addStyleName("panelMetamap");
+		PanelMetamap.setHeight("100%");
+//		PanelMetamap.setSize("100%", "100%");
+		LoadMeta=new Image(LOADINGGEN);
+
+		
+		PanelUsed=new VerticalPanel();
+		PanelMetaUsed.add(PanelUsed);
+		PanelUsed.addStyleName("panelUses");
+		PanelUsed.setHeight("100%");
+//		PanelUsed.setSize("100%", "100%");
+		LoadUsed=new Image(LOADINGGEN);
+		
+		
+		PanelImgTra=new VerticalPanel();
+		PanelCentral.add(PanelImgTra);
+		PanelImgTra.setSize("100%", "100%");
+		//PanelImgTra.setWidth("100%");
+		
+		VerticalPanel PanelImgTra2=new VerticalPanel();
+		PanelImgTra.add(PanelImgTra2);
+		//PanelImgTra.setSize("100%", "100%");
+		PanelImgTra2.setWidth("100%");
+		
+		PanelImg=new VerticalPanel();
+		PanelImgTra2.add(PanelImg);
+		PanelImg.addStyleName("panelImages");
+//		PanelImg.setSize("50%", "100%");
+		//PanelImg.setHeight("100%");
+//		PanelImg.setSize("100%","100%");
+		LoadIMG=new Image(LOADINGGEN);
+		
+		
+		PanelTra=new VerticalPanel();
+		PanelImgTra2.add(PanelTra);
+		PanelTra.addStyleName("panelTraduct");
+//		PanelTra.setSize("100%", "100%");
+//		PanelTra.setHeight("100%");
+//		PanelTra.setWidth("100%");
+		LoadTra=new Image(LOADINGGEN);
+		
+		
+		
+	}
+
+
+
+
+
+
+
 	private List<String> test(StructureJSON sS) {
 		ArrayList<String> Errores = new ArrayList<String>();
 		List<StructureJSON> ZonaBUsqueda=null;
