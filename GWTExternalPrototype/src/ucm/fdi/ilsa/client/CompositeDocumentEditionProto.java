@@ -72,6 +72,8 @@ public class CompositeDocumentEditionProto{
 	private Image LoadIMG;
 	private VerticalPanel PanelTra;
 	private Image LoadTra;
+	private StructureJSON DeleteBien;
+	private HashMap<StructureJSON, StructureJSON> Termino_Delete;
 	
 	
 	private static final String LOADINGGEN = "Loader.gif";
@@ -462,6 +464,7 @@ public class CompositeDocumentEditionProto{
 		TermElements=new LinkedList<StructureJSON>();
 		UteranciasBien=new LinkedList<StructureJSON>();
 		ImagenesBien=new LinkedList<StructureJSON>();
+		DeleteBien=null;
 		
 		for (StructureJSON structureJSON : ZonaBUsqueda){ 
 			if (structureJSON.getId().equals(sS.getClaseOf())||structureJSON.getClaseOf().equals(sS.getClaseOf()))
@@ -482,6 +485,14 @@ public class CompositeDocumentEditionProto{
 						ImagenesBien.add(structureJSON);
 				}
 			
+			
+			if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Basic)
+				for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
+					if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+					ViewstructureJSON.getDefault().toLowerCase().equals("delete"))
+						DeleteBien=structureJSON;
+				}
+			
 		}
 		
 		
@@ -489,8 +500,11 @@ public class CompositeDocumentEditionProto{
 		if (UteranciasBien.isEmpty())
 			Errores.add("I cant found Utterances structure element in this context father with view proto->type->utterance");
 		
+		if (DeleteBien==null)
+			Errores.add("I cant found Delete structure element in this context father with view proto->type->delete");
+		
 		if (ImagenesBien.isEmpty())
-			Errores.add("I cant found Images structure element in this context fathe with view proto->type->image");
+			Errores.add("I cant found Images structure element in this context father with view proto->type->image");
 			
 		if (!UteranciasBien.isEmpty()&&!UteranciasBien.get(0).isMultivalued())
 			Errores.add("Utterances structure element should be multivalued");
@@ -503,8 +517,7 @@ public class CompositeDocumentEditionProto{
 		
 		Termino_Seman=new HashMap<StructureJSON, List<StructureJSON>>();
 		
-		
-		
+		Termino_Delete=new HashMap<StructureJSON, StructureJSON>();
 		
 		
 		
@@ -531,11 +544,25 @@ public class CompositeDocumentEditionProto{
 			}
 			
 			
+			StructureJSON DeleteElement = null;
+			for (StructureJSON structureJSON : termElem.getSons()) {
+				if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Basic)
+					for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
+						if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+						ViewstructureJSON.getDefault().toLowerCase().equals("delete"))
+							DeleteElement=structureJSON;
+					}
+			}
+			
+			
 			
 			
 			
 			Termino_Posicion.put(termElem, PositionsList);
 			Termino_Seman.put(termElem, SemanticList);
+			
+			if (DeleteElement!=null)
+				Termino_Delete.put(termElem, DeleteElement);
 		}
 		
 		
@@ -554,8 +581,10 @@ public class CompositeDocumentEditionProto{
 		if (!(ListPosition.isEmpty())
 				&&(ListPosition.get(0).getValue().isEmpty()))
 			Errores.add("Term structure element should have almost one Position structure element with position view proto->type->position");
-
 		
+		if (!(ListSemantic.isEmpty())
+				&&(ListSemantic.get(0).getValue().isEmpty()))
+			Errores.add("Term element should have almost one Semantic element with semantic view proto->type->semantic");
 		
 		if (!(ListPosition.isEmpty())
 				&&!(ListPosition.get(0).getValue().isEmpty())
@@ -563,12 +592,7 @@ public class CompositeDocumentEditionProto{
 						)
 				Errores.add("Position structure element should be multivalued");
 		
-		
-		
-		if (!(ListSemantic.isEmpty())
-				&&(ListSemantic.get(0).getValue().isEmpty()))
-			Errores.add("Term element should have almost one Semantic element with semantic view proto->type->semantic");
-		
+
 		
 		if (!(ListSemantic.isEmpty())
 				&&!(ListSemantic.get(0).getValue().isEmpty())
@@ -576,8 +600,6 @@ public class CompositeDocumentEditionProto{
 						)
 				Errores.add("Semantic structure element should be multivalued");
 			
-		
-		
 		
 		/**
 		
@@ -620,6 +642,11 @@ public class CompositeDocumentEditionProto{
 					Errores.add("Semantic structure element should have a CUI element with CUI view proto->type->cui");
 				
 			}
+		
+		
+		
+		if (Termino_Delete.isEmpty())
+			Errores.add("Term structure element should have delete structure element with position view proto->type->delete");
 			
 		
 		for (String err : Errores) {
