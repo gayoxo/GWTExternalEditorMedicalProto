@@ -105,7 +105,6 @@ public class CompositeDocumentEditionProto{
 		VerticalPanel VP = new VerticalPanel();
 		VP.setSpacing(20);
 		RP.add(VP);
-		VP.setSize(Width+"px", Heigh+"px");
 		PanelPrincipal=VP;
 		
 
@@ -211,6 +210,7 @@ public class CompositeDocumentEditionProto{
 			}else
 				{
 				
+				VP.setSize(Width+"px", Heigh+"px");
 //				Label T4 = new Label();
 //				T4.setText("Ahora mismo hay que empezar a meter la informacion poco a poco");
 //				VP.add(T4);
