@@ -12,11 +12,9 @@ import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -333,12 +331,51 @@ public class CompositeDocumentEditionProto{
 //		PanelTra.setWidth("100%");
 		LoadTra=new Image(LOADINGGEN);
 		
-		
+		cleanPanels();
+
+			processActualDocument();
+			
 		
 	}
 
-
-
+	protected void processActualDocument() {
+		
+		
+	}
+	
+	
+	
+	
+	private void cleanPanels() {
+		PanelPhrases.clear();
+		PanelPhrases.add(LoadPH);
+		
+		PanelAuto.clear();
+		PanelAuto.add(LoadAUTO);
+		
+		PanelManual.clear();
+		PanelManual.add(LoadMAN);
+		
+		PanelMetamap.clear();
+		PanelMetamap.add(LoadMeta);
+		
+		PanelUsed.clear();
+		PanelUsed.add(LoadUsed);
+		
+		PanelImg.clear();
+		PanelImg.add(LoadIMG);
+		
+		PanelTra.clear();
+		PanelTra.add(LoadTra);
+		
+		PanelRemDocu.clear();
+		PanelRemDocu.add(LoadREMDocu);
+		
+		PanelRemGlob.clear();
+		PanelRemGlob.add(LoadREMGlob);
+		
+		
+	}
 
 
 
