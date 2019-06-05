@@ -103,7 +103,7 @@ public class CompositeDocumentEditionProto{
 		VerticalPanel VP = new VerticalPanel();
 		VP.setSpacing(20);
 		RP.add(VP);
-		
+		VP.setSize(Width+"px", Heigh+"px");
 		PanelPrincipal=VP;
 		
 
