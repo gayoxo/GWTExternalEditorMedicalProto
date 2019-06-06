@@ -1,1 +1,33 @@
-/test-classes/
+# Created by https://www.gitignore.io/api/gwt
+# Edit at https://www.gitignore.io/?templates=gwt
+
+### GWT ###
+*.class
+*.gwt.rpc
+*.cache.js
+
+# Package Files #
+#*.jar
+#*.war
+
+# gwt caches and compiled units #
+war/gwt_bree/
+gwt-unitCache/
+
+# boilerplate generated classes #
+.apt_generated/
+
+# more caches and things from deploy #
+war/WEB-INF/deploy/
+war/WEB-INF/classes/
+
+#compilation logs
+.gwt/
+
+#gwt junit compilation files
+www-test/
+
+#old GWT (1.5) created this dir
+.gwt-tmp/
+
+# End of https://www.gitignore.io/api/gwt
