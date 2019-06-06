@@ -12,14 +12,21 @@ import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fdi.ucm.server.interconect.model.DocumentCompleteJSON;
@@ -74,8 +81,20 @@ public class CompositeDocumentEditionProto{
 	private Image LoadTra;
 	private StructureJSON DeleteBien;
 	private HashMap<StructureJSON, StructureJSON> Termino_Delete;
+	private DockLayoutPanel dockLayoutPanel;
+	private Label DeleteLabel;
+	private PushButton DeleteDocumentButton;
+	private PushButton RecoverDocumentButton;
+	private HashMap<Label, Integer> posicionTabla;
+	private HashMap<Integer, Label> posicionTablaI;
+	private LinkedList<Label> ActualSelected;
+	private PushButton AlanteIma;
+	private PushButton AtrasIma;
+	private Label LabelImage;
+	private int ImagenActual;
+	private Image Ima;
 	
-	
+	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
 	
 
@@ -210,10 +229,95 @@ public class CompositeDocumentEditionProto{
 			}else
 				{
 				
-				VP.setSize(Width+"px", Heigh+"px");
+				
+				
+				dockLayoutPanel = new DockLayoutPanel(Unit.PX);
+				VP.add(dockLayoutPanel);
+				dockLayoutPanel.setSize(Width+"px", Heigh+"px");
+				
+				
+				PanelPrincipal=dockLayoutPanel;
+				
 //				Label T4 = new Label();
 //				T4.setText("Ahora mismo hay que empezar a meter la informacion poco a poco");
 //				VP.add(T4);
+				
+				
+				 HorizontalPanel PanelBotones=new HorizontalPanel();
+				    PanelBotones.setSpacing(6);
+				    PanelBotones.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+//				    PanelBotones.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+				    dockLayoutPanel.addSouth(PanelBotones,80);
+				    
+				    
+				    HorizontalPanel PanelDelete=new HorizontalPanel();
+					PanelDelete.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+					PanelDelete.addStyleName("botoneraDelete");
+					PanelDelete.setSpacing(3);
+					
+					SimplePanel basicoEspacio= new SimplePanel();
+					basicoEspacio.addStyleName("simplePanel");
+					
+					DeleteLabel=new Label(StringConstants.getInstance().get("deletelabel"));
+					DeleteDocumentButton = new PushButton(new Image("img/ejectnormalred.png"));
+					DeleteDocumentButton.setTitle(StringConstants.getInstance().get("deletelabel"));
+					DeleteDocumentButton.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent arg0) {
+							
+							DeleteBien.setSelectedValue(true);
+							processActualDocument();
+							
+							//TODO ARREGLAR
+//							if (Estado!=null)
+//							{
+//								String Docu = Estado.getPorRevisar().get(ActualDocument);
+//								if (!Estado.getBorrados().contains(Docu))
+//									Estado.getBorrados().add(Docu);
+//								
+//								
+//								
+//								
+//								RefreshStatus();
+//							}
+							
+						}
+					});
+							
+					
+					RecoverDocumentButton = new PushButton(new Image("Proto/ejectnormal.png"));
+					RecoverDocumentButton.setTitle(StringConstants.getInstance().get("recoverlabel"));
+					RecoverDocumentButton.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent arg0) {
+							
+							DeleteBien.setSelectedValue(false);
+							//TODO ARREGLAR
+//							if (Estado!=null)
+//							{
+//								String Docu = Estado.getPorRevisar().get(ActualDocument);
+//								if (Estado.getBorrados().contains(Docu))
+//									Estado.getBorrados().remove(Docu);
+//								
+//								
+//								
+//								RefreshStatus();
+//							}
+							
+							processActualDocument();
+						}
+					});
+					
+					PanelDelete.add(basicoEspacio);
+					PanelDelete.add(DeleteDocumentButton);
+					PanelDelete.add(RecoverDocumentButton);
+					PanelDelete.add(DeleteLabel);
+					
+					PanelBotones.add(PanelDelete);
+				    
+				    
 				
 				CreaLosPaneles();
 				
@@ -342,12 +446,362 @@ public class CompositeDocumentEditionProto{
 
 	protected void processActualDocument() {
 		
+			
+//TODO FALTA EL ANOTADO
+//		if (procesaAnotado())	
+//		{
+//			SiAnnotButton.setVisible(true);
+//			NoAnnotButton.setVisible(false);
+//		}
+//		else
+//		{
+//			SiAnnotButton.setVisible(false);
+//			NoAnnotButton.setVisible(true);
+//		}
+			
+	
+		
+		
+		if (procesaBorrado())
+		{
+			
+			ProcesaLabelRecuperar(true);		
+			procesaSentenciasPhrases(true);
+			processPaneles();
+//			procesaPanelMetamap();
+//			procesaUsed();
+			processImage();
+//			procesaTraduccion();			
+			
+		}
+		else
+		{	
+
+		ProcesaLabelRecuperar(false);	
+		procesaSentenciasPhrases(false);
+//		procesaAuto();
+//		procesaManual();
+//		procesaGlobalDelete();
+//		procesaLocalDelete();
+//		procesaPanelMetamap();
+//		procesaUsed();
+		processImage();
+//		procesaTraduccion();
+		}
+		
+		
 		
 	}
 	
 	
 	
+	private void processImage() {
+		PanelImg.clear();
+		VerticalPanel PanelImages=new VerticalPanel();
+		PanelImages.setSize("100&", "100%");
+		PanelImg.add(PanelImages);
+		
+		HorizontalPanel Botonera=new HorizontalPanel();
+		Botonera.setSpacing(3);
+		Botonera.setHeight("60px");
+		AlanteIma = new PushButton(new Image("img/forward.png"));
+		AtrasIma = new PushButton(new Image("img/back.png"));
+		AlanteIma.setEnabled(false);
+		AtrasIma.setEnabled(false);
+		Botonera.add(AtrasIma);
+		LabelImage=new Label("");
+		Botonera.add(LabelImage);
+		Botonera.add(AlanteIma);
+		
+		AlanteIma.addClickHandler(new ClickHandler() {
+			
+
+
+			@Override
+			public void onClick(ClickEvent arg0) {
+				ImagenActual++;
+				printImage();
+				
+			}
+		});
+		
+		AtrasIma.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent arg0) {
+				ImagenActual--;
+				printImage();
+				
+			}
+		});
+		
+		SimplePanel P = new SimplePanel();
+		P.setSize("100%", "100%");
+		
+		Ima=new Image(DEFAULTIMAGE);
+		
+		Ima.setHeight((PanelImgTra.getOffsetHeight()-164)+"px");
+		Ima.getOffsetHeight();
+		Ima.getOffsetWidth();
+		
+		Ima.addStyleName("imageDoc");
+		
+		
+		Ima.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent arg0) {
+				
+				if (!Ima.getUrl().equals(DEFAULTIMAGE))
+				{
+					/**
+				PopupPanel Dialog=new PopUpPanelImage(Ima.getUrl());
+				Dialog.center();
+				*/
+				}
+			}
+		});
+		
+		ImagenActual=0;
+		
+		if (ImagenesBien.size()>0)
+			printImage();
+			
+		P.add(Ima);
+		PanelImages.add(P);
+		PanelImages.add(Botonera);
+		
+		
+	}
 	
+	
+	private void printImage() {
+		Ima.setUrl(ImagenesBien.get(ImagenActual).getValue());
+		if (ImagenActual<ImagenesBien.size()-1)
+			AlanteIma.setEnabled(true);
+		else
+			AlanteIma.setEnabled(false);
+		
+		if (ImagenActual>0)
+			AtrasIma.setEnabled(true);
+		else
+			AtrasIma.setEnabled(false);
+		
+		LabelImage.setText(((ImagenActual+1)+"/"+ImagenesBien.size()));
+	}
+	
+	
+	
+	private void processPaneles() {
+		PanelAuto.clear();
+		
+//		String DocumenA = Estado.getPorRevisar().get(ActualDocument);
+//		HashSet<String> remLocal = Estado.getDoc_Words_State().get(DocumenA);
+//		HashSet<String> remglob = Estado.getDoc_Words_State_Global();
+//		
+//		if (remglob==null)
+//			remglob=new HashSet<String>();
+//		
+//		if (remLocal==null)
+//			remLocal=new HashSet<String>();
+//		
+//		for (int i = 0; i < ActualDocumentProcesated.getTerm_Words_Pos_Table_Procesed().size(); i++) {
+//			
+//			TermProcesado termProcc =ActualDocumentProcesated.getTerm_Words_Pos_Table_Procesed().get(i);
+//			
+//			
+//			if (!remglob.contains(termProcc.getTerm()))
+//				remLocal.add(termProcc.getTerm());
+//
+//		}
+//		
+//		List<TermProcesado> remgadded = Estado.getDoc_Words_State_Add().get(DocumenA);
+//		if (remgadded!=null)
+//			{
+//			remgadded.clear();
+//			Estado.getDoc_Words_State_Add().put(DocumenA, remgadded);
+//			}
+//		
+//		Estado.getDoc_Words_State().put(DocumenA, remLocal);
+		
+		{
+		Label Deleted=new Label(StringConstants.getInstance().get("deletelabeldocument"));
+		Deleted.addStyleName("labelDeleteDoc");
+		
+		PanelAuto.add(Deleted);
+		}
+		
+		{
+		PanelManual.clear();
+		Label Deleted=new Label(StringConstants.getInstance().get("deletelabeldocument"));
+		Deleted.addStyleName("labelDeleteDoc");
+		
+		PanelManual.add(Deleted);
+		}
+		
+		{
+			PanelRemGlob.clear();
+			Label Deleted=new Label(StringConstants.getInstance().get("deletelabeldocument"));
+			Deleted.addStyleName("labelDeleteDoc");
+			
+			PanelRemGlob.add(Deleted);
+			}
+		
+		{
+			PanelRemDocu.clear();
+			Label Deleted=new Label(StringConstants.getInstance().get("deletelabeldocument"));
+			Deleted.addStyleName("labelDeleteDoc");
+			
+			PanelRemDocu.add(Deleted);
+			}
+		
+		
+
+		
+	}
+	
+	
+	private void ProcesaLabelRecuperar(boolean recuperar_) {
+		if (recuperar_)
+		{
+		DeleteLabel.setText(StringConstants.getInstance().get("recoverlabel"));
+		DeleteDocumentButton.setVisible(false);
+		RecoverDocumentButton.setVisible(true);
+		}
+		else
+		{
+			DeleteLabel.setText(StringConstants.getInstance().get("deletelabel"));
+			DeleteDocumentButton.setVisible(true);
+			RecoverDocumentButton.setVisible(false);
+			}
+	}
+	
+	
+protected void procesaSentenciasPhrases(boolean borrado_) {
+		
+		PanelPhrases.clear();
+		
+		
+		
+		VerticalPanel DP=new VerticalPanel();
+		DP.setWidth("100%");
+		PanelPhrases.add(DP);
+		
+		
+		Label Findings=new Label(StringConstants.getInstance().get("DocumentFindings"));
+		Findings.addStyleName("boldData");
+		DP.add(Findings);
+		
+		ScrollPanel SPanel=new ScrollPanel();
+//		SPanel.addStyleName("maxmin400x200");
+		//SPanel.setWidth(200+"px");
+		
+		SPanel.addStyleName("scrollPharese");
+	
+		DP.add(SPanel);
+//		PanelPhrases.add(SPanel);
+		
+		VerticalPanel Vertical=new VerticalPanel();
+		SPanel.add(Vertical);
+		
+		posicionTabla = new HashMap<Label, Integer>();
+		posicionTablaI = new HashMap<Integer,Label>();
+		ActualSelected = new LinkedList<Label>();
+		
+		int posi=0;
+		
+		for (int i = 0; i < UteranciasBien.size(); i++) {
+			String Sentence=UteranciasBien.get(i).getValue();
+			
+			HorizontalPanel PanelSente=new HorizontalPanel();
+			PanelSente.setSpacing(5);
+			Vertical.add(PanelSente);
+			
+			
+			List<String> palabras=new LinkedList<String>();
+			String frase=Sentence;
+			frase=frase.trim();
+			frase=frase.replace(",", ", ");
+			frase=frase.replace(" ,", ",");
+			frase=frase.replace(";", "; ");
+			frase=frase.replace(" ;", ";");
+			frase=frase.replace("/", "/ ");
+			frase=frase.replace(" /", "/");
+			frase=frase.replace("-", "- ");
+			frase=frase.replace(" -", "-");
+			frase=frase.replace("  ", " ");
+				String[] palabrasS = frase.split(" ");
+				for (String palabraS : palabrasS) {
+					if (!palabraS.trim().isEmpty())
+						palabras.add(palabraS);
+
+				}
+			frase=frase+".";
+
+			for (int j = 0; j < palabras.size(); j++) {
+				Integer posiA=new Integer(posi++);
+				Label labe=new Label(palabras.get(j));
+				PanelSente.add(labe);
+				posicionTabla.put(labe, posiA);
+				posicionTablaI.put(posiA, labe);
+				
+				if (!borrado_&&EditorMode())
+					labe.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent arg0) {
+							Label labe=(Label) arg0.getSource();
+							if (ActualSelected.contains(labe))
+									{
+									labe.removeStyleName("selectedLab");
+									ActualSelected.remove(labe);
+									}			
+							else
+							{
+								labe.addStyleName("selectedLab");
+								ActualSelected.add(labe);
+								
+							}
+							
+						}
+					});
+			}
+		}
+		
+		int PP=PanelPhrases.getOffsetHeight();
+		int F=Findings.getOffsetHeight();
+		int heightD=PP-F;
+		SPanel.setHeight(heightD+"px");
+		SPanel.setWidth(PanelPhrases.getOffsetWidth()+"px");
+	}
+	
+	
+	
+	
+	protected boolean EditorMode() {
+	return true;
+}
+
+
+
+
+
+
+
+	private boolean procesaBorrado() {
+		
+		if (DeleteBien.isSelectedValue())
+			return true;
+		else
+			return false;
+	}
+
+
+
+
+
+
+
 	private void cleanPanels() {
 		PanelPhrases.clear();
 		PanelPhrases.add(LoadPH);
