@@ -5,6 +5,7 @@ package ucm.fdi.ilsa.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -31,9 +34,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fdi.ucm.server.interconect.model.DocumentCompleteJSON;
 import fdi.ucm.server.interconect.model.GrammarJSON;
+import fdi.ucm.server.interconect.model.OperationalValueJSON;
 import fdi.ucm.server.interconect.model.OperationalValueTypeJSON;
 import fdi.ucm.server.interconect.model.StructureJSON;
 import fdi.ucm.server.interconect.model.StructureJSON.TypeOfStructureEnum;
+
 
 /**
  * @author Joaquin Gayoso-Cabada
@@ -55,7 +60,6 @@ public class CompositeDocumentEditionProto{
 	private DocumentCompleteJSON Documento;
 	private StructureJSON SuperS;
 	private HashMap<StructureJSON, List<StructureJSON>> Termino_Posicion;
-	private HashMap<StructureJSON, List<StructureJSON>> Termino_CUI;
 	private LinkedList<StructureJSON> TermElements;
 	private LinkedList<StructureJSON> UteranciasBien;
 	private LinkedList<StructureJSON> ImagenesBien;
@@ -93,6 +97,9 @@ public class CompositeDocumentEditionProto{
 	private Label LabelImage;
 	private int ImagenActual;
 	private Image Ima;
+	private HashMap<String, TermProcesado> autoTerm;
+	private HashMap<StructureJSON, StructureJSON> Termino_CUI;
+	private OperationalValueTypeJSON SourceAutoBien;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
@@ -479,7 +486,7 @@ public class CompositeDocumentEditionProto{
 
 		ProcesaLabelRecuperar(false);	
 		procesaSentenciasPhrases(false);
-//		procesaAuto();
+		procesaAuto();
 //		procesaManual();
 //		procesaGlobalDelete();
 //		procesaLocalDelete();
@@ -495,6 +502,168 @@ public class CompositeDocumentEditionProto{
 	
 	
 	
+protected void procesaAuto() {
+		
+		PanelAuto.clear();
+		ScrollPanel SPanel=new ScrollPanel();
+		SPanel.addStyleName("autoScroll");
+		PanelAuto.add(SPanel);
+		
+		
+		//TODO LISTAS DE BORRADO
+//		HashSet<String> remLocal = Estado.getDoc_Words_State().get(DocumenA);
+//		HashSet<String> remglob = Estado.getDoc_Words_State_Global();
+//		
+//		if (remglob==null)
+//			remglob=new HashSet<String>();
+//		
+//		if (remLocal==null)
+//			remLocal=new HashSet<String>();
+		HashSet<String> remLocal = new HashSet<String>();
+		HashSet<String> remglob = new HashSet<String>();
+
+		autoTerm=new HashMap<String,TermProcesado>();
+		
+		List<TermProcesado> ProcesarLimpio=new LinkedList<TermProcesado>();
+		HashMap<TermProcesado, StructureJSON> Term_St=new HashMap<TermProcesado, StructureJSON>();
+		
+		for (StructureJSON termelem : TermElements) {
+			
+			if (!termelem.getValue().trim().isEmpty())
+			{
+				
+				
+				boolean AutoCorrecto = true;
+				for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
+					if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+					{
+						AutoCorrecto=false;
+						break;	
+					}
+				}
+				
+				if (!AutoCorrecto)
+					return;
+					
+				HashSet<Integer> posiciones=new HashSet<Integer>();
+				List<StructureJSON> listaPosiciones = Termino_Posicion.get(termelem);
+				if (listaPosiciones!=null&&!listaPosiciones.isEmpty())
+				{
+					for (StructureJSON pos : listaPosiciones)
+					{
+						if (!pos.getValue().isEmpty())
+						{
+							try {
+								
+								posiciones.add(Integer.parseInt(pos.getValue()));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					
+					if (!posiciones.isEmpty())
+					{
+						
+						
+						List<StructureJSON> semanticas = Termino_Seman.get(termelem);
+						List<String> semantica= new LinkedList<String>();
+ 						if (semanticas!=null)
+						{
+							for (StructureJSON seman : semanticas) {
+								if (!seman.getValue().trim().isEmpty())
+									semantica.add(seman.getValue().trim());
+							}
+						}
+ 						
+ 						StructureJSON CUI=Termino_CUI.get(termelem);
+						
+						TermProcesado N=new TermProcesado(termelem.getValue().trim(), posiciones);
+						N.setSemantica(semantica);
+						
+						if (CUI!=null)
+						N.setCUI(CUI.getValue());
+						
+						StructureJSON Delete=Termino_Delete.get(termelem);
+						
+						autoTerm.put(N.getTerm(),N);
+						Term_St.put(N, termelem);
+						
+						//TODO FALTA LA CONDICION DEL GENERAKL
+						if (Delete==null|| !Delete.isSelectedValue())
+							ProcesarLimpio.add(N);
+						else
+							remLocal.add(N.getTerm());
+							
+					}
+					
+				}
+				
+			}
+			
+			
+		}
+		
+
+		PintalLimpio(ProcesarLimpio,SPanel,Term_St);
+		
+		
+		
+		
+
+	}
+	
+	
+	
+	protected void PintalLimpio(List<TermProcesado> ProcesarLimpio, ScrollPanel SPanel, HashMap<TermProcesado, StructureJSON> term_St) {
+		Grid g = new Grid(ProcesarLimpio.size(), 2);
+		g.setWidth("100%");
+		SPanel.add(g);
+		
+		for (int i = 0; i < ProcesarLimpio.size(); i++) {
+			
+			TermProcesado termProcc =ProcesarLimpio.get(i);
+			
+			LabelTerm labe=new LabelTerm(termProcc,this);
+			
+			g.setWidget(i, 0, labe);
+			
+			StructureJSON StructTerm = term_St.get(termProcc);
+			if (StructTerm==null)
+				return;
+			
+			StructureJSON DeleteElem = Termino_Delete.get(StructTerm);
+			
+			PushButton DeleteLocal = new PushButtonLocal(this,DeleteElem);
+			PushButton DeleteGlobal = new PushButtonGlobal(labe,this);
+			PushButton EditTerm = new PushButtonEdit(labe,this,StructTerm);
+			
+			HorizontalPanel HP=new HorizontalPanel();
+			HP.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+			HP.setWidth("100%");
+			
+			HorizontalPanel HP2=new HorizontalPanel();
+			HP2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+			HP2.setSpacing(2);
+			
+			HP2.add(DeleteLocal);
+			HP2.add(DeleteGlobal);
+			HP2.add(EditTerm);
+			
+			HP.add(HP2);
+			
+			g.setWidget(i, 1, HP);
+		}
+	
+}
+
+
+
+
+
+
+
 	private void processImage() {
 		PanelImg.clear();
 		VerticalPanel PanelImages=new VerticalPanel();
@@ -892,16 +1061,16 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 			Errores.add("Term structure element should be text type");
 		
 		boolean TermBien = false;
-		boolean SourceAutoBien = false;
+		SourceAutoBien = null;
 		for (OperationalValueTypeJSON OperaValTyJSON : sS.getShows()) {
 			//REvisa las cosas de la vista, basicamente que pone term y auto
 			if (OperaValTyJSON.getView().toLowerCase().equals("proto")&&OperaValTyJSON.getName().toLowerCase().equals("type")&&OperaValTyJSON.getDefault().toLowerCase().equals("term"))
 				TermBien = true;
 			
-			if (OperaValTyJSON.getView().toLowerCase().equals("proto")&&OperaValTyJSON.getName().toLowerCase().equals("source")&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
-				SourceAutoBien = true;
+			if (OperaValTyJSON.getView().toLowerCase().equals("proto")&&OperaValTyJSON.getName().toLowerCase().equals("source")&&OperaValTyJSON.getDefault().toLowerCase().equals("auto")&&SourceAutoBien==null)
+				SourceAutoBien = OperaValTyJSON;
 			
-			if (TermBien&&SourceAutoBien)
+			if (TermBien&&(SourceAutoBien!=null))
 				break;
 				
 		}
@@ -911,7 +1080,7 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 		if (!TermBien)
 			Errores.add("Term structure element view should have term type proto->type->term");
 		
-		if (!SourceAutoBien)
+		if (SourceAutoBien==null)
 			Errores.add("Term structure element view should have term type proto->source->auto");
 
 
@@ -947,6 +1116,7 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 						DeleteBien=structureJSON;
 				}
 			
+			
 		}
 		
 		
@@ -972,6 +1142,8 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 		Termino_Seman=new HashMap<StructureJSON, List<StructureJSON>>();
 		
 		Termino_Delete=new HashMap<StructureJSON, StructureJSON>();
+		
+		Termino_CUI=new HashMap<StructureJSON, StructureJSON>();
 		
 		
 		
@@ -1008,7 +1180,15 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 					}
 			}
 			
-			
+			StructureJSON CUIElement = null;
+			for (StructureJSON structureJSON : termElem.getSons()) {
+				if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Text)
+					for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
+						if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+						ViewstructureJSON.getDefault().toLowerCase().equals("cui"))
+							CUIElement=structureJSON;
+					}
+			}
 			
 			
 			
@@ -1017,6 +1197,9 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 			
 			if (DeleteElement!=null)
 				Termino_Delete.put(termElem, DeleteElement);
+			
+			if (CUIElement!=null)
+				Termino_CUI.put(termElem, CUIElement);
 		}
 		
 		
@@ -1053,55 +1236,18 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 				&&!(ListSemantic.get(0).getValue().get(0).isMultivalued())
 						)
 				Errores.add("Semantic structure element should be multivalued");
-			
-		
-		/**
-		
-		if (!(ListSemantic.isEmpty())
-				&&!(ListSemantic.get(0).getValue().isEmpty())
-				&&(ListSemantic.get(0).getValue().get(0).getSons().isEmpty())
-						)
-			Errores.add("Semantic element should have a CUI element");
-		
-		*/
-		
-		
-		
-		
-		if(!(ListSemantic.isEmpty())
-				&&
-				!(ListSemantic.get(0).getValue().isEmpty())
-				&&
-				!(ListSemantic.get(0).getValue().get(0).getSons().isEmpty()))
-			{
-			
-			
-			console("TP1: "+ ListSemantic.size() );
-			console("TP2: "+ ListSemantic.get(0).getValue().size() );
-			console("TP3: "+ ListSemantic.get(0).getValue().get(0).getSons().size() );
-			console("TP4: "+ ListSemantic.get(0).getValue().get(0).getSons().get(0).getShows().size() );
-			
-				boolean CUIBoo = false;
-				for (OperationalValueTypeJSON ViewstructureJSON : ListSemantic.get(0).getValue().get(0).getSons().get(0).getShows()) {
-					if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
-							ViewstructureJSON.getDefault().toLowerCase().equals("cui"))
-						CUIBoo=true;
-				}
-				
-				if (CUIBoo)
-					if (ListSemantic.get(0).getValue().get(0).getSons().get(0).getTypeOfStructure()!=TypeOfStructureEnum.Text)
-						Errores.add("Semantic element should have a CUI element with Text Type");
-					else;
-				else
-					Errores.add("Semantic structure element should have a CUI element with CUI view proto->type->cui");
-				
-			}
-		
 		
 		
 		if (Termino_Delete.isEmpty())
 			Errores.add("Term structure element should have delete structure element with position view proto->type->delete");
-			
+		
+		
+		if (Termino_CUI.isEmpty())
+			Errores.add("Term structure element should have CUI structure element with position view proto->type->cui");
+		
+		
+		
+		
 		
 		for (String err : Errores) {
 			console("E2:"+err);
@@ -1113,7 +1259,19 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 	}
 
 
+	public LinkedList<Label> getActualSelected() {
+		return ActualSelected;
+	}
 
+	public HashMap<Integer, Label> getLabelsByPos() {
+		return posicionTablaI;
+	}
+	
+	
+	
+	public HashMap<Label, Integer> getPosicionTabla() {
+		return posicionTabla;
+	}
 
 
 
@@ -1268,4 +1426,15 @@ eval($wnd.daletmp)
 	/*-{
 	    console.log(text);
 	}-*/;
+
+
+
+
+
+	//TODO SUPER IMPORTANTE
+
+	public void RefreshStatus() {
+		// TODO Auto-generated method stub
+		
+	}
 }
