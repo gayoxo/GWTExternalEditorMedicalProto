@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -266,7 +267,7 @@ public class CompositeDocumentEditionProto{
 					basicoEspacio.addStyleName("simplePanel");
 					
 					DeleteLabel=new Label(StringConstants.getInstance().get("deletelabel"));
-					DeleteDocumentButton = new PushButton(new Image("img/ejectnormalred.png"));
+					DeleteDocumentButton = new PushButton(new Image("Proto/ejectnormalred.png"));
 					DeleteDocumentButton.setTitle(StringConstants.getInstance().get("deletelabel"));
 					DeleteDocumentButton.addClickHandler(new ClickHandler() {
 						
@@ -554,8 +555,12 @@ protected void procesaAuto() {
 						if (!pos.getValue().isEmpty())
 						{
 							try {
+								int position=Integer.parseInt(pos.getValue())-1;
+								if (position<0)
+									position=0;
 								
-								posiciones.add(Integer.parseInt(pos.getValue()));
+								posiciones.add(position);
+								
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -673,8 +678,8 @@ protected void procesaAuto() {
 		HorizontalPanel Botonera=new HorizontalPanel();
 		Botonera.setSpacing(3);
 		Botonera.setHeight("60px");
-		AlanteIma = new PushButton(new Image("img/forward.png"));
-		AtrasIma = new PushButton(new Image("img/back.png"));
+		AlanteIma = new PushButton(new Image("Proto/forward.png"));
+		AtrasIma = new PushButton(new Image("Proto/back.png"));
 		AlanteIma.setEnabled(false);
 		AtrasIma.setEnabled(false);
 		Botonera.add(AtrasIma);
@@ -723,10 +728,10 @@ protected void procesaAuto() {
 				
 				if (!Ima.getUrl().equals(DEFAULTIMAGE))
 				{
-					/**
+				
 				PopupPanel Dialog=new PopUpPanelImage(Ima.getUrl());
 				Dialog.center();
-				*/
+				
 				}
 			}
 		});
@@ -745,8 +750,16 @@ protected void procesaAuto() {
 	
 	
 	private void printImage() {
-		Ima.setUrl(ImagenesBien.get(ImagenActual).getValue());
-		if (ImagenActual<ImagenesBien.size()-1)
+		
+		LinkedList<StructureJSON> Con_Valor=new LinkedList<StructureJSON>();
+		for (StructureJSON structureJSON : ImagenesBien) {
+			if (structureJSON.getValue()!=null&&!structureJSON.getValue().isEmpty())
+				Con_Valor.add(structureJSON);
+		}
+		
+		
+		Ima.setUrl(Con_Valor.get(ImagenActual).getValue());
+		if (ImagenActual<Con_Valor.size()-1)
 			AlanteIma.setEnabled(true);
 		else
 			AlanteIma.setEnabled(false);
@@ -756,7 +769,7 @@ protected void procesaAuto() {
 		else
 			AtrasIma.setEnabled(false);
 		
-		LabelImage.setText(((ImagenActual+1)+"/"+ImagenesBien.size()));
+		LabelImage.setText(((ImagenActual+1)+"/"+Con_Valor.size()));
 	}
 	
 	

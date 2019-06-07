@@ -31,8 +31,8 @@ public class LabelTerm extends Label {
 		HashMap<Integer, Label> lista=ActualSelected.getLabelsByPos();
 		for (Integer posi : Termio.getPosiciones()) {
 			Label sele=lista.get(posi);
-			
-			ActualTMPSelected.add(sele);
+			if (sele!=null)
+				ActualTMPSelected.add(sele);
 		}
 		
 		addMouseOverHandler(new MouseOverHandler() {

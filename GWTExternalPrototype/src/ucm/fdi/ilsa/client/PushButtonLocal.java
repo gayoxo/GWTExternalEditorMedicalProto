@@ -17,7 +17,7 @@ public class PushButtonLocal extends PushButton {
 	private StructureJSON Docum;
 
 	public PushButtonLocal(CompositeDocumentEditionProto medicalPrototipeILSAMain, StructureJSON structureJSON) {
-		super(new Image("img/cancel.png"));
+		super(new Image("Proto/cancel.png"));
 		setWidth(25+"px");
 		setHeight(27+"px");
 		setTitle(StringConstants.getInstance().get("disablelocal"));
