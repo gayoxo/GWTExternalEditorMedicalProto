@@ -19,7 +19,9 @@ public class CompositeDocumentDescriptionProto extends CompositeDocumentEditionP
 		
 	}
 
-	
-
+	@Override
+	protected boolean EditorMode() {
+		return false;
+	}
 	
 }

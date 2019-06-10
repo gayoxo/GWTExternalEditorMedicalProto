@@ -1,24 +1,23 @@
 function gwtexternalproto(){
-  var $intern_0 = 'bootstrap', $intern_1 = 'begin', $intern_2 = 'gwt.codesvr.gwtexternalproto=', $intern_3 = 'gwt.codesvr=', $intern_4 = 'gwtexternalproto', $intern_5 = 'startup', $intern_6 = 'DUMMY', $intern_7 = 0, $intern_8 = 1, $intern_9 = 'iframe', $intern_10 = 'javascript:""', $intern_11 = 'position:absolute; width:0; height:0; border:none; left: -1000px;', $intern_12 = ' top: -1000px;', $intern_13 = 'CSS1Compat', $intern_14 = '<!doctype html>', $intern_15 = '', $intern_16 = '<html><head><\/head><body><\/body><\/html>', $intern_17 = 'undefined', $intern_18 = 'DOMContentLoaded', $intern_19 = 50, $intern_20 = 'script', $intern_21 = 'javascript', $intern_22 = 'Failed to load ', $intern_23 = 'moduleStartup', $intern_24 = 'scriptTagAdded', $intern_25 = 'moduleRequested', $intern_26 = 'meta', $intern_27 = 'name', $intern_28 = 'gwtexternalproto::', $intern_29 = '::', $intern_30 = 'gwt:property', $intern_31 = 'content', $intern_32 = '=', $intern_33 = 'gwt:onPropertyErrorFn', $intern_34 = 'Bad handler "', $intern_35 = '" for "gwt:onPropertyErrorFn"', $intern_36 = 'gwt:onLoadErrorFn', $intern_37 = '" for "gwt:onLoadErrorFn"', $intern_38 = '#', $intern_39 = '?', $intern_40 = '/', $intern_41 = 'img', $intern_42 = 'clear.cache.gif', $intern_43 = 'baseUrl', $intern_44 = 'gwtexternalproto.nocache.js', $intern_45 = 'base', $intern_46 = '//', $intern_47 = 'user.agent', $intern_48 = 'webkit', $intern_49 = 'safari', $intern_50 = 'msie', $intern_51 = 10, $intern_52 = 11, $intern_53 = 'ie10', $intern_54 = 9, $intern_55 = 'ie9', $intern_56 = 8, $intern_57 = 'ie8', $intern_58 = 'gecko', $intern_59 = 'gecko1_8', $intern_60 = 2, $intern_61 = 3, $intern_62 = 4, $intern_63 = 'selectingPermutation', $intern_64 = 'gwtexternalproto.devmode.js', $intern_65 = '18DC06C0D89CF922C58CC0BB40E55F40', $intern_66 = '8225C74D40BBCD468CB1594E039031FF', $intern_67 = '92D0F7AC97EF70D103A60B55CB9BF263', $intern_68 = 'C8A9CD2349DE5413E637AE36425BA7DE', $intern_69 = 'F073263E5BD84D3B472EBCFB821DCF07', $intern_70 = ':', $intern_71 = '.cache.js', $intern_72 = 'link', $intern_73 = 'rel', $intern_74 = 'stylesheet', $intern_75 = 'href', $intern_76 = 'head', $intern_77 = 'loadExternalRefs', $intern_78 = 'gwt/clean/clean.css', $intern_79 = 'end', $intern_80 = 'http:', $intern_81 = 'file:', $intern_82 = '_gwt_dummy_', $intern_83 = '__gwtDevModeHook:gwtexternalproto', $intern_84 = 'Ignoring non-whitelisted Dev Mode URL: ', $intern_85 = ':moduleBase';
-  var $wnd = window;
-  var $doc = document;
-  sendStats($intern_0, $intern_1);
+  var $wnd_0 = window;
+  var $doc_0 = document;
+  sendStats('bootstrap', 'begin');
   function isHostedMode(){
-    var query = $wnd.location.search;
-    return query.indexOf($intern_2) != -1 || query.indexOf($intern_3) != -1;
+    var query = $wnd_0.location.search;
+    return query.indexOf('gwt.codesvr.gwtexternalproto=') != -1 || query.indexOf('gwt.codesvr=') != -1;
   }
 
   function sendStats(evtGroupString, typeString){
-    if ($wnd.__gwtStatsEvent) {
-      $wnd.__gwtStatsEvent({moduleName:$intern_4, sessionId:$wnd.__gwtStatsSessionId, subSystem:$intern_5, evtGroup:evtGroupString, millis:(new Date).getTime(), type:typeString});
+    if ($wnd_0.__gwtStatsEvent) {
+      $wnd_0.__gwtStatsEvent({moduleName:'gwtexternalproto', sessionId:$wnd_0.__gwtStatsSessionId, subSystem:'startup', evtGroup:evtGroupString, millis:(new Date).getTime(), type:typeString});
     }
   }
 
   gwtexternalproto.__sendStats = sendStats;
-  gwtexternalproto.__moduleName = $intern_4;
+  gwtexternalproto.__moduleName = 'gwtexternalproto';
   gwtexternalproto.__errFn = null;
-  gwtexternalproto.__moduleBase = $intern_6;
-  gwtexternalproto.__softPermutationId = $intern_7;
+  gwtexternalproto.__moduleBase = 'DUMMY';
+  gwtexternalproto.__softPermutationId = 0;
   gwtexternalproto.__computePropValue = null;
   gwtexternalproto.__getPropMap = null;
   gwtexternalproto.__installRunAsyncCode = function(){
@@ -37,16 +36,16 @@ function gwtexternalproto(){
   }
   ;
   var __propertyErrorFunction = null;
-  var activeModules = $wnd.__gwt_activeModules = $wnd.__gwt_activeModules || {};
-  activeModules[$intern_4] = {moduleName:$intern_4};
+  var activeModules = $wnd_0.__gwt_activeModules = $wnd_0.__gwt_activeModules || {};
+  activeModules['gwtexternalproto'] = {moduleName:'gwtexternalproto'};
   gwtexternalproto.__moduleStartupDone = function(permProps){
-    var oldBindings = activeModules[$intern_4].bindings;
-    activeModules[$intern_4].bindings = function(){
+    var oldBindings = activeModules['gwtexternalproto'].bindings;
+    activeModules['gwtexternalproto'].bindings = function(){
       var props = oldBindings?oldBindings():{};
       var embeddedProps = permProps[gwtexternalproto.__softPermutationId];
-      for (var i = $intern_7; i < embeddedProps.length; i++) {
+      for (var i = 0; i < embeddedProps.length; i++) {
         var pair = embeddedProps[i];
-        props[pair[$intern_7]] = pair[$intern_8];
+        props[pair[0]] = pair[1];
       }
       return props;
     }
@@ -63,29 +62,29 @@ function gwtexternalproto(){
     if (frameDoc) {
       return;
     }
-    var scriptFrame = $doc.createElement($intern_9);
-    scriptFrame.src = $intern_10;
-    scriptFrame.id = $intern_4;
-    scriptFrame.style.cssText = $intern_11 + $intern_12;
+    var scriptFrame = $doc_0.createElement('iframe');
+    scriptFrame.src = 'javascript:""';
+    scriptFrame.id = 'gwtexternalproto';
+    scriptFrame.style.cssText = 'position:absolute; width:0; height:0; border:none; left: -1000px;' + ' top: -1000px;';
     scriptFrame.tabIndex = -1;
-    $doc.body.appendChild(scriptFrame);
+    $doc_0.body.appendChild(scriptFrame);
     frameDoc = scriptFrame.contentDocument;
     if (!frameDoc) {
       frameDoc = scriptFrame.contentWindow.document;
     }
     frameDoc.open();
-    var doctype = document.compatMode == $intern_13?$intern_14:$intern_15;
-    frameDoc.write(doctype + $intern_16);
+    var doctype = document.compatMode == 'CSS1Compat'?'<!doctype html>':'';
+    frameDoc.write(doctype + '<html><head><\/head><body><\/body><\/html>');
     frameDoc.close();
   }
 
   function installScript(filename){
     function setupWaitForBodyLoad(callback){
       function isBodyLoaded(){
-        if (typeof $doc.readyState == $intern_17) {
-          return typeof $doc.body != $intern_17 && $doc.body != null;
+        if (typeof $doc_0.readyState == 'undefined') {
+          return typeof $doc_0.body != 'undefined' && $doc_0.body != null;
         }
-        return /loaded|complete/.test($doc.readyState);
+        return /loaded|complete/.test($doc_0.readyState);
       }
 
       var bodyDone = isBodyLoaded();
@@ -97,8 +96,8 @@ function gwtexternalproto(){
         if (!bodyDone) {
           bodyDone = true;
           callback();
-          if ($doc.removeEventListener) {
-            $doc.removeEventListener($intern_18, onBodyDone, false);
+          if ($doc_0.removeEventListener) {
+            $doc_0.removeEventListener('DOMContentLoaded', onBodyDone, false);
           }
           if (onBodyDoneTimerId) {
             clearInterval(onBodyDoneTimerId);
@@ -106,34 +105,34 @@ function gwtexternalproto(){
         }
       }
 
-      if ($doc.addEventListener) {
-        $doc.addEventListener($intern_18, onBodyDone, false);
+      if ($doc_0.addEventListener) {
+        $doc_0.addEventListener('DOMContentLoaded', onBodyDone, false);
       }
       var onBodyDoneTimerId = setInterval(function(){
         if (isBodyLoaded()) {
           onBodyDone();
         }
       }
-      , $intern_19);
+      , 50);
     }
 
     function installCode(code_0){
       var doc = getInstallLocationDoc();
       var docbody = doc.body;
-      var script = doc.createElement($intern_20);
-      script.language = $intern_21;
+      var script = doc.createElement('script');
+      script.language = 'javascript';
       script.src = code_0;
       if (gwtexternalproto.__errFn) {
         script.onerror = function(){
-          gwtexternalproto.__errFn($intern_4, new Error($intern_22 + code_0));
+          gwtexternalproto.__errFn('gwtexternalproto', new Error('Failed to load ' + code_0));
         }
         ;
       }
       docbody.appendChild(script);
-      sendStats($intern_23, $intern_24);
+      sendStats('moduleStartup', 'scriptTagAdded');
     }
 
-    sendStats($intern_23, $intern_25);
+    sendStats('moduleStartup', 'moduleRequested');
     setupWaitForBodyLoad(function(){
       installCode(filename);
     }
@@ -147,8 +146,8 @@ function gwtexternalproto(){
   gwtexternalproto.__installRunAsyncCode = function(code_0){
     var doc = getInstallLocationDoc();
     var docbody = doc.body;
-    var script = doc.createElement($intern_20);
-    script.language = $intern_21;
+    var script = doc.createElement('script');
+    script.language = 'javascript';
     script.text = code_0;
     docbody.appendChild(script);
   }
@@ -157,48 +156,48 @@ function gwtexternalproto(){
     var metaProps = {};
     var propertyErrorFunc;
     var onLoadErrorFunc;
-    var metas = $doc.getElementsByTagName($intern_26);
-    for (var i = $intern_7, n = metas.length; i < n; ++i) {
-      var meta = metas[i], name_0 = meta.getAttribute($intern_27), content;
-      if (name_0) {
-        name_0 = name_0.replace($intern_28, $intern_15);
-        if (name_0.indexOf($intern_29) >= $intern_7) {
+    var metas = $doc_0.getElementsByTagName('meta');
+    for (var i = 0, n = metas.length; i < n; ++i) {
+      var meta = metas[i], name_1 = meta.getAttribute('name'), content_0;
+      if (name_1) {
+        name_1 = name_1.replace('gwtexternalproto::', '');
+        if (name_1.indexOf('::') >= 0) {
           continue;
         }
-        if (name_0 == $intern_30) {
-          content = meta.getAttribute($intern_31);
-          if (content) {
-            var value_0, eq = content.indexOf($intern_32);
-            if (eq >= $intern_7) {
-              name_0 = content.substring($intern_7, eq);
-              value_0 = content.substring(eq + $intern_8);
+        if (name_1 == 'gwt:property') {
+          content_0 = meta.getAttribute('content');
+          if (content_0) {
+            var value_1, eq = content_0.indexOf('=');
+            if (eq >= 0) {
+              name_1 = content_0.substring(0, eq);
+              value_1 = content_0.substring(eq + 1);
             }
              else {
-              name_0 = content;
-              value_0 = $intern_15;
+              name_1 = content_0;
+              value_1 = '';
             }
-            metaProps[name_0] = value_0;
+            metaProps[name_1] = value_1;
           }
         }
-         else if (name_0 == $intern_33) {
-          content = meta.getAttribute($intern_31);
-          if (content) {
+         else if (name_1 == 'gwt:onPropertyErrorFn') {
+          content_0 = meta.getAttribute('content');
+          if (content_0) {
             try {
-              propertyErrorFunc = eval(content);
+              propertyErrorFunc = eval(content_0);
             }
              catch (e) {
-              alert($intern_34 + content + $intern_35);
+              alert('Bad handler "' + content_0 + '" for "gwt:onPropertyErrorFn"');
             }
           }
         }
-         else if (name_0 == $intern_36) {
-          content = meta.getAttribute($intern_31);
-          if (content) {
+         else if (name_1 == 'gwt:onLoadErrorFn') {
+          content_0 = meta.getAttribute('content');
+          if (content_0) {
             try {
-              onLoadErrorFunc = eval(content);
+              onLoadErrorFunc = eval(content_0);
             }
              catch (e) {
-              alert($intern_34 + content + $intern_37);
+              alert('Bad handler "' + content_0 + '" for "gwt:onLoadErrorFn"');
             }
           }
         }
@@ -215,69 +214,69 @@ function gwtexternalproto(){
 
   function computeScriptBase(){
     function getDirectoryOfFile(path){
-      var hashIndex = path.lastIndexOf($intern_38);
+      var hashIndex = path.lastIndexOf('#');
       if (hashIndex == -1) {
         hashIndex = path.length;
       }
-      var queryIndex = path.indexOf($intern_39);
+      var queryIndex = path.indexOf('?');
       if (queryIndex == -1) {
         queryIndex = path.length;
       }
-      var slashIndex = path.lastIndexOf($intern_40, Math.min(queryIndex, hashIndex));
-      return slashIndex >= $intern_7?path.substring($intern_7, slashIndex + $intern_8):$intern_15;
+      var slashIndex = path.lastIndexOf('/', Math.min(queryIndex, hashIndex));
+      return slashIndex >= 0?path.substring(0, slashIndex + 1):'';
     }
 
     function ensureAbsoluteUrl(url_0){
       if (url_0.match(/^\w+:\/\//)) {
       }
        else {
-        var img = $doc.createElement($intern_41);
-        img.src = url_0 + $intern_42;
+        var img = $doc_0.createElement('img');
+        img.src = url_0 + 'clear.cache.gif';
         url_0 = getDirectoryOfFile(img.src);
       }
       return url_0;
     }
 
     function tryMetaTag(){
-      var metaVal = __gwt_getMetaProperty($intern_43);
+      var metaVal = __gwt_getMetaProperty('baseUrl');
       if (metaVal != null) {
         return metaVal;
       }
-      return $intern_15;
+      return '';
     }
 
     function tryNocacheJsTag(){
-      var scriptTags = $doc.getElementsByTagName($intern_20);
-      for (var i = $intern_7; i < scriptTags.length; ++i) {
-        if (scriptTags[i].src.indexOf($intern_44) != -1) {
+      var scriptTags = $doc_0.getElementsByTagName('script');
+      for (var i = 0; i < scriptTags.length; ++i) {
+        if (scriptTags[i].src.indexOf('gwtexternalproto.nocache.js') != -1) {
           return getDirectoryOfFile(scriptTags[i].src);
         }
       }
-      return $intern_15;
+      return '';
     }
 
     function tryBaseTag(){
-      var baseElements = $doc.getElementsByTagName($intern_45);
-      if (baseElements.length > $intern_7) {
-        return baseElements[baseElements.length - $intern_8].href;
+      var baseElements = $doc_0.getElementsByTagName('base');
+      if (baseElements.length > 0) {
+        return baseElements[baseElements.length - 1].href;
       }
-      return $intern_15;
+      return '';
     }
 
     function isLocationOk(){
-      var loc = $doc.location;
-      return loc.href == loc.protocol + $intern_46 + loc.host + loc.pathname + loc.search + loc.hash;
+      var loc = $doc_0.location;
+      return loc.href == loc.protocol + '//' + loc.host + loc.pathname + loc.search + loc.hash;
     }
 
     var tempBase = tryMetaTag();
-    if (tempBase == $intern_15) {
+    if (tempBase == '') {
       tempBase = tryNocacheJsTag();
     }
-    if (tempBase == $intern_15) {
+    if (tempBase == '') {
       tempBase = tryBaseTag();
     }
-    if (tempBase == $intern_15 && isLocationOk()) {
-      tempBase = getDirectoryOfFile($doc.location.href);
+    if (tempBase == '' && isLocationOk()) {
+      tempBase = getDirectoryOfFile($doc_0.location.href);
     }
     tempBase = ensureAbsoluteUrl(tempBase);
     return tempBase;
@@ -295,10 +294,10 @@ function gwtexternalproto(){
 
   function getCompiledCodeFilename(){
     var answers = [];
-    var softPermutationId = $intern_7;
+    var softPermutationId = 0;
     function unflattenKeylistIntoAnswers(propValArray, value_0){
       var answer = answers;
-      for (var i = $intern_7, n = propValArray.length - $intern_8; i < n; ++i) {
+      for (var i = 0, n = propValArray.length - 1; i < n; ++i) {
         answer = answer[propValArray[i]] || (answer[propValArray[i]] = []);
       }
       answer[propValArray[n]] = value_0;
@@ -321,38 +320,38 @@ function gwtexternalproto(){
       throw null;
     }
 
-    providers[$intern_47] = function(){
+    providers['user.agent'] = function(){
       var ua = navigator.userAgent.toLowerCase();
-      var docMode = $doc.documentMode;
+      var docMode = $doc_0.documentMode;
       if (function(){
-        return ua.indexOf($intern_48) != -1;
+        return ua.indexOf('webkit') != -1;
       }
       ())
-        return $intern_49;
+        return 'safari';
       if (function(){
-        return ua.indexOf($intern_50) != -1 && (docMode >= $intern_51 && docMode < $intern_52);
+        return ua.indexOf('msie') != -1 && (docMode >= 10 && docMode < 11);
       }
       ())
-        return $intern_53;
+        return 'ie10';
       if (function(){
-        return ua.indexOf($intern_50) != -1 && (docMode >= $intern_54 && docMode < $intern_52);
+        return ua.indexOf('msie') != -1 && (docMode >= 9 && docMode < 11);
       }
       ())
-        return $intern_55;
+        return 'ie9';
       if (function(){
-        return ua.indexOf($intern_50) != -1 && (docMode >= $intern_56 && docMode < $intern_52);
+        return ua.indexOf('msie') != -1 && (docMode >= 8 && docMode < 11);
       }
       ())
-        return $intern_57;
+        return 'ie8';
       if (function(){
-        return ua.indexOf($intern_58) != -1 || docMode >= $intern_52;
+        return ua.indexOf('gecko') != -1 || docMode >= 11;
       }
       ())
-        return $intern_59;
-      return $intern_15;
+        return 'gecko1_8';
+      return '';
     }
     ;
-    values[$intern_47] = {gecko1_8:$intern_7, ie10:$intern_8, ie8:$intern_60, ie9:$intern_61, safari:$intern_62};
+    values['user.agent'] = {gecko1_8:0, ie10:1, ie8:2, ie9:3, safari:4};
     __gwt_isKnownPropertyValue = function(propName, propValue){
       return propValue in values[propName];
     }
@@ -368,62 +367,62 @@ function gwtexternalproto(){
     }
     ;
     gwtexternalproto.__computePropValue = computePropValue;
-    $wnd.__gwt_activeModules[$intern_4].bindings = gwtexternalproto.__getPropMap;
-    sendStats($intern_0, $intern_63);
+    $wnd_0.__gwt_activeModules['gwtexternalproto'].bindings = gwtexternalproto.__getPropMap;
+    sendStats('bootstrap', 'selectingPermutation');
     if (isHostedMode()) {
-      return computeUrlForResource($intern_64);
+      return computeUrlForResource('gwtexternalproto.devmode.js');
     }
     var strongName;
     try {
-      unflattenKeylistIntoAnswers([$intern_53], $intern_65);
-      unflattenKeylistIntoAnswers([$intern_59], $intern_66);
-      unflattenKeylistIntoAnswers([$intern_57], $intern_67);
-      unflattenKeylistIntoAnswers([$intern_55], $intern_68);
-      unflattenKeylistIntoAnswers([$intern_49], $intern_69);
-      strongName = answers[computePropValue($intern_47)];
-      var idx = strongName.indexOf($intern_70);
+      unflattenKeylistIntoAnswers(['safari'], '238A81289437DC4713967A9893624B70');
+      unflattenKeylistIntoAnswers(['ie10'], '882E77205D7AC0DBC6AA5557CEA03CC4');
+      unflattenKeylistIntoAnswers(['ie9'], 'AF7840D6CC706749A8696C04641C7F49');
+      unflattenKeylistIntoAnswers(['ie8'], 'DF4BB1FDAB6BE80A6F86623EE0158094');
+      unflattenKeylistIntoAnswers(['gecko1_8'], 'EC875B74E127F1B24FC35D953BE3D597');
+      strongName = answers[computePropValue('user.agent')];
+      var idx = strongName.indexOf(':');
       if (idx != -1) {
-        softPermutationId = parseInt(strongName.substring(idx + $intern_8), $intern_51);
-        strongName = strongName.substring($intern_7, idx);
+        softPermutationId = parseInt(strongName.substring(idx + 1), 10);
+        strongName = strongName.substring(0, idx);
       }
     }
      catch (e) {
     }
     gwtexternalproto.__softPermutationId = softPermutationId;
-    return computeUrlForResource(strongName + $intern_71);
+    return computeUrlForResource(strongName + '.cache.js');
   }
 
   function loadExternalStylesheets(){
-    if (!$wnd.__gwt_stylesLoaded) {
-      $wnd.__gwt_stylesLoaded = {};
+    if (!$wnd_0.__gwt_stylesLoaded) {
+      $wnd_0.__gwt_stylesLoaded = {};
     }
     function installOneStylesheet(stylesheetUrl){
       if (!__gwt_stylesLoaded[stylesheetUrl]) {
-        var l = $doc.createElement($intern_72);
-        l.setAttribute($intern_73, $intern_74);
-        l.setAttribute($intern_75, computeUrlForResource(stylesheetUrl));
-        $doc.getElementsByTagName($intern_76)[$intern_7].appendChild(l);
+        var l = $doc_0.createElement('link');
+        l.setAttribute('rel', 'stylesheet');
+        l.setAttribute('href', computeUrlForResource(stylesheetUrl));
+        $doc_0.getElementsByTagName('head')[0].appendChild(l);
         __gwt_stylesLoaded[stylesheetUrl] = true;
       }
     }
 
-    sendStats($intern_77, $intern_1);
-    installOneStylesheet($intern_78);
-    sendStats($intern_77, $intern_79);
+    sendStats('loadExternalRefs', 'begin');
+    installOneStylesheet('gwt/clean/clean.css');
+    sendStats('loadExternalRefs', 'end');
   }
 
   processMetas();
   gwtexternalproto.__moduleBase = computeScriptBase();
-  activeModules[$intern_4].moduleBase = gwtexternalproto.__moduleBase;
-  var filename = getCompiledCodeFilename();
-  if ($wnd) {
-    var devModePermitted = !!($wnd.location.protocol == $intern_80 || $wnd.location.protocol == $intern_81);
-    $wnd.__gwt_activeModules[$intern_4].canRedirect = devModePermitted;
+  activeModules['gwtexternalproto'].moduleBase = gwtexternalproto.__moduleBase;
+  var filename_0 = getCompiledCodeFilename();
+  if ($wnd_0) {
+    var devModePermitted = !!($wnd_0.location.protocol == 'http:' || $wnd_0.location.protocol == 'file:');
+    $wnd_0.__gwt_activeModules['gwtexternalproto'].canRedirect = devModePermitted;
     function supportsSessionStorage(){
-      var key = $intern_82;
+      var key = '_gwt_dummy_';
       try {
-        $wnd.sessionStorage.setItem(key, key);
-        $wnd.sessionStorage.removeItem(key);
+        $wnd_0.sessionStorage.setItem(key, key);
+        $wnd_0.sessionStorage.removeItem(key);
         return true;
       }
        catch (e) {
@@ -432,28 +431,28 @@ function gwtexternalproto(){
     }
 
     if (devModePermitted && supportsSessionStorage()) {
-      var devModeKey = $intern_83;
-      var devModeUrl = $wnd.sessionStorage[devModeKey];
+      var devModeKey = '__gwtDevModeHook:gwtexternalproto';
+      var devModeUrl = $wnd_0.sessionStorage[devModeKey];
       if (!/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/.*$/.test(devModeUrl)) {
         if (devModeUrl && (window.console && console.log)) {
-          console.log($intern_84 + devModeUrl);
+          console.log('Ignoring non-whitelisted Dev Mode URL: ' + devModeUrl);
         }
-        devModeUrl = $intern_15;
+        devModeUrl = '';
       }
-      if (devModeUrl && !$wnd[devModeKey]) {
-        $wnd[devModeKey] = true;
-        $wnd[devModeKey + $intern_85] = computeScriptBase();
-        var devModeScript = $doc.createElement($intern_20);
+      if (devModeUrl && !$wnd_0[devModeKey]) {
+        $wnd_0[devModeKey] = true;
+        $wnd_0[devModeKey + ':moduleBase'] = computeScriptBase();
+        var devModeScript = $doc_0.createElement('script');
         devModeScript.src = devModeUrl;
-        var head = $doc.getElementsByTagName($intern_76)[$intern_7];
-        head.insertBefore(devModeScript, head.firstElementChild || head.children[$intern_7]);
+        var head = $doc_0.getElementsByTagName('head')[0];
+        head.insertBefore(devModeScript, head.firstElementChild || head.children[0]);
         return false;
       }
     }
   }
   loadExternalStylesheets();
-  sendStats($intern_0, $intern_79);
-  installScript(filename);
+  sendStats('bootstrap', 'end');
+  installScript(filename_0);
   return true;
 }
 

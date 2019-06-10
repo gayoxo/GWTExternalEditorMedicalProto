@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 
+import fdi.ucm.server.interconect.model.OperationalValueJSON;
+import fdi.ucm.server.interconect.model.OperationalValueTypeJSON;
 import fdi.ucm.server.interconect.model.StructureJSON;
 
 
@@ -19,8 +21,11 @@ public class PushButtonEdit extends PushButton {
 	private LabelTerm TermLabe;
 	private CompositeDocumentEditionProto Padre;
 	private StructureJSON Docum;
+	private OperationalValueTypeJSON SourceAutoBien;
+	private LinkedList<StructureJSON> TermElements;
+	private List<StructureJSON> Posiciones;
 	
-	public PushButtonEdit(LabelTerm labe, CompositeDocumentEditionProto medicalPrototipeILSAMain, StructureJSON structTerm) {
+	public PushButtonEdit(LabelTerm labe, CompositeDocumentEditionProto medicalPrototipeILSAMain, StructureJSON structTerm, OperationalValueTypeJSON sourceAutoBien, LinkedList<StructureJSON> termElements, List<StructureJSON> posiciones) {
 		super(new Image("Proto/edit.png"));
 		setWidth(25+"px");
 		setHeight(27+"px");
@@ -28,10 +33,14 @@ public class PushButtonEdit extends PushButton {
 		TermLabe=labe;
 		Padre=medicalPrototipeILSAMain;
 		Docum=structTerm;
+		SourceAutoBien=sourceAutoBien;
+		TermElements=termElements;
+		Posiciones=posiciones;
 		addClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent arg0) {
+				
 				
 				
 				/**
@@ -49,21 +58,100 @@ public class PushButtonEdit extends PushButton {
 
 				*/
 				
+				
+				
+				
+				boolean AutoCorrecto = true;
+				for (OperationalValueJSON termProcesado : Docum.getOperationalValues()) {
+					if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+					{
+						AutoCorrecto=false;
+						break;	
+					}
+				}
+				
+				if (AutoCorrecto&&processAddTerm())
+					{
+					
+					HashSet<Integer> INteLis=new HashSet<Integer>();
+					
+					for (Label labe : Padre.getActualSelected()) {
+						Integer a = Padre.getPosicionTabla().get(labe);
+						if (a!=null)
+							INteLis.add(a);
+					}	
+					
+					if (INteLis.isEmpty())
+						Window.alert(StringConstants.getInstance().get("selectionempty"));
+					else
+					{	
+						
+						
+					Docum.getOperationalValues().add(new OperationalValueJSON(null, SourceAutoBien.getId().get(0), "manual"));
+					
+					for (StructureJSON structureJSON : Posiciones) {
+						structureJSON.setValue("");
+					}
+						
+					
+					if (INteLis.size()>Posiciones.size())
+					{ 
+						//TODO AQUI HAY QUE CRECER
+					}
+					
+					
+					LinkedList<Integer> INteLisList = new LinkedList<Integer>(INteLis);
+					
+					
+					for (int i = 0; i < INteLisList.size(); i++) {
+						Posiciones.get(i).setValue(Integer.toString(INteLisList.get(i)));
+					}
+					
+					
+					}
+					
+					
+					
+					}
+				
+
+				Padre.RefreshStatus();
+				
 			}
 		});
 	}
 
-	/*
+	
 	protected boolean processAddTerm() {
-		List<TermProcesado> actuales = Padre.getEstado().getDoc_Words_State_Add().get(Docum);
-		if (actuales==null)
-			actuales=new LinkedList<TermProcesado>();
 		
 		
+		List<String> Term_Elements=new LinkedList<>();
+		for (StructureJSON termelem : TermElements) {
+			if (!termelem.getValue().trim().isEmpty())
+			{
+				
+				
+				boolean AutoCorrecto = true;
+				for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
+					if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+					{
+						AutoCorrecto=false;
+						break;	
+					}
+				}
+				
+				if (!AutoCorrecto)
+					Term_Elements.add(termelem.getValue().trim());
+				
+			}
+		}
+		
+
+	
 		
 		boolean found=false;
-		for (TermProcesado termino : actuales) {
-			if (termino.getTerm().equals(TermLabe.getTermio().getTerm()))
+		for (String termino : Term_Elements) {
+			if (termino.equals(TermLabe.getTermio().getTerm()))
 			{
 			found=true;
 			break;
@@ -76,32 +164,9 @@ public class PushButtonEdit extends PushButton {
 			return false;
 			}
 		else
-		{
-		
-			HashSet<Integer> INteLis=new HashSet<Integer>();
-			
-			for (Label labe : Padre.getActualSelected()) {
-				Integer a = Padre.getPosicionTabla().get(labe);
-				if (a!=null)
-					INteLis.add(a);
-			}	
-			
-			if (INteLis.isEmpty())
-				{
-				Window.alert(StringConstants.getInstance().get("selectionempty"));
-				return false;
-				}
-			else
-			{	
-			TermProcesado Nuevo=new TermProcesado(TermLabe.getTermio().getTerm(), INteLis);
-			Nuevo.setCUI(TermLabe.getTermio().getCUI());
-			Nuevo.setSemantica(TermLabe.getTermio().getSemantica());
-			actuales.add(Nuevo);
-			Padre.getEstado().getDoc_Words_State_Add().put(Docum,actuales);
 			return true;
-			}
-		}
+
 		
 	}
-	*/
+	
 }

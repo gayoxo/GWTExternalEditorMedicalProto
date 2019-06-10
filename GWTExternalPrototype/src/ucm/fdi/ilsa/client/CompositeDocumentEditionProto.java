@@ -42,6 +42,7 @@ import fdi.ucm.server.interconect.model.StructureJSON.TypeOfStructureEnum;
 
 
 
+
 /**
  * @author Joaquin Gayoso-Cabada
  *
@@ -453,7 +454,7 @@ public class CompositeDocumentEditionProto{
 		
 	}
 
-	protected void processActualDocument() {
+private void processActualDocument() {
 		
 			
 //TODO FALTA EL ANOTADO
@@ -489,7 +490,7 @@ public class CompositeDocumentEditionProto{
 		ProcesaLabelRecuperar(false);	
 		procesaSentenciasPhrases(false);
 		procesaAuto();
-//		procesaManual();
+		procesaManual();
 //		procesaGlobalDelete();
 		procesaLocalDelete();
 //		procesaPanelMetamap();
@@ -504,13 +505,131 @@ public class CompositeDocumentEditionProto{
 	
 	
 	
+private void procesaManual() {
+	PanelManual.clear();
+
+	ScrollPanel SPanel=new ScrollPanel();
+	PanelManual.add(SPanel);
+	
+	
+	
+	
+	HashMap<String, TermProcesado> autoTerm = new HashMap<String,TermProcesado>();
+	
+	List<TermProcesado> ProcesarLimpio=new LinkedList<TermProcesado>();
+	HashMap<TermProcesado, StructureJSON> Term_Str=new HashMap<TermProcesado, StructureJSON>();
+	
+	for (StructureJSON termelem : TermElements) {
+		
+		if (!termelem.getValue().trim().isEmpty())
+		{
+			
+			
+			boolean AutoCorrecto = true;
+			for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
+				if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+				{
+					AutoCorrecto=false;
+					break;	
+				}
+			}
+			
+			if (!AutoCorrecto)
+				{
+				
+			HashSet<Integer> posiciones=new HashSet<Integer>();
+			List<StructureJSON> listaPosiciones = Termino_Posicion.get(termelem);
+			if (listaPosiciones!=null&&!listaPosiciones.isEmpty())
+			{
+				for (StructureJSON pos : listaPosiciones)
+				{
+					if (!pos.getValue().isEmpty())
+					{
+						try {
+							
+							int position=Integer.parseInt(pos.getValue())-1;
+							if (position<0)
+								position=0;
+							
+							posiciones.add(position);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				
+				if (!posiciones.isEmpty())
+				{
+					
+					
+					List<StructureJSON> semanticas = Termino_Seman.get(termelem);
+					List<String> semantica= new LinkedList<String>();
+						if (semanticas!=null)
+					{
+						for (StructureJSON seman : semanticas) {
+							if (!seman.getValue().trim().isEmpty())
+								semantica.add(seman.getValue().trim());
+						}
+					}
+						
+						StructureJSON CUI=Termino_CUI.get(termelem);
+					
+					TermProcesado N=new TermProcesado(termelem.getValue().trim(), posiciones);
+					N.setSemantica(semantica);
+					
+					if (CUI!=null)
+					N.setCUI(CUI.getValue());
+					
+//					StructureJSON Delete=Termino_Delete.get(termelem);
+//					
+					autoTerm.put(N.getTerm(),N);
+					Term_Str.put(N, termelem);
+					
+						ProcesarLimpio.add(N);
+
+						
+				}
+			}
+			}
+			
+		}
+		
+		
+	}
+	
+
+		Grid g = new Grid(ProcesarLimpio.size(), 2);
+		g.setWidth("100%");
+		SPanel.add(g);
+		
+		for (int j = 0; j < ProcesarLimpio.size(); j++) {
+			TermProcesado termProcesado = ProcesarLimpio.get(j);
+			Label labe=new LabelTerm(termProcesado,this);
+			PushButton RecoverGlobal = new PushButtonDeleteManual(termProcesado,this,Term_Str.get(termProcesado));
+			g.setWidget(j, 0, labe);
+			if (EditorMode())
+				g.setWidget(j, 1, RecoverGlobal);
+			//Vertical.add(labe);
+			
+		}
+		
+
+	}
+
+
+
+
+
+
+
 private void procesaLocalDelete() {
 	PanelRemDocu.clear();
 	
 	
 	
 	
-	HashSet<String> remglob = new HashSet<String>();
+	HashSet<String> remglob = getglobaldelete();
 	ScrollPanel SPanel=new ScrollPanel();
 	PanelRemDocu.add(SPanel);
 //	VerticalPanel Vertical=new VerticalPanel();
@@ -552,7 +671,11 @@ private void procesaLocalDelete() {
 					{
 						try {
 							
-							posiciones.add(Integer.parseInt(pos.getValue()));
+							int position=Integer.parseInt(pos.getValue())-1;
+							if (position<0)
+								position=0;
+							
+							posiciones.add(position);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -601,16 +724,6 @@ private void procesaLocalDelete() {
 		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	LinkedList<LabelTerm> TermLocalDeleteList=new LinkedList<LabelTerm>();
 
 			for (TermProcesado string : ProcesarLimpio) {
@@ -639,7 +752,18 @@ private void procesaLocalDelete() {
 
 
 
-protected void procesaAuto() {
+private HashSet<String> getglobaldelete() {
+	// TODO Auto-generated method stub
+	return new HashSet<String>();
+}
+
+
+
+
+
+
+
+private void procesaAuto() {
 		
 		PanelAuto.clear();
 		ScrollPanel SPanel=new ScrollPanel();
@@ -648,7 +772,7 @@ protected void procesaAuto() {
 		
 		
 
-		HashSet<String> remglob = new HashSet<String>();
+		HashSet<String> remglob = getglobaldelete();
 
 		HashMap<String, TermProcesado> autoTerm = new HashMap<String,TermProcesado>();
 		
@@ -745,7 +869,7 @@ protected void procesaAuto() {
 	
 	
 	
-	protected void PintalLimpio(List<TermProcesado> ProcesarLimpio, ScrollPanel SPanel, HashMap<TermProcesado, StructureJSON> term_St) {
+	private void PintalLimpio(List<TermProcesado> ProcesarLimpio, ScrollPanel SPanel, HashMap<TermProcesado, StructureJSON> term_St) {
 		Grid g = new Grid(ProcesarLimpio.size(), 2);
 		g.setWidth("100%");
 		SPanel.add(g);
@@ -766,7 +890,7 @@ protected void procesaAuto() {
 			
 			PushButton DeleteLocal = new PushButtonLocal(this,DeleteElem);
 			PushButton DeleteGlobal = new PushButtonGlobal(labe,this);
-			PushButton EditTerm = new PushButtonEdit(labe,this,StructTerm);
+			PushButton EditTerm = new PushButtonEdit(labe,this,StructTerm,SourceAutoBien,TermElements,Termino_Posicion.get(StructTerm));
 			
 			HorizontalPanel HP=new HorizontalPanel();
 			HP.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -782,7 +906,8 @@ protected void procesaAuto() {
 			
 			HP.add(HP2);
 			
-			g.setWidget(i, 1, HP);
+			if (EditorMode())
+				g.setWidget(i, 1, HP);
 		}
 	
 }
@@ -980,10 +1105,17 @@ protected void procesaAuto() {
 			DeleteDocumentButton.setVisible(true);
 			RecoverDocumentButton.setVisible(false);
 			}
+		
+		
+		if (!EditorMode())
+		{
+			DeleteDocumentButton.setVisible(false);
+			RecoverDocumentButton.setVisible(false);
+		}
 	}
 	
 	
-protected void procesaSentenciasPhrases(boolean borrado_) {
+private void procesaSentenciasPhrases(boolean borrado_) {
 		
 		PanelPhrases.clear();
 		
@@ -1071,6 +1203,7 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 							
 						}
 					});
+					
 			}
 		}
 		
@@ -1082,8 +1215,8 @@ protected void procesaSentenciasPhrases(boolean borrado_) {
 	}
 	
 	
-	
-	
+
+
 	protected boolean EditorMode() {
 	return true;
 }

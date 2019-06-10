@@ -38,6 +38,8 @@ public class StringConstants {
 		id_valorS.put("generainformes", "Generate Summaries");
 		id_valorS.put("clicklinkdocument", "Click on the link to download the summary document");
 		id_valorS.put("clicklinkvocabulary", "Click on the link to download the vocabulary document");
+		id_valorS.put("active", "Active");
+		id_valorS.put("inactive", "Inactive");
 	}
 	
 	public static StringConstants getInstance() {
