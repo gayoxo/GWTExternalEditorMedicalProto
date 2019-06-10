@@ -927,8 +927,8 @@ private void procesaAuto() {
 		HorizontalPanel Botonera=new HorizontalPanel();
 		Botonera.setSpacing(3);
 		Botonera.setHeight("60px");
-		AlanteIma = new PushButton(new Image("img/forward.png"));
-		AtrasIma = new PushButton(new Image("img/back.png"));
+		AlanteIma = new PushButton(new Image("Proto/forward.png"));
+		AtrasIma = new PushButton(new Image("Proto/back.png"));
 		AlanteIma.setEnabled(false);
 		AtrasIma.setEnabled(false);
 		Botonera.add(AtrasIma);
@@ -1096,12 +1096,14 @@ private void procesaAuto() {
 		if (recuperar_)
 		{
 		DeleteLabel.setText(StringConstants.getInstance().get("recoverlabel"));
+		
 		DeleteDocumentButton.setVisible(false);
 		RecoverDocumentButton.setVisible(true);
 		}
 		else
 		{
 			DeleteLabel.setText(StringConstants.getInstance().get("deletelabel"));
+			
 			DeleteDocumentButton.setVisible(true);
 			RecoverDocumentButton.setVisible(false);
 			}
@@ -1111,6 +1113,10 @@ private void procesaAuto() {
 		{
 			DeleteDocumentButton.setVisible(false);
 			RecoverDocumentButton.setVisible(false);
+			if (recuperar_)
+				DeleteLabel.setText(StringConstants.getInstance().get("inactive"));
+			else
+				DeleteLabel.setText(StringConstants.getInstance().get("active"));
 		}
 	}
 	
