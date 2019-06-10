@@ -21,7 +21,7 @@ public class PushButtonEdit extends PushButton {
 	private StructureJSON Docum;
 	
 	public PushButtonEdit(LabelTerm labe, CompositeDocumentEditionProto medicalPrototipeILSAMain, StructureJSON structTerm) {
-		super(new Image("img/edit.png"));
+		super(new Image("Proto/edit.png"));
 		setWidth(25+"px");
 		setHeight(27+"px");
 		setTitle(StringConstants.getInstance().get("edittit"));

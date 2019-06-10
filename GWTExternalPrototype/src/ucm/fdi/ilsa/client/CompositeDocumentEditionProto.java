@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -38,6 +39,7 @@ import fdi.ucm.server.interconect.model.OperationalValueJSON;
 import fdi.ucm.server.interconect.model.OperationalValueTypeJSON;
 import fdi.ucm.server.interconect.model.StructureJSON;
 import fdi.ucm.server.interconect.model.StructureJSON.TypeOfStructureEnum;
+
 
 
 /**
@@ -97,7 +99,6 @@ public class CompositeDocumentEditionProto{
 	private Label LabelImage;
 	private int ImagenActual;
 	private Image Ima;
-	private HashMap<String, TermProcesado> autoTerm;
 	private HashMap<StructureJSON, StructureJSON> Termino_CUI;
 	private OperationalValueTypeJSON SourceAutoBien;
 	
@@ -266,7 +267,7 @@ public class CompositeDocumentEditionProto{
 					basicoEspacio.addStyleName("simplePanel");
 					
 					DeleteLabel=new Label(StringConstants.getInstance().get("deletelabel"));
-					DeleteDocumentButton = new PushButton(new Image("img/ejectnormalred.png"));
+					DeleteDocumentButton = new PushButton(new Image("Proto/ejectnormalred.png"));
 					DeleteDocumentButton.setTitle(StringConstants.getInstance().get("deletelabel"));
 					DeleteDocumentButton.addClickHandler(new ClickHandler() {
 						
@@ -274,6 +275,7 @@ public class CompositeDocumentEditionProto{
 						public void onClick(ClickEvent arg0) {
 							
 							DeleteBien.setSelectedValue(true);
+							
 							processActualDocument();
 							
 							//TODO ARREGLAR
@@ -489,7 +491,7 @@ public class CompositeDocumentEditionProto{
 		procesaAuto();
 //		procesaManual();
 //		procesaGlobalDelete();
-//		procesaLocalDelete();
+		procesaLocalDelete();
 //		procesaPanelMetamap();
 //		procesaUsed();
 		processImage();
@@ -502,6 +504,141 @@ public class CompositeDocumentEditionProto{
 	
 	
 	
+private void procesaLocalDelete() {
+	PanelRemDocu.clear();
+	
+	
+	
+	
+	HashSet<String> remglob = new HashSet<String>();
+	ScrollPanel SPanel=new ScrollPanel();
+	PanelRemDocu.add(SPanel);
+//	VerticalPanel Vertical=new VerticalPanel();
+//	SPanel.add(Vertical);
+	
+	
+	
+	
+	HashMap<String, TermProcesado> autoTerm = new HashMap<String,TermProcesado>();
+	
+	List<TermProcesado> ProcesarLimpio=new LinkedList<TermProcesado>();
+	HashMap<TermProcesado, StructureJSON> Term_dEL=new HashMap<TermProcesado, StructureJSON>();
+	
+	for (StructureJSON termelem : TermElements) {
+		
+		if (!termelem.getValue().trim().isEmpty())
+		{
+			
+			
+			boolean AutoCorrecto = true;
+			for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
+				if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+				{
+					AutoCorrecto=false;
+					break;	
+				}
+			}
+			
+			if (AutoCorrecto)
+				{
+				
+			HashSet<Integer> posiciones=new HashSet<Integer>();
+			List<StructureJSON> listaPosiciones = Termino_Posicion.get(termelem);
+			if (listaPosiciones!=null&&!listaPosiciones.isEmpty())
+			{
+				for (StructureJSON pos : listaPosiciones)
+				{
+					if (!pos.getValue().isEmpty())
+					{
+						try {
+							
+							posiciones.add(Integer.parseInt(pos.getValue()));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				
+				if (!posiciones.isEmpty())
+				{
+					
+					
+					List<StructureJSON> semanticas = Termino_Seman.get(termelem);
+					List<String> semantica= new LinkedList<String>();
+						if (semanticas!=null)
+					{
+						for (StructureJSON seman : semanticas) {
+							if (!seman.getValue().trim().isEmpty())
+								semantica.add(seman.getValue().trim());
+						}
+					}
+						
+						StructureJSON CUI=Termino_CUI.get(termelem);
+					
+					TermProcesado N=new TermProcesado(termelem.getValue().trim(), posiciones);
+					N.setSemantica(semantica);
+					
+					if (CUI!=null)
+					N.setCUI(CUI.getValue());
+					
+					StructureJSON Delete=Termino_Delete.get(termelem);
+					
+					autoTerm.put(N.getTerm(),N);
+					Term_dEL.put(N, Delete);
+					
+					//TODO FALTA LA CONDICION DEL GENERAKL
+					if (Delete!=null&&Delete.isSelectedValue()&&!remglob.contains(N.getTerm()))
+						ProcesarLimpio.add(N);
+
+						
+				}
+			}
+			}
+			
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	LinkedList<LabelTerm> TermLocalDeleteList=new LinkedList<LabelTerm>();
+
+			for (TermProcesado string : ProcesarLimpio) {
+
+					
+					LabelTerm labe=new LabelTerm(string,this);
+						TermLocalDeleteList.add(labe);
+			}
+	
+	Grid g = new Grid(TermLocalDeleteList.size(), 2);
+	g.setWidth("100%");
+	SPanel.add(g);
+	
+	for (int j = 0; j < TermLocalDeleteList.size(); j++) {
+		LabelTerm labe = TermLocalDeleteList.get(j);
+		g.setWidget(j, 0, labe);
+		PushButton RecoverGlobal = new PushButtonRecoberLocal(labe,this,Term_dEL.get(labe.getTermio()));
+		g.setWidget(j, 1, RecoverGlobal);
+	}
+		
+	}
+
+
+
+
+
+
+
 protected void procesaAuto() {
 		
 		PanelAuto.clear();
@@ -510,19 +647,10 @@ protected void procesaAuto() {
 		PanelAuto.add(SPanel);
 		
 		
-		//TODO LISTAS DE BORRADO
-//		HashSet<String> remLocal = Estado.getDoc_Words_State().get(DocumenA);
-//		HashSet<String> remglob = Estado.getDoc_Words_State_Global();
-//		
-//		if (remglob==null)
-//			remglob=new HashSet<String>();
-//		
-//		if (remLocal==null)
-//			remLocal=new HashSet<String>();
-		HashSet<String> remLocal = new HashSet<String>();
+
 		HashSet<String> remglob = new HashSet<String>();
 
-		autoTerm=new HashMap<String,TermProcesado>();
+		HashMap<String, TermProcesado> autoTerm = new HashMap<String,TermProcesado>();
 		
 		List<TermProcesado> ProcesarLimpio=new LinkedList<TermProcesado>();
 		HashMap<TermProcesado, StructureJSON> Term_St=new HashMap<TermProcesado, StructureJSON>();
@@ -542,8 +670,8 @@ protected void procesaAuto() {
 					}
 				}
 				
-				if (!AutoCorrecto)
-					return;
+				if (AutoCorrecto)
+					{
 					
 				HashSet<Integer> posiciones=new HashSet<Integer>();
 				List<StructureJSON> listaPosiciones = Termino_Posicion.get(termelem);
@@ -554,8 +682,11 @@ protected void procesaAuto() {
 						if (!pos.getValue().isEmpty())
 						{
 							try {
+								int position=Integer.parseInt(pos.getValue())-1;
+								if (position<0)
+									position=0;
 								
-								posiciones.add(Integer.parseInt(pos.getValue()));
+								posiciones.add(position);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -591,13 +722,12 @@ protected void procesaAuto() {
 						Term_St.put(N, termelem);
 						
 						//TODO FALTA LA CONDICION DEL GENERAKL
-						if (Delete==null|| !Delete.isSelectedValue())
+						if ((Delete==null|| !Delete.isSelectedValue())&&!remglob.contains(N.getTerm()))
 							ProcesarLimpio.add(N);
-						else
-							remLocal.add(N.getTerm());
+
 							
 					}
-					
+				}
 				}
 				
 			}
@@ -607,8 +737,7 @@ protected void procesaAuto() {
 		
 
 		PintalLimpio(ProcesarLimpio,SPanel,Term_St);
-		
-		
+
 		
 		
 
@@ -723,10 +852,10 @@ protected void procesaAuto() {
 				
 				if (!Ima.getUrl().equals(DEFAULTIMAGE))
 				{
-					/**
+					
 				PopupPanel Dialog=new PopUpPanelImage(Ima.getUrl());
 				Dialog.center();
-				*/
+			
 				}
 			}
 		});
@@ -745,8 +874,16 @@ protected void procesaAuto() {
 	
 	
 	private void printImage() {
-		Ima.setUrl(ImagenesBien.get(ImagenActual).getValue());
-		if (ImagenActual<ImagenesBien.size()-1)
+		
+		LinkedList<StructureJSON> ImagenesBienConElem = new LinkedList<StructureJSON>();
+		for (StructureJSON imavalue : ImagenesBien) 
+			if (imavalue.getValue()!=null&&!imavalue.getValue().isEmpty())
+				ImagenesBienConElem.add(imavalue);
+		
+		
+		
+		Ima.setUrl(ImagenesBienConElem.get(ImagenActual).getValue());
+		if (ImagenActual<ImagenesBienConElem.size()-1)
 			AlanteIma.setEnabled(true);
 		else
 			AlanteIma.setEnabled(false);
@@ -756,7 +893,7 @@ protected void procesaAuto() {
 		else
 			AtrasIma.setEnabled(false);
 		
-		LabelImage.setText(((ImagenActual+1)+"/"+ImagenesBien.size()));
+		LabelImage.setText(((ImagenActual+1)+"/"+ImagenesBienConElem.size()));
 	}
 	
 	
@@ -1431,10 +1568,11 @@ eval($wnd.daletmp)
 
 
 
-	//TODO SUPER IMPORTANTE
 
 	public void RefreshStatus() {
-		// TODO Auto-generated method stub
+		//TODO SUPER IMPORTANTE POR AHORA
+
+		processActualDocument();
 		
 	}
 }

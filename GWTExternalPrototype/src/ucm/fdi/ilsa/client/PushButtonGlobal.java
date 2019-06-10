@@ -12,7 +12,7 @@ public class PushButtonGlobal extends PushButton {
 	private CompositeDocumentEditionProto Padre;
 
 	public PushButtonGlobal(LabelTerm labe, CompositeDocumentEditionProto medicalPrototipeILSAMain) {
-		super(new Image("img/delete1.png"));
+		super(new Image("Proto/delete1.png"));
 		setTitle(StringConstants.getInstance().get("disableglobal"));
 		setWidth(25+"px");
 		setHeight(27+"px");
