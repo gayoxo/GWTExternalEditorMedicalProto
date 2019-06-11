@@ -78,7 +78,7 @@ public class PushButtonEdit extends PushButton {
 					for (Label labe : Padre.getActualSelected()) {
 						Integer a = Padre.getPosicionTabla().get(labe);
 						if (a!=null)
-							INteLis.add(a);
+							INteLis.add(a+1);
 					}	
 					
 					if (INteLis.isEmpty())
@@ -86,8 +86,10 @@ public class PushButtonEdit extends PushButton {
 					else
 					{	
 						
-						
-					Docum.getOperationalValues().add(new OperationalValueJSON(null, SourceAutoBien.getId().get(0), "manual"));
+						OperationalValueJSON newV=	new OperationalValueJSON();
+						newV.setType(SourceAutoBien.getId().get(0));
+						newV.setValue("manual");
+					Docum.getOperationalValues().add(newV);
 					
 					for (StructureJSON structureJSON : Posiciones) {
 						structureJSON.setValue("");

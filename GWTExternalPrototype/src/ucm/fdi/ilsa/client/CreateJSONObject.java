@@ -375,6 +375,8 @@ public class CreateJSONObject {
 
 	private static JSONValue createOperational(OperationalValueJSON operationalValueJSON) {
 		JSONObject DocumentoJI=new JSONObject();
+		if (operationalValueJSON.getId()==null)
+			operationalValueJSON.setId(-1l);
 		DocumentoJI.put("Id", new JSONNumber(operationalValueJSON.getId()));
 		DocumentoJI.put("OperationalValueTypeId", new JSONNumber(operationalValueJSON.getOperationalValueTypeId()));
 		DocumentoJI.put("Value", new JSONString(operationalValueJSON.getValue()));

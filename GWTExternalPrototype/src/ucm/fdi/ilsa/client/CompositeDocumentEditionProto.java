@@ -740,8 +740,11 @@ private void procesaLocalDelete() {
 	for (int j = 0; j < TermLocalDeleteList.size(); j++) {
 		LabelTerm labe = TermLocalDeleteList.get(j);
 		g.setWidget(j, 0, labe);
+		if (EditorMode())
+		{
 		PushButton RecoverGlobal = new PushButtonRecoberLocal(labe,this,Term_dEL.get(labe.getTermio()));
 		g.setWidget(j, 1, RecoverGlobal);
+		}
 	}
 		
 	}
