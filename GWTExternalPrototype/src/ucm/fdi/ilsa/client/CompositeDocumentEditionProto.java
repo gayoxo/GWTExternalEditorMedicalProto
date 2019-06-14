@@ -16,6 +16,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
@@ -458,8 +463,33 @@ public class CompositeDocumentEditionProto{
 
 private void processActualDocument() {
 		
-	
-	
+	//TODO FALTA UN SERVICIO GENEREAL
+//	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/setDelete/"+Padre.getCollectionNumber()+"/?term="+TermLabe.getTermio().getTerm());
+//
+//    try {
+//        builder.sendRequest(null, new RequestCallback() {
+//            public void onError(Request request, Throwable exception) {
+//                // Code omitted for clarity
+//            }
+//
+//            public void onResponseReceived(Request request, Response response) {
+//                if (response.getStatusCode()!=0&&response.getStatusCode()==200)
+//                	{
+//                	 Window.alert(response.getText());
+//                	 
+//                	 
+//                	 
+//                	 Padre.RefreshStatus();
+//                	}
+//                else
+//                	Window.alert("Error ->"+response.getStatusCode());
+//            }
+//        });
+//
+//    } catch (RequestException e) {
+//       e.printStackTrace();
+//       Window.alert(e.getMessage());
+//    }
 			
 //TODO FALTA EL ANOTADO
 //		if (procesaAnotado())	
