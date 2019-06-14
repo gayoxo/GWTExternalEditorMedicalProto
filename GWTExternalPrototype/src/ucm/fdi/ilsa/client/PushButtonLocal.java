@@ -1,8 +1,5 @@
 package ucm.fdi.ilsa.client;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
@@ -12,7 +9,6 @@ import fdi.ucm.server.interconect.model.StructureJSON;
 
 public class PushButtonLocal extends PushButton {
 
-	private LabelTerm TermLabe;
 	private CompositeDocumentEditionProto Padre;
 	private StructureJSON Docum;
 

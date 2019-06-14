@@ -102,6 +102,7 @@ public class CompositeDocumentEditionProto{
 	private Image Ima;
 	private HashMap<StructureJSON, StructureJSON> Termino_CUI;
 	private OperationalValueTypeJSON SourceAutoBien;
+	private Long CollectioNumber;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
@@ -199,6 +200,7 @@ public class CompositeDocumentEditionProto{
 		}
 		
 		*/
+		CollectioNumber=Documento.getGramatica().get(0).getColeccion();
 		
 		StructureJSON SS=null;
 		for (GrammarJSON Gr : Documento.getGramatica()) 	
@@ -456,6 +458,8 @@ public class CompositeDocumentEditionProto{
 
 private void processActualDocument() {
 		
+	
+	
 			
 //TODO FALTA EL ANOTADO
 //		if (procesaAnotado())	
@@ -1716,5 +1720,15 @@ eval($wnd.daletmp)
 
 		processActualDocument();
 		
+	}
+
+
+
+
+
+
+
+	public Long getCollectionNumber() {
+		return CollectioNumber;
 	}
 }
