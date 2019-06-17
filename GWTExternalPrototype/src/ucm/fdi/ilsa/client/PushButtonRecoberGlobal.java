@@ -11,7 +11,7 @@ public class PushButtonRecoberGlobal extends PushButton {
 	private CompositeDocumentEditionProto Padre;
 
 	public PushButtonRecoberGlobal(LabelTerm labe, CompositeDocumentEditionProto medicalPrototipeILSAMain) {
-		super(new Image("img/add1.png"));
+		super(new Image("Proto/add1.png"));
 		setWidth(25+"px");
 		setHeight(27+"px");
 		TermLabe = labe;
