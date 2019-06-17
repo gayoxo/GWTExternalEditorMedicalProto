@@ -21,8 +21,10 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -108,6 +110,7 @@ public class CompositeDocumentEditionProto{
 	private HashMap<StructureJSON, StructureJSON> Termino_CUI;
 	private OperationalValueTypeJSON SourceAutoBien;
 	private Long CollectioNumber;
+	private HashSet<String> GlobalDelete;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
@@ -216,7 +219,8 @@ public class CompositeDocumentEditionProto{
 			
 		}		
 		
-				
+		GlobalDelete=new HashSet<String>();
+		
 		
 		if (SS==null)
 		{
@@ -463,75 +467,54 @@ public class CompositeDocumentEditionProto{
 
 private void processActualDocument() {
 		
-	//TODO FALTA UN SERVICIO GENEREAL
-//	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/setDelete/"+Padre.getCollectionNumber()+"/?term="+TermLabe.getTermio().getTerm());
-//
-//    try {
-//        builder.sendRequest(null, new RequestCallback() {
-//            public void onError(Request request, Throwable exception) {
-//                // Code omitted for clarity
-//            }
-//
-//            public void onResponseReceived(Request request, Response response) {
-//                if (response.getStatusCode()!=0&&response.getStatusCode()==200)
-//                	{
-//                	 Window.alert(response.getText());
-//                	 
-//                	 
-//                	 
-//                	 Padre.RefreshStatus();
-//                	}
-//                else
-//                	Window.alert("Error ->"+response.getStatusCode());
-//            }
-//        });
-//
-//    } catch (RequestException e) {
-//       e.printStackTrace();
-//       Window.alert(e.getMessage());
-//    }
-			
-//TODO FALTA EL ANOTADO
-//		if (procesaAnotado())	
-//		{
-//			SiAnnotButton.setVisible(true);
-//			NoAnnotButton.setVisible(false);
-//		}
-//		else
-//		{
-//			SiAnnotButton.setVisible(false);
-//			NoAnnotButton.setVisible(true);
-//		}
-			
+	console("Esta pasando");
 	
-		
-		
-		if (procesaBorrado())
-		{
-			
-			ProcesaLabelRecuperar(true);		
-			procesaSentenciasPhrases(true);
-			processPaneles();
-//			procesaPanelMetamap();
-//			procesaUsed();
-			processImage();
-//			procesaTraduccion();			
-			
-		}
-		else
-		{	
+	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/getDelete/"+getCollectionNumber());
 
-		ProcesaLabelRecuperar(false);	
-		procesaSentenciasPhrases(false);
-		procesaAuto();
-		procesaManual();
-//		procesaGlobalDelete();
-		procesaLocalDelete();
-//		procesaPanelMetamap();
-//		procesaUsed();
-		processImage();
-//		procesaTraduccion();
-		}
+    try {
+        builder.sendRequest(null, new RequestCallback() {
+            public void onError(Request request, Throwable exception) {
+            	 Window.alert("Error ->"+exception.getMessage());
+            	 processActualDocumentContinue();
+            	 GlobalDelete=new HashSet<String>();
+            }
+
+            public void onResponseReceived(Request request, Response response) {
+                if (response.getStatusCode()!=0&&response.getStatusCode()==200)
+                	{
+                	 GlobalDelete=new HashSet<String>();
+                	 try {
+                		 JSONValue value = JSONParser.parseLenient(response.getText());
+                    	 JSONArray authorObject = value.isArray();
+                    	 for (int i = 0; i < authorObject.size(); i++) {
+                    		 GlobalDelete.add(authorObject.get(i).isString().stringValue());
+//                    		 Window.alert(authorObject.get(i).isString().stringValue());
+                    	 }
+                    	 
+					} catch (Exception e) {
+						e.printStackTrace();
+						Window.alert("Error ->"+e.getMessage());
+					}
+                	 
+                	 
+                	}
+                else
+                	{
+                	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());
+                	 GlobalDelete=new HashSet<String>();
+                	}
+                
+                
+                processActualDocumentContinue();
+            }
+        });
+
+    } catch (RequestException e) {
+       e.printStackTrace();
+       Window.alert(e.getMessage());
+    }
+			
+
 		
 		
 		
@@ -539,6 +522,56 @@ private void processActualDocument() {
 	
 	
 	
+protected void processActualDocumentContinue() {
+	//TODO FALTA EL ANOTADO
+//	if (procesaAnotado())	
+//	{
+//		SiAnnotButton.setVisible(true);
+//		NoAnnotButton.setVisible(false);
+//	}
+//	else
+//	{
+//		SiAnnotButton.setVisible(false);
+//		NoAnnotButton.setVisible(true);
+//	}
+		
+
+	
+	
+	if (procesaBorrado())
+	{
+		
+		ProcesaLabelRecuperar(true);		
+		procesaSentenciasPhrases(true);
+		processPaneles();
+//		procesaPanelMetamap();
+//		procesaUsed();
+		processImage();
+//		procesaTraduccion();			
+		
+	}
+	else
+	{	
+
+	ProcesaLabelRecuperar(false);	
+	procesaSentenciasPhrases(false);
+	procesaAuto();
+	procesaManual();
+//	procesaGlobalDelete();
+	procesaLocalDelete();
+//	procesaPanelMetamap();
+//	procesaUsed();
+	processImage();
+//	procesaTraduccion();
+	}
+}
+
+
+
+
+
+
+
 private void procesaManual() {
 	PanelManual.clear();
 
@@ -791,7 +824,7 @@ private void procesaLocalDelete() {
 
 private HashSet<String> getglobaldelete() {
 	// TODO Auto-generated method stub
-	return new HashSet<String>();
+	return GlobalDelete;
 }
 
 
