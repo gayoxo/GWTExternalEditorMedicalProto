@@ -557,7 +557,7 @@ protected void processActualDocumentContinue() {
 	procesaSentenciasPhrases(false);
 	procesaAuto();
 	procesaManual();
-//	procesaGlobalDelete();
+	procesaGlobalDelete();
 	procesaLocalDelete();
 //	procesaPanelMetamap();
 //	procesaUsed();
@@ -569,7 +569,131 @@ protected void processActualDocumentContinue() {
 
 
 
+private void procesaGlobalDelete() {
+	PanelRemGlob.clear();
+	
+	
+	
+	
+	HashSet<String> remglob = getglobaldelete();
+	ScrollPanel SPanel=new ScrollPanel();
+	PanelRemGlob.add(SPanel);
+//	VerticalPanel Vertical=new VerticalPanel();
+//	SPanel.add(Vertical);
+	
+	
+	
+	
+	HashMap<String, TermProcesado> autoTerm = new HashMap<String,TermProcesado>();
+	
+	List<TermProcesado> ProcesarLimpio=new LinkedList<TermProcesado>();
+	HashMap<TermProcesado, StructureJSON> Term_dEL=new HashMap<TermProcesado, StructureJSON>();
+	
+	for (StructureJSON termelem : TermElements) {
+		
+		if (!termelem.getValue().trim().isEmpty())
+		{
+			
+			
+			boolean AutoCorrecto = true;
+			for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
+				if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+				{
+					AutoCorrecto=false;
+					break;	
+				}
+			}
+			
+			if (AutoCorrecto)
+				{
+				
+			HashSet<Integer> posiciones=new HashSet<Integer>();
+			List<StructureJSON> listaPosiciones = Termino_Posicion.get(termelem);
+			if (listaPosiciones!=null&&!listaPosiciones.isEmpty())
+			{
+				for (StructureJSON pos : listaPosiciones)
+				{
+					if (!pos.getValue().isEmpty())
+					{
+						try {
+							
+							int position=Integer.parseInt(pos.getValue())-1;
+							if (position<0)
+								position=0;
+							
+							posiciones.add(position);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				
+				if (!posiciones.isEmpty())
+				{
+					
+					
+					List<StructureJSON> semanticas = Termino_Seman.get(termelem);
+					List<String> semantica= new LinkedList<String>();
+						if (semanticas!=null)
+					{
+						for (StructureJSON seman : semanticas) {
+							if (!seman.getValue().trim().isEmpty())
+								semantica.add(seman.getValue().trim());
+						}
+					}
+						
+						StructureJSON CUI=Termino_CUI.get(termelem);
+					
+					TermProcesado N=new TermProcesado(termelem.getValue().trim(), posiciones);
+					N.setSemantica(semantica);
+					
+					if (CUI!=null)
+					N.setCUI(CUI.getValue());
+					
+					StructureJSON Delete=Termino_Delete.get(termelem);
+					
+					autoTerm.put(N.getTerm(),N);
+					Term_dEL.put(N, Delete);
+					
+					//TODO FALTA LA CONDICION DEL GENERAKL
+					if (Delete!=null&&remglob.contains(N.getTerm()))
+						ProcesarLimpio.add(N);
 
+						
+				}
+			}
+			}
+			
+		}
+		
+		
+	}
+	
+	LinkedList<LabelTerm> TermLocalDeleteList=new LinkedList<LabelTerm>();
+
+			for (TermProcesado string : ProcesarLimpio) {
+
+					
+					LabelTerm labe=new LabelTerm(string,this);
+						TermLocalDeleteList.add(labe);
+			}
+	
+	Grid g = new Grid(TermLocalDeleteList.size(), 2);
+	g.setWidth("100%");
+	SPanel.add(g);
+	
+	for (int j = 0; j < TermLocalDeleteList.size(); j++) {
+		LabelTerm labe = TermLocalDeleteList.get(j);
+		g.setWidget(j, 0, labe);
+		if (EditorMode())
+		{
+		PushButton RecoverGlobal = new PushButtonRecoberGlobal(labe,this);
+		g.setWidget(j, 1, RecoverGlobal);
+		}
+	}
+	
+}
 
 
 private void procesaManual() {
@@ -708,6 +832,7 @@ private void procesaLocalDelete() {
 	HashMap<String, TermProcesado> autoTerm = new HashMap<String,TermProcesado>();
 	
 	List<TermProcesado> ProcesarLimpio=new LinkedList<TermProcesado>();
+	List<TermProcesado> ProcesaDeleteFuturo=new LinkedList<TermProcesado>();
 	HashMap<TermProcesado, StructureJSON> Term_dEL=new HashMap<TermProcesado, StructureJSON>();
 	
 	for (StructureJSON termelem : TermElements) {
@@ -780,7 +905,9 @@ private void procesaLocalDelete() {
 					//TODO FALTA LA CONDICION DEL GENERAKL
 					if (Delete!=null&&Delete.isSelectedValue()&&!remglob.contains(N.getTerm()))
 						ProcesarLimpio.add(N);
-
+					else 
+						if (Delete!=null&&!remglob.contains(N.getTerm())) 
+							ProcesaDeleteFuturo.add(N);
 						
 				}
 			}
@@ -790,6 +917,14 @@ private void procesaLocalDelete() {
 		
 		
 	}
+	
+	
+	for (TermProcesado termProcesado : ProcesaDeleteFuturo) {
+		StructureJSON StructTerm = Term_dEL.get(termProcesado);
+		if (StructTerm!=null)
+			StructTerm.setSelectedValue(true);
+		}
+	
 	
 	LinkedList<LabelTerm> TermLocalDeleteList=new LinkedList<LabelTerm>();
 
@@ -823,7 +958,6 @@ private void procesaLocalDelete() {
 
 
 private HashSet<String> getglobaldelete() {
-	// TODO Auto-generated method stub
 	return GlobalDelete;
 }
 
