@@ -33,15 +33,15 @@ public class PushButtonGlobal extends PushButton {
 		        try {
 		            builder.sendRequest(null, new RequestCallback() {
 		                public void onError(Request request, Throwable exception) {
-		                    // Code omitted for clarity
+		                	Window.alert("Error ->"+exception.getMessage());
 		                }
 
 		                public void onResponseReceived(Request request, Response response) {
 		                    if (response.getStatusCode()!=0&&response.getStatusCode()==200)
 		                    	{
-		                    	 Window.alert(response.getText());
-		                    	 
-		                    	 
+//		                    	 Window.alert(response.getText());
+//		                    	 
+		                    	 CompositeDocumentEditionProto.console(response.getText());
 		                    	 
 		                    	 Padre.RefreshStatus();
 		                    	}
