@@ -466,8 +466,6 @@ public class CompositeDocumentEditionProto{
 	}
 
 private void processActualDocument() {
-		
-	console("Esta pasando");
 	
 	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/getDelete/"+getCollectionNumber());
 
@@ -547,7 +545,7 @@ protected void processActualDocumentContinue() {
 //		procesaPanelMetamap();
 //		procesaUsed();
 		processImage();
-//		procesaTraduccion();			
+		procesaTraduccion();			
 		
 	}
 	else
@@ -562,8 +560,163 @@ protected void processActualDocumentContinue() {
 //	procesaPanelMetamap();
 //	procesaUsed();
 	processImage();
-//	procesaTraduccion();
+	procesaTraduccion();
 	}
+}
+
+
+
+
+private void procesaTraduccion() {
+	PanelTra.clear();
+	LoadIMG.setSize("100%", "135px");
+	PanelTra.add(LoadIMG);
+	String Entrada = getDocumentText();
+	
+	
+//	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/getDelete/"+getCollectionNumber());
+//
+//    try {
+//        builder.sendRequest(null, new RequestCallback() {
+//            public void onError(Request request, Throwable exception) {
+//            	 Window.alert("Error ->"+exception.getMessage());
+//            	 processActualDocumentContinue();
+//            	 GlobalDelete=new HashSet<String>();
+//            }
+//
+//            public void onResponseReceived(Request request, Response response) {
+//                if (response.getStatusCode()!=0&&response.getStatusCode()==200)
+//                	{
+//                	 GlobalDelete=new HashSet<String>();
+//                	 try {
+//                		 JSONValue value = JSONParser.parseLenient(response.getText());
+//                    	 JSONArray authorObject = value.isArray();
+//                    	 for (int i = 0; i < authorObject.size(); i++) {
+//                    		 GlobalDelete.add(authorObject.get(i).isString().stringValue());
+////                    		 Window.alert(authorObject.get(i).isString().stringValue());
+//                    	 }
+//                    	 
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//						Window.alert("Error ->"+e.getMessage());
+//					}
+//                	 
+//                	 
+//                	}
+//                else
+//                	{
+//                	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());
+//                	 GlobalDelete=new HashSet<String>();
+//                	}
+//                
+//                
+//                processActualDocumentContinue();
+//            }
+//        });
+//
+//    } catch (RequestException e) {
+//       e.printStackTrace();
+//       Window.alert(e.getMessage());
+//    }
+	
+	RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, ServerINFO.ServerURI+"ProtoEditorService/service/translade/"+getCollectionNumber());
+	builder.setHeader("Content-type", "text/plain");
+	
+	try {
+      builder.sendRequest(Entrada, new RequestCallback() {
+          public void onError(Request request, Throwable exception) {
+          	 Window.alert("Error ->"+exception.getMessage());
+          }
+
+          public void onResponseReceived(Request request, Response response) {
+              if (response.getStatusCode()!=0&&response.getStatusCode()==200)
+              	{
+            	  
+            	  JSONValue value = JSONParser.parseLenient(response.getText());
+             	 JSONArray authorObject = value.isArray();
+              	 
+             	List<List<String>> arg0=new LinkedList<List<String>>();
+             	 
+             	 for (int i = 0; i < authorObject.size(); i++) {
+             		 
+             		 try {
+             			JSONArray authorObjectint=authorObject.get(i).isArray();
+             			
+             			List<String> EntradaSalida=new LinkedList<String>();
+             			
+             			for (int j = 0; j < authorObjectint.size(); j++) {
+             				EntradaSalida.add(authorObjectint.get(j).isString().stringValue());	
+             			}
+             			
+             			arg0.add(EntradaSalida);
+             			
+             			
+             			
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+             		
+             		 
+             	 }
+             	
+             	
+            	PanelTra.clear();
+      			ScrollPanel SP= new ScrollPanel();
+      			SP.setSize("100%", "100%");
+      			VerticalPanel VP=new VerticalPanel();
+      			SP.add(VP);
+      			PanelTra.add(SP);
+      			if (arg0.size()>0){
+      				for (List<String> traducEle : arg0) {
+      					VerticalPanel VPP=new VerticalPanel();
+      					VP.add(VPP);
+      					for (String widget : traducEle) {
+      						Label Tra=new Label(widget);
+      						VPP.add(Tra);
+      					}
+      				}
+      			}
+      			else
+      				for (String widget : arg0.get(0)) {
+      					Label Tra=new Label(widget);
+      					VP.add(Tra);
+      				}
+              	 
+              	}
+              else
+              	{
+              	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());
+              	}
+
+          }
+      });
+
+  } catch (RequestException e) {
+     e.printStackTrace();
+     Window.alert(e.getMessage());
+  }
+	
+	
+	
+	
+	
+}
+
+
+public String getDocumentText() {
+	StringBuffer SB=new StringBuffer();
+	
+	for (int i = 0; i < UteranciasBien.size(); i++){ 
+		String Sentence=UteranciasBien.get(i).getValue();
+		SB.append(Sentence);
+		}
+	
+	
+//	if (ActualDocumentProcesated!=null)
+//		for (String string : ActualDocumentProcesated.getSentence_Order())
+//			SB.append(string);
+
+	return SB.toString();
 }
 
 
