@@ -24,6 +24,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -558,11 +559,22 @@ protected void processActualDocumentContinue() {
 	procesaGlobalDelete();
 	procesaLocalDelete();
 //	procesaPanelMetamap();
-//	procesaUsed();
+	procesaUsed();
 	processImage();
 	procesaTraduccion();
 	}
 }
+
+
+
+
+private void procesaUsed() {
+	// TODO Auto-generated method stub
+	
+}
+
+
+
 
 
 
@@ -572,52 +584,6 @@ private void procesaTraduccion() {
 	LoadIMG.setSize("100%", "135px");
 	PanelTra.add(LoadIMG);
 	String Entrada = getDocumentText();
-	
-	
-//	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/getDelete/"+getCollectionNumber());
-//
-//    try {
-//        builder.sendRequest(null, new RequestCallback() {
-//            public void onError(Request request, Throwable exception) {
-//            	 Window.alert("Error ->"+exception.getMessage());
-//            	 processActualDocumentContinue();
-//            	 GlobalDelete=new HashSet<String>();
-//            }
-//
-//            public void onResponseReceived(Request request, Response response) {
-//                if (response.getStatusCode()!=0&&response.getStatusCode()==200)
-//                	{
-//                	 GlobalDelete=new HashSet<String>();
-//                	 try {
-//                		 JSONValue value = JSONParser.parseLenient(response.getText());
-//                    	 JSONArray authorObject = value.isArray();
-//                    	 for (int i = 0; i < authorObject.size(); i++) {
-//                    		 GlobalDelete.add(authorObject.get(i).isString().stringValue());
-////                    		 Window.alert(authorObject.get(i).isString().stringValue());
-//                    	 }
-//                    	 
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//						Window.alert("Error ->"+e.getMessage());
-//					}
-//                	 
-//                	 
-//                	}
-//                else
-//                	{
-//                	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());
-//                	 GlobalDelete=new HashSet<String>();
-//                	}
-//                
-//                
-//                processActualDocumentContinue();
-//            }
-//        });
-//
-//    } catch (RequestException e) {
-//       e.printStackTrace();
-//       Window.alert(e.getMessage());
-//    }
 	
 	RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, ServerINFO.ServerURI+"ProtoEditorService/service/translade/"+getCollectionNumber());
 	builder.setHeader("Content-type", "text/plain");
@@ -1444,6 +1410,24 @@ private void procesaAuto() {
 			}
 		
 		
+		{
+			PanelUsed.clear();
+			Label Deleted=new Label(StringConstants.getInstance().get("deletelabeldocument"));
+			Deleted.addStyleName("labelDeleteDoc");
+			
+			PanelUsed.add(Deleted);
+			}
+		
+		{
+			PanelMetamap.clear();
+			Label Deleted=new Label(StringConstants.getInstance().get("deletelabeldocument"));
+			Deleted.addStyleName("labelDeleteDoc");
+			
+			PanelMetamap.add(Deleted);
+			}
+		
+		
+		
 
 		
 	}
@@ -1994,11 +1978,163 @@ eval($wnd.daletmp)
 //	@Override
 	public void persistJS() {
 		GWT.log(Documento.toString());
+		List<TermProcesado> getUsedTerms=getTermsUsed();
+		sendtoused(getUsedTerms);
 		setVariableBase2(Documento,RandomIdVars);
 		
 	}
 	
 	
+	private void sendtoused(List<TermProcesado> getUsedTerms) {
+		
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, ServerINFO.ServerURI+"ProtoEditorService/service/setUsedTerms/"+getCollectionNumber()+"/"+Documento.getDocumento().getId());
+		builder.setHeader("Content-type", "text/plain");
+		
+		
+		JSONArray lista=new JSONArray();
+		List<JSONObject> authorList = new LinkedList<JSONObject>();
+		for (int i = 0; i < getUsedTerms.size(); i++) {
+			TermProcesado termProcesado = getUsedTerms.get(i);
+			JSONObject jsonAuthor = new JSONObject();
+            jsonAuthor.put("CUI", new JSONString(termProcesado.getCUI()));
+            jsonAuthor.put("Term", new JSONString(termProcesado.getTerm()));
+            authorList.add(jsonAuthor);
+            lista.set(0, jsonAuthor);
+		}
+		
+		
+		
+		
+		try {
+	      builder.sendRequest(lista.toString(), new RequestCallback() {
+	          public void onError(Request request, Throwable exception) {
+	          	 Window.alert("Error ->"+exception.getMessage());
+	          }
+
+	          public void onResponseReceived(Request request, Response response) {
+	              if (response.getStatusCode()!=0&&response.getStatusCode()==200)
+	            	  console(response.getText());
+	              else
+	              	{
+	              	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());
+	              	}
+
+	          }
+	      });
+
+	  } catch (RequestException e) {
+	     e.printStackTrace();
+	     Window.alert(e.getMessage());
+	  }
+	
+}
+
+
+
+
+
+
+
+	private List<TermProcesado> getTermsUsed() {
+		
+		HashSet<String> remglob = getglobaldelete();
+
+		HashMap<String, TermProcesado> autoTerm = new HashMap<String,TermProcesado>();
+		
+		List<TermProcesado> ProcesarLimpio=new LinkedList<TermProcesado>();
+		HashMap<TermProcesado, StructureJSON> Term_St=new HashMap<TermProcesado, StructureJSON>();
+		
+		for (StructureJSON termelem : TermElements) {
+			
+			if (!termelem.getValue().trim().isEmpty())
+			{
+				
+				
+				boolean AutoCorrecto = true;
+				for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
+					if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+					{
+						AutoCorrecto=false;
+						break;	
+					}
+				}
+				
+//				if (AutoCorrecto)
+//					{
+					
+				HashSet<Integer> posiciones=new HashSet<Integer>();
+				List<StructureJSON> listaPosiciones = Termino_Posicion.get(termelem);
+				if (listaPosiciones!=null&&!listaPosiciones.isEmpty())
+				{
+					for (StructureJSON pos : listaPosiciones)
+					{
+						if (!pos.getValue().isEmpty())
+						{
+							try {
+								int position=Integer.parseInt(pos.getValue())-1;
+								if (position<0)
+									position=0;
+								
+								posiciones.add(position);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					
+					if (!posiciones.isEmpty())
+					{
+						
+						
+						List<StructureJSON> semanticas = Termino_Seman.get(termelem);
+						List<String> semantica= new LinkedList<String>();
+ 						if (semanticas!=null)
+						{
+							for (StructureJSON seman : semanticas) {
+								if (!seman.getValue().trim().isEmpty())
+									semantica.add(seman.getValue().trim());
+							}
+						}
+ 						
+ 						StructureJSON CUI=Termino_CUI.get(termelem);
+						
+						TermProcesado N=new TermProcesado(termelem.getValue().trim(), posiciones);
+						N.setSemantica(semantica);
+						
+						if (CUI!=null)
+						N.setCUI(CUI.getValue());
+						
+						StructureJSON Delete=Termino_Delete.get(termelem);
+						
+						autoTerm.put(N.getTerm(),N);
+						Term_St.put(N, termelem);
+						
+						if (Delete==null|| !Delete.isSelectedValue())
+						{
+						if (AutoCorrecto&&!remglob.contains(N.getTerm()))
+							ProcesarLimpio.add(N);
+						else if (!AutoCorrecto)
+							ProcesarLimpio.add(N);
+						}
+							
+					}
+				}
+//				}
+				
+			}
+			
+			
+		}
+		return ProcesarLimpio;
+	}
+
+
+
+
+
+
+
 	private JSONObject setVariableBase2(DocumentCompleteJSON documento2, String randomIdVars2) {
 		JSONObject DocumentoJ = CreateJSONObject.create(documento2);
 //		JSONObject DocumentoJ = CreateJSONObject(documento2);
