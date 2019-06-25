@@ -569,8 +569,45 @@ protected void processActualDocumentContinue() {
 
 
 private void procesaUsed() {
-	// TODO Auto-generated method stub
-	
+	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/getUsedTerms/"+getCollectionNumber());
+	try {
+        builder.sendRequest(null, new RequestCallback() {
+            public void onError(Request request, Throwable exception) {
+            	 Window.alert("Error ->"+exception.getMessage());
+            }
+
+            public void onResponseReceived(Request request, Response response) {
+                if (response.getStatusCode()!=0&&response.getStatusCode()==200)
+                	{
+//                	 GlobalDelete=new HashSet<String>();
+//                	 try {
+//                		 JSONValue value = JSONParser.parseLenient(response.getText());
+//                    	 JSONArray authorObject = value.isArray();
+//                    	 for (int i = 0; i < authorObject.size(); i++) {
+//                    		 GlobalDelete.add(authorObject.get(i).isString().stringValue());
+////                    		 Window.alert(authorObject.get(i).isString().stringValue());
+//                    	 }
+//                    	 
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//						Window.alert("Error ->"+e.getMessage());
+//					}
+//                	 
+//                	 
+                	}
+                else
+                	{
+                	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());
+                	}
+                
+            
+            }
+        });
+
+    } catch (RequestException e) {
+       e.printStackTrace();
+       Window.alert(e.getMessage());
+    }
 }
 
 
