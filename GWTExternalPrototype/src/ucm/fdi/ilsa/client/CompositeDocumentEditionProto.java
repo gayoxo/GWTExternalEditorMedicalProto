@@ -579,6 +579,9 @@ private void procesaUsed() {
             public void onResponseReceived(Request request, Response response) {
                 if (response.getStatusCode()!=0&&response.getStatusCode()==200)
                 	{
+                	
+                	Window.alert("Lista ->"+response.getText());
+                	
 //                	 GlobalDelete=new HashSet<String>();
 //                	 try {
 //                		 JSONValue value = JSONParser.parseLenient(response.getText());
@@ -2014,6 +2017,7 @@ eval($wnd.daletmp)
 
 //	@Override
 	public void persistJS() {
+			
 		GWT.log(Documento.toString());
 		List<TermProcesado> getUsedTerms=getTermsUsed();
 		sendtoused(getUsedTerms);
