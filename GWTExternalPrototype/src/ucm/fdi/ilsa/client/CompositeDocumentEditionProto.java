@@ -2151,6 +2151,7 @@ eval($wnd.daletmp)
 						autoTerm.put(N.getTerm(),N);
 						Term_St.put(N, termelem);
 						
+						console(N.getTerm());
 						if (Delete==null|| !Delete.isSelectedValue())
 						{
 						if (AutoCorrecto&&!remglob.contains(N.getTerm()))
@@ -2158,6 +2159,7 @@ eval($wnd.daletmp)
 						else if (!AutoCorrecto)
 							ProcesarLimpio.add(N);
 						}
+						console(Integer.toString(ProcesarLimpio.size()));
 							
 					}
 				}
