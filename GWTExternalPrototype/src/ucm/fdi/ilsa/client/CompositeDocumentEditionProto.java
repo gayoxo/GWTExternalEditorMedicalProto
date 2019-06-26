@@ -2029,7 +2029,7 @@ eval($wnd.daletmp)
 	private void sendtoused(List<TermProcesado> getUsedTerms) {
 		
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, ServerINFO.ServerURI+"ProtoEditorService/service/setUsedTerms/"+getCollectionNumber()+"/"+Documento.getDocumento().getId());
-		builder.setHeader("Content-type", "text/plain");
+		builder.setHeader("Content-type", "application/json");
 		
 		
 		JSONArray lista=new JSONArray();
@@ -2044,7 +2044,7 @@ eval($wnd.daletmp)
 		}
 		
 		
-		
+		GWT.log(lista.toString());
 		
 		try {
 	      builder.sendRequest(lista.toString(), new RequestCallback() {
