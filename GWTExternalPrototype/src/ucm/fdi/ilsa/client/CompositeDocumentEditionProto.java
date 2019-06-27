@@ -1065,7 +1065,7 @@ private void procesaLocalDelete() {
 					if (Delete!=null&&Delete.isSelectedValue()&&!remglob.contains(N.getTerm()))
 						ProcesarLimpio.add(N);
 					else 
-						if (Delete!=null&&!remglob.contains(N.getTerm())) 
+						if (Delete!=null&&remglob.contains(N.getTerm())) 
 							ProcesaDeleteFuturo.add(N);
 						
 				}
@@ -1079,9 +1079,9 @@ private void procesaLocalDelete() {
 	
 	
 	for (TermProcesado termProcesado : ProcesaDeleteFuturo) {
-		StructureJSON StructTerm = Term_dEL.get(termProcesado);
-		if (StructTerm!=null)
-			StructTerm.setSelectedValue(true);
+		StructureJSON Delete = Term_dEL.get(termProcesado);
+		if (Delete!=null)
+			Delete.setSelectedValue(true);
 		}
 	
 	
@@ -1196,7 +1196,7 @@ private void procesaAuto() {
 						}
  						
  						StructureJSON CUI=Termino_CUI.get(termelem);
-						
+ 						 						
 						TermProcesado N=new TermProcesado(termelem.getValue().trim(), posiciones);
 						N.setSemantica(semantica);
 						
@@ -2040,7 +2040,7 @@ eval($wnd.daletmp)
             jsonAuthor.put("CUI", new JSONString(termProcesado.getCUI()));
             jsonAuthor.put("Term", new JSONString(termProcesado.getTerm()));
             authorList.add(jsonAuthor);
-            lista.set(0, jsonAuthor);
+            lista.set(i, jsonAuthor);
 		}
 		
 		
@@ -2151,7 +2151,7 @@ eval($wnd.daletmp)
 						autoTerm.put(N.getTerm(),N);
 						Term_St.put(N, termelem);
 						
-						console(N.getTerm());
+						console("Term->"+N.getTerm());
 						if (Delete==null|| !Delete.isSelectedValue())
 						{
 						if (AutoCorrecto&&!remglob.contains(N.getTerm()))
@@ -2159,7 +2159,7 @@ eval($wnd.daletmp)
 						else if (!AutoCorrecto)
 							ProcesarLimpio.add(N);
 						}
-						console(Integer.toString(ProcesarLimpio.size()));
+						console("TermList->"+Integer.toString(ProcesarLimpio.size()));
 							
 					}
 				}

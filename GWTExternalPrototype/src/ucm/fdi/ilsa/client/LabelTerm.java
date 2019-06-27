@@ -92,7 +92,7 @@ public class LabelTerm extends Label {
 			@Override
 			public void onClick(ClickEvent arg0) {
 
-				Window.alert("llamada a servicio externo UMLS");
+				Window.alert("llamada a servicio externo UMLS ->"+Termio.getCUI() );
 //				if (Termio.getCUI()!=null&&!Termio.getCUI().isEmpty())
 //				{
 //				LoadingPopupPanel.getInstance().setLabelTexto(
