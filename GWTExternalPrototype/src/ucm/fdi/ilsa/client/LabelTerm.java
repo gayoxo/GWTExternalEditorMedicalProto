@@ -1,6 +1,7 @@
 package ucm.fdi.ilsa.client;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -9,7 +10,16 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 
 //import ucm.fdi.ilsa.prototype.shared.TermInfo;
@@ -92,7 +102,48 @@ public class LabelTerm extends Label {
 			@Override
 			public void onClick(ClickEvent arg0) {
 
-				Window.alert("llamada a servicio externo UMLS ->"+Termio.getCUI() );
+			//	http://localhost:8080/ProtoEditorService/service/UMLSDesc?q=C0004144
+				
+				if (Termio.getCUI()!=null&&!Termio.getCUI().isEmpty())
+				{
+				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/UMLSDesc?q="+Termio.getCUI());
+				
+				try {
+			        builder.sendRequest(null, new RequestCallback() {
+			            public void onError(Request request, Throwable exception) {
+			            	 Window.alert("Error ->"+exception.getMessage());
+			            }
+
+			            public void onResponseReceived(Request request, Response response) {
+			                if (response.getStatusCode()!=0&&response.getStatusCode()==200)
+			                	{
+			                	
+			                	TermInfo TF=new TermInfo();
+			                	
+			                	//TODO AQUI
+			                	
+			                	
+			                	DialogBox DB=new DialogBoxCUI(TF);
+								DB.center();
+			                	
+			                	 
+			                	}
+			                else
+			                	{
+			                	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());
+			                	}
+			                
+
+			            }
+			        });
+
+			    } catch (RequestException e) {
+			       e.printStackTrace();
+			       Window.alert(e.getMessage());
+			    }
+				
+				
+//				Window.alert("llamada a servicio externo UMLS ->"+Termio.getCUI() );
 //				if (Termio.getCUI()!=null&&!Termio.getCUI().isEmpty())
 //				{
 //				LoadingPopupPanel.getInstance().setLabelTexto(
@@ -116,6 +167,7 @@ public class LabelTerm extends Label {
 //				});
 				
 //				}
+			}
 			}
 		});
 	}
