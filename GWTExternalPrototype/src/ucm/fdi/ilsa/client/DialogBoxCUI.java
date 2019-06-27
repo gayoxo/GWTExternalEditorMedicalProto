@@ -22,12 +22,14 @@ public class DialogBoxCUI extends DialogBox {
 	private static final String DESCTERM = "Description of Term:";
 	private static final String CLOSE = "Close";
 	private TermInfo CUI;
+	private DialogBoxCUI YO;
 
 	public DialogBoxCUI(TermInfo cui) {
 		super(true);
 		setGlassEnabled(true);
 		setModal(true);
 		CUI=cui;
+		YO=this;
 		//setSize(Window.getClientWidth()/10+"px", Window.getClientHeight()/10+"px");
 		addStyleName("dialogCUI");
 		
@@ -55,7 +57,7 @@ public class DialogBoxCUI extends DialogBox {
 			
 			@Override
 			public void onClick(ClickEvent arg0) {
-				hide();
+				YO.hide();
 			}
 		});
 		
