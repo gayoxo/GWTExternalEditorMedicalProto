@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dev.json.JsonObject;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -39,6 +40,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import fdi.ucm.server.interconect.model.DocumentCompleteJSON;
@@ -112,6 +114,10 @@ public class CompositeDocumentEditionProto{
 	private OperationalValueTypeJSON SourceAutoBien;
 	private Long CollectioNumber;
 	private HashSet<String> GlobalDelete;
+    private VerticalPanel Fixed;
+	private ToggleButton toggleButton;
+	private ScrollPanel PanelAlphabetOrder;
+	private ScrollPanel PanelSemantycOrder;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
@@ -569,10 +575,17 @@ protected void processActualDocumentContinue() {
 
 
 private void procesaUsed() {
+	
+	PanelUsed.clear();
+	
+	if (EditorMode())
+	{
 	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/getUsedTerms/"+getCollectionNumber());
 	try {
         builder.sendRequest(null, new RequestCallback() {
-            public void onError(Request request, Throwable exception) {
+
+
+			public void onError(Request request, Throwable exception) {
             	 Window.alert("Error ->"+exception.getMessage());
             }
 
@@ -580,6 +593,84 @@ private void procesaUsed() {
                 if (response.getStatusCode()!=0&&response.getStatusCode()==200)
                 	{
                 	
+                	
+                	Fixed=new VerticalPanel();
+            		Fixed.setWidth("100%");
+            		PanelUsed.add(Fixed);
+            		
+            		HorizontalPanel Opciones = new HorizontalPanel();
+            		Fixed.add(Opciones);
+            		
+            		Opciones.setSpacing(5);
+
+            		toggleButton = new ToggleButton("Change to Alphabetically Order", "Change to Semantic Group Order");
+            	    toggleButton.addClickHandler(new ClickHandler() {
+            	      public void onClick(ClickEvent event) {
+            	        if (toggleButton.isDown()) {
+            	        	 Fixed.remove(PanelSemantycOrder);
+            	        	 Fixed.add(PanelAlphabetOrder);
+            	        } else {
+            	          Fixed.add(PanelSemantycOrder);
+            	          Fixed.remove(PanelAlphabetOrder);
+            	        }
+            	      }
+            	    });
+            		
+            	    Opciones.add(toggleButton);
+            		
+            	    
+            	    
+            	    PanelAlphabetOrder=new ScrollPanel();
+            		PanelAlphabetOrder.setSize("100%", PanelUsed.getOffsetHeight()+"px");
+            	    
+
+            		PanelSemantycOrder=new ScrollPanel();
+            		PanelSemantycOrder.setSize("100%", PanelUsed.getOffsetHeight()+"px");
+                	
+            		HashMap<String, HashSet<TermProcesado>> tablaAcordeon=new HashMap<String, HashSet<TermProcesado>>();
+            		HashSet<TermProcesado> tablaListado=new HashSet<TermProcesado>();
+            		
+            		
+            		
+            		
+            		
+            		 try {
+                		 JSONValue value = JSONParser.parseLenient(response.getText());
+                    	 JSONArray authorObject = value.isArray();
+                    	 for (int i = 0; i < authorObject.size(); i++) {
+                    		JSONObject Termino1 = authorObject.get(i).isObject();
+                    		Window.alert("Error ->"+Termino1.get("Term"));
+                    	 }
+                    	 
+					} catch (Exception e) {
+						e.printStackTrace();
+						Window.alert("Error ->"+e.getMessage());
+					}
+            		
+            		
+//            		 for (Entry<String, List<TermProcesado>> doc_terms_auto : Estado.getDoc_Words_State_AUTO().entrySet()) {
+//             			for (TermProcesado temino : doc_terms_auto.getValue()) {
+//             				List<String> seman=temino.getSemantica();
+//             				if (seman==null||seman.isEmpty())
+//             					{
+//             					seman=new LinkedList<String>();
+//             					seman.add("#");
+//             					}
+//             				for (String semanterm : seman) {
+//             					HashSet<TermProcesado> lista = tablaAcordeon.get(semanterm);
+//             					if (lista==null)
+//             						lista=new HashSet<TermProcesado>();
+//             					lista.add(temino);
+//             					tablaAcordeon.put(semanterm, lista);
+//             				}
+//             				
+//             				tablaListado.add(temino);
+//             				
+//             				
+//             			}
+//             		}
+            		 
+            		 
                 	Window.alert("Lista ->"+response.getText());
                 	
 //                	 GlobalDelete=new HashSet<String>();
@@ -611,6 +702,8 @@ private void procesaUsed() {
        e.printStackTrace();
        Window.alert(e.getMessage());
     }
+	
+	}
 }
 
 
@@ -2039,6 +2132,16 @@ eval($wnd.daletmp)
 			JSONObject jsonAuthor = new JSONObject();
             jsonAuthor.put("CUI", new JSONString(termProcesado.getCUI()));
             jsonAuthor.put("Term", new JSONString(termProcesado.getTerm()));
+            
+            JSONArray jsonSeman=new JSONArray();
+            
+            for (int j = 0; j < termProcesado.getSemantica().size(); j++) {
+				String jsonObject = termProcesado.getSemantica().get(j);
+				jsonSeman.set(j, new JSONString(jsonObject));
+			}
+            
+            jsonAuthor.put("Seman", jsonSeman);
+            
             authorList.add(jsonAuthor);
             lista.set(i, jsonAuthor);
 		}
