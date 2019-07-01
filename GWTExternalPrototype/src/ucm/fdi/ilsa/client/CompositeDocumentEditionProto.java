@@ -2140,7 +2140,7 @@ eval($wnd.daletmp)
 				jsonSeman.set(j, new JSONString(jsonObject));
 			}
             
-            jsonAuthor.put("Seman", jsonSeman);
+            jsonAuthor.put("Semanticas", jsonSeman);
             
             authorList.add(jsonAuthor);
             lista.set(i, jsonAuthor);
