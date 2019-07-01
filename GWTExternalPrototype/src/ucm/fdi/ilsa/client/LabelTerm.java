@@ -20,8 +20,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 
 //import ucm.fdi.ilsa.prototype.shared.TermInfo;
 //import ucm.fdi.ilsa.prototype.shared.TermProcesado;
@@ -149,7 +149,7 @@ public class LabelTerm extends Label {
 			                	 TF.setSemanticTypes(Semanticas);
 			                	 TF.setDescripciones(Descripciones);
 			                	 
-			                	DialogBox DB=new DialogBoxCUI(TF);
+			                	PopupPanel DB=new DialogBoxCUI(TF);
 								DB.center();
 			                	
 			                	 

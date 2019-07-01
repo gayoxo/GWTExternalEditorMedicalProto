@@ -639,8 +639,38 @@ private void procesaUsed() {
                     	 JSONArray authorObject = value.isArray();
                     	 for (int i = 0; i < authorObject.size(); i++) {
                     		JSONObject Termino1 = authorObject.get(i).isObject();
-                    		Window.alert("Error ->"+Termino1.get("Term"));
+                    		JSONArray JA= Termino1.get("Semantica").isArray();
+                    		String Termino=Termino1.get("Term").isString().toString();
+                    		String CUI=Termino1.get("CUI").isString().toString();
+                    		
+                    		LinkedList<String> Semanticas=new LinkedList<String>();
+                    		for (int j = 0; j < JA.size(); j++) {
+                    			String seman=JA.get(j).isString().toString();
+                    			Semanticas.add(seman);
+                    			}
+                    		
+                    		TermProcesado T = new TermProcesado(Termino, new HashSet<Integer>());
+                			T.setCUI(CUI);
+                			T.setSemantica(Semanticas);
+                			
+                    		
+                    		for (int j = 0; j < Semanticas.size(); j++) {
+                    			String seman=Semanticas.get(j);
+                    			HashSet<TermProcesado> Lista =tablaAcordeon.get(seman);
+                    			if (Lista==null)
+                    				Lista=new HashSet<>();
+                    			
+                    			Lista.add(T);
+                    			tablaAcordeon.put(seman, Lista);
+							}
+                    		
+                    		tablaListado.add(T);
+                    		
+                    		Window.alert("Termino ->"+T.getTerm());
                     	 }
+                    	 
+                    	 
+                    	 
                     	 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -671,7 +701,7 @@ private void procesaUsed() {
 //             		}
             		 
             		 
-                	Window.alert("Lista ->"+response.getText());
+//                	Window.alert("Lista ->"+response.getText());
                 	
 //                	 GlobalDelete=new HashSet<String>();
 //                	 try {
