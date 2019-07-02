@@ -2,14 +2,8 @@ package ucm.fdi.ilsa.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -20,94 +14,29 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PushButton;
 
-//import ucm.fdi.ilsa.prototype.shared.TermInfo;
-//import ucm.fdi.ilsa.prototype.shared.TermProcesado;
 
-public class LabelTerm extends Label {
+public class PushButtonUMLSImport extends PushButton {
 
-	private TermProcesado Termio;
-	private LinkedList<Label> ActualTMPSelected;
-	private CompositeDocumentEditionProto ActualSelected;
-//	private final static MedicalPrototypeServiceAsync medialService = GWT.create(MedicalPrototypeService.class);
+	private CompositeDocumentEditionProto PanelPrincipal;
+	private String Name;
+	private String CUI;
 
-	public LabelTerm(TermProcesado termProcc, CompositeDocumentEditionProto medicalPrototipeILSAMain) {
-		super(termProcc.getTerm());
-		Termio=termProcc;
-		ActualSelected=medicalPrototipeILSAMain;
-		ActualTMPSelected=new LinkedList<Label>();
-		
-		HashMap<Integer, Label> lista=ActualSelected.getLabelsByPos();
-		for (Integer posi : Termio.getPosiciones()) {
-			Label sele=lista.get(posi);
-			if (sele!=null)
-				ActualTMPSelected.add(sele);
-		}
-		
-		addMouseOverHandler(new MouseOverHandler() {
-			
-			@Override
-			public void onMouseOver(MouseOverEvent arg0) {
-				for (Label widget : ActualSelected.getActualSelected()) 
-					widget.removeStyleName("selectedLab");
-
-				for (Label label : ActualTMPSelected)
-					label.addStyleName("selectedLabMarked");
-				
-				
-			}
-		});
-		
-		addMouseOutHandler(new MouseOutHandler() {
-			
-			@Override
-			public void onMouseOut(MouseOutEvent arg0) {
-				for (Label label : ActualTMPSelected) 
-					label.removeStyleName("selectedLabMarked");
-				
-				for (Label widget : ActualSelected.getActualSelected()) 
-					widget.addStyleName("selectedLab");
-				
-			}
-		});
-		
-		StringBuffer SBTitle=new StringBuffer();
-		
-		for (int i = 0; i < Termio.getSemantica().size(); i++) {
-			String label = Termio.getSemantica().get(i);
-			SBTitle.append(label);
-			if (i < Termio.getSemantica().size()-1)
-				SBTitle.append("\n");
-		}
-		
-		addMouseOverHandler(new MouseOverHandler() {
-			
-			@Override
-			public void onMouseOver(MouseOverEvent arg0) {
-				for (Label widget : ActualSelected.getActualSelected()) 
-					widget.removeStyleName("selectedLab");
-
-				for (Label label : ActualTMPSelected)
-					label.addStyleName("selectedLabMarked");
-				
-				
-			}
-		});
-		
-		setTitle(SBTitle.toString());
-		
+	public PushButtonUMLSImport(String name, String valor, CompositeDocumentEditionProto panelPrincipal) {
+		super(new Image("img/import.png"));
+		PanelPrincipal=panelPrincipal;
+		Name=name;
+		CUI=valor;
 		addClickHandler(new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent arg0) {
-
-			//	http://localhost:8080/ProtoEditorService/service/UMLSDesc?q=C0004144
 				
-				if (Termio.getCUI()!=null&&!Termio.getCUI().isEmpty())
+				if (CUI!=null&&!CUI.isEmpty())
 				{
-				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/UMLSDesc?q="+Termio.getCUI());
+				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/UMLSDesc?q="+CUI);
 				
 				try {
 			        builder.sendRequest(null, new RequestCallback() {
@@ -150,8 +79,43 @@ public class LabelTerm extends Label {
 			                	 TF.setDescripciones(Descripciones);
 			                	 
 			                	 
-			                	 PopupPanel DB=new DialogBoxCUI(TF);
-								DB.center();
+
+									
+//									boolean found=false;
+//									for (TermProcesado termino : actuales) {
+//										if (termino.getTerm().equals(Name.trim()))
+//										{
+//										found=true;
+//										break;
+//										}
+//									}
+//									
+//									if (found)
+//										Window.alert(StringConstants.getInstance().get("termexist"));
+//									else
+//									{
+//									
+//										HashSet<Integer> INteLis=new HashSet<Integer>();
+//										
+//										for (Label labe : PanelPrincipal.getActualSelected()) {
+//											Integer a = PanelPrincipal.getPosicionTabla().get(labe);
+//											if (a!=null)
+//												INteLis.add(a);
+//										}	
+//										
+//										if (INteLis.isEmpty())
+//											Window.alert(StringConstants.getInstance().get("selectionempty"));
+//										else
+//										{
+//									TermProcesado Nuevo=new TermProcesado(Name, INteLis);
+//									Nuevo.setCUI(CUI);
+//									Nuevo.setSemantica(arg0);
+//									actuales.add(Nuevo);
+//										}
+//									}
+			                	 
+			                	 Window.alert("Nuevo ->"+Name);
+			                	
 			                	 
 			                	}
 			                else
@@ -167,22 +131,64 @@ public class LabelTerm extends Label {
 			       e.printStackTrace();
 			       Window.alert(e.getMessage());
 			    }
+				}
 				
 				
-//				Window.alert("llamada a servicio externo UMLS ->"+Termio.getCUI() );
-//				if (Termio.getCUI()!=null&&!Termio.getCUI().isEmpty())
-//				{
 //				LoadingPopupPanel.getInstance().setLabelTexto(
 //						StringConstants.getInstance().get("Loading"));
 //				LoadingPopupPanel.getInstance().center();
-//				medialService.getTermInfo(Termio.getCUI(), new AsyncCallback<TermInfo>() {
+//				
+//				
+//				medialService.getTermSemanticas(CUI, new AsyncCallback<List<String>>() {
 //					
 //					@Override
-//					public void onSuccess(TermInfo arg0) {
+//					public void onSuccess(List<String> arg0) {
 //						LoadingPopupPanel.getInstance().hide();
-//						DialogBox DB=new DialogBoxCUI(arg0);
-//						DB.center();
+//						String DocumenA = PanelPrincipal.getEstado().getPorRevisar().get(PanelPrincipal.getActualDocument());
+//						List<TermProcesado> actuales = PanelPrincipal.getEstado().getDoc_Words_State_Add().get(DocumenA);
+//						if (actuales==null)
+//							actuales=new LinkedList<TermProcesado>();
 //						
+//						
+//						
+//						boolean found=false;
+//						for (TermProcesado termino : actuales) {
+//							if (termino.getTerm().equals(Name.trim()))
+//							{
+//							found=true;
+//							break;
+//							}
+//						}
+//						
+//						if (found)
+//							Window.alert(StringConstants.getInstance().get("termexist"));
+//						else
+//						{
+//						
+//							HashSet<Integer> INteLis=new HashSet<Integer>();
+//							
+//							for (Label labe : PanelPrincipal.getActualSelected()) {
+//								Integer a = PanelPrincipal.getPosicionTabla().get(labe);
+//								if (a!=null)
+//									INteLis.add(a);
+//							}	
+//							
+//							if (INteLis.isEmpty())
+//								Window.alert(StringConstants.getInstance().get("selectionempty"));
+//							else
+//							{
+//						TermProcesado Nuevo=new TermProcesado(Name, INteLis);
+//						Nuevo.setCUI(CUI);
+//						Nuevo.setSemantica(arg0);
+//						actuales.add(Nuevo);
+//						PanelPrincipal.getEstado().getDoc_Words_State_Add().put(DocumenA,actuales);
+//						PanelPrincipal.RefreshStatus();
+//							}
+//						
+//						
+//						
+//						
+//						}
 //					}
 //					
 //					@Override
@@ -192,14 +198,11 @@ public class LabelTerm extends Label {
 //					}
 //				});
 				
-//				}
-			}
+				
+				
+				
 			}
 		});
-	}
-	
-	public TermProcesado getTermio() {
-		return Termio;
 	}
 
 }
