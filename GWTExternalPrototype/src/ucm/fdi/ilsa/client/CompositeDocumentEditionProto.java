@@ -4,6 +4,7 @@
 package ucm.fdi.ilsa.client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -40,6 +41,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -639,11 +641,52 @@ private void procesaUsed() {
                     	 JSONArray authorObject = value.isArray();
                     	 for (int i = 0; i < authorObject.size(); i++) {
                     		JSONObject Termino1 = authorObject.get(i).isObject();
-                    		Window.alert("Error ->"+Termino1.get("Term"));
+                    		JSONArray JA= Termino1.get("Semanticas").isArray();
+                    		String Termino=Termino1.get("Term").isString().toString();
+                    		String CUI=Termino1.get("CUI").isString().toString();
                     		
+                    		LinkedList<String> Semanticas=new LinkedList<String>();
+                    		for (int j = 0; j < JA.size(); j++) {
+                    			String seman=JA.get(j).isString().toString();
+                    			Semanticas.add(seman);
+                    			}
                     		
+  
+                    			
                     		
+                    		TermProcesado T = new TermProcesado(Termino, new HashSet<Integer>());
+                			T.setCUI(CUI);
+                			T.setSemantica(Semanticas);
+                			
+                    		
+                    		for (int j = 0; j < Semanticas.size(); j++) {
+                    			String seman=Semanticas.get(j);
+                    			HashSet<TermProcesado> Lista =tablaAcordeon.get(seman);
+                    			if (Lista==null)
+                    				Lista=new HashSet<>();
+                    			
+                    			Lista.add(T);
+                    			tablaAcordeon.put(seman, Lista);
+							}
+                    		
+                    		if (Semanticas.isEmpty())
+                    		{
+                    			String seman="#Manual#";
+                    			HashSet<TermProcesado> Lista =tablaAcordeon.get(seman);
+                    			if (Lista==null)
+                    				Lista=new HashSet<>();
+                    			
+                    			Lista.add(T);
+                    			tablaAcordeon.put(seman, Lista);
+                    		}
+                    		
+                    		tablaListado.add(T);
+                    		
+                    		Window.alert("Termino ->"+T.getTerm());
                     	 }
+                    	 
+                    	 
+                    	 
                     	 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -674,7 +717,7 @@ private void procesaUsed() {
 //             		}
             		 
             		 
-                	Window.alert("Lista ->"+response.getText());
+//                	Window.alert("Lista ->"+response.getText());
                 	
 //                	 GlobalDelete=new HashSet<String>();
 //                	 try {
@@ -691,6 +734,98 @@ private void procesaUsed() {
 //					}
 //                	 
 //                	 
+            		 
+            		 
+            		//PanelAlphabet
+            			
+            			HashMap<String, TermProcesado> tablaTexto_valorAlpha=new HashMap<String, TermProcesado>();
+            			for (TermProcesado termProcesado : tablaListado)
+            				tablaTexto_valorAlpha.put(termProcesado.getTerm(), termProcesado);
+            			
+            			LinkedList<String> ListaAlpha = new LinkedList<String>(tablaTexto_valorAlpha.keySet());
+            			Collections.sort(ListaAlpha);
+            			
+            			Grid gA = new Grid(ListaAlpha.size(), 2);
+            			
+            			gA.setWidth("100%");
+            			for (int j = 0; j < ListaAlpha.size(); j++) {
+            				String termname = ListaAlpha.get(j);
+            				TermProcesado termasoc = tablaTexto_valorAlpha.get(termname);
+            				gA.setWidget(j, 0, new LabelUMLS(termasoc.getTerm(),termasoc.getCUI()));
+            				
+            				HorizontalPanel hPanel = new HorizontalPanel();
+            				
+            				PushButton RecoverGlobal = new PushButtonUMLSImport(termasoc.getTerm(),termasoc.getCUI(),Yo);
+            				hPanel.add(RecoverGlobal);
+            				hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+            				
+            				gA.setWidget(j, 1, hPanel);
+            				
+            			}
+            			
+            			PanelAlphabetOrder.add(gA);
+            		 
+            		 
+            			//PAnelSemantica
+            			 StackPanel panel = new StackPanel();
+            			 panel.setWidth("100%");
+            			 
+            			 LinkedList<String> ordenar=new LinkedList<String>(tablaAcordeon.keySet());
+            			 Collections.sort(ordenar);
+            			 
+            			 for (int i = 0; i < ordenar.size(); i++) {
+            				String termSeman = ordenar.get(i);
+            				HashSet<TermProcesado> ListaDesordenada = tablaAcordeon.get(termSeman);
+            				
+            				HashMap<String, TermProcesado> tablaTexto_valor=new HashMap<String, TermProcesado>();
+            				for (TermProcesado termProcesado : ListaDesordenada)
+            					tablaTexto_valor.put(termProcesado.getTerm(), termProcesado);
+            				
+            				
+            				
+            				LinkedList<String> Lista = new LinkedList<String>(tablaTexto_valor.keySet());
+
+            				
+            				
+            				Collections.sort(Lista);
+            			
+            				Grid g = new Grid(Lista.size(), 2);
+            				g.setWidth("100%");
+            				for (int j = 0; j < Lista.size(); j++) {
+            					String termname = Lista.get(j);
+            					TermProcesado termasoc = tablaTexto_valor.get(termname);
+            					g.setWidget(j, 0, new LabelUMLS(termasoc.getTerm(),termasoc.getCUI()));
+            					
+            					HorizontalPanel hPanel = new HorizontalPanel();
+            					
+            					PushButton RecoverGlobal = new PushButtonUMLSImport(termasoc.getTerm(),termasoc.getCUI(),Yo);
+            					hPanel.add(RecoverGlobal);
+            					hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+            					
+            					g.setWidget(j, 1, hPanel);
+            					
+            				}
+            				
+            				ScrollPanel SPI=new ScrollPanel();
+            				SPI.setSize("100%", "100px");
+            				
+            				SPI.setWidget(g);
+            				
+            				panel.add(SPI, termSeman);
+            			}
+            			 
+            			
+            			    
+            			    PanelSemantycOrder.add(panel);
+            			    
+            			    
+            			    
+            			    //AQUI
+            			    Fixed.add(PanelSemantycOrder);
+            		 
+            		 
+            		 
+            		 
                 	}
                 else
                 	{
@@ -2160,7 +2295,9 @@ eval($wnd.daletmp)
 
 	          public void onResponseReceived(Request request, Response response) {
 	              if (response.getStatusCode()!=0&&response.getStatusCode()==200)
-	            	  console(response.getText());
+	            	  {
+	            	  //console(response.getText());
+	            	  }
 	              else
 	              	{
 	              	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());

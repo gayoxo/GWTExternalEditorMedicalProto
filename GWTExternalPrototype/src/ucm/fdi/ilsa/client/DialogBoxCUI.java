@@ -6,17 +6,17 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-
-public class DialogBoxCUI extends DialogBox {
+//LO HE CAMBIADO A POPUP A VER QUE TAL
+public class DialogBoxCUI extends PopupPanel {
 
 	private static final String ASOCCCIA = "Associated Semantic Types:";
 	private static final String DESCTERM = "Description of Term:";
@@ -27,7 +27,7 @@ public class DialogBoxCUI extends DialogBox {
 	public DialogBoxCUI(TermInfo cui) {
 		super(true);
 		setGlassEnabled(true);
-		setModal(true);
+//		setModal(true);
 		CUI=cui;
 		YO=this;
 		//setSize(Window.getClientWidth()/10+"px", Window.getClientHeight()/10+"px");
