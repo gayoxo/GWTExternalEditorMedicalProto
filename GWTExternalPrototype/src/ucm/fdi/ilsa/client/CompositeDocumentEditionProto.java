@@ -14,7 +14,6 @@ import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dev.json.JsonObject;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -641,13 +640,13 @@ private void procesaUsed() {
                     	 JSONArray authorObject = value.isArray();
                     	 for (int i = 0; i < authorObject.size(); i++) {
                     		JSONObject Termino1 = authorObject.get(i).isObject();
-                    		JSONArray JA= Termino1.get("Semanticas").isArray();
-                    		String Termino=Termino1.get("Term").isString().toString();
-                    		String CUI=Termino1.get("CUI").isString().toString();
+                    		JSONArray JA= Termino1.get("SemanticasExt").isArray();
+                    		String Termino=Termino1.get("Term").isString().stringValue();
+                    		String CUI=Termino1.get("CUI").isString().stringValue();
                     		
                     		LinkedList<String> Semanticas=new LinkedList<String>();
                     		for (int j = 0; j < JA.size(); j++) {
-                    			String seman=JA.get(j).isString().toString();
+                    			String seman=JA.get(j).isString().stringValue();
                     			Semanticas.add(seman);
                     			}
                     		
@@ -743,13 +742,20 @@ private void procesaUsed() {
             				tablaTexto_valorAlpha.put(termProcesado.getTerm(), termProcesado);
             			
             			LinkedList<String> ListaAlpha = new LinkedList<String>(tablaTexto_valorAlpha.keySet());
-            			Collections.sort(ListaAlpha);
             			
-            			Grid gA = new Grid(ListaAlpha.size(), 2);
+            			HashMap<String, String> ListaMayusculas=new HashMap<String, String>();
+            			for (String namemini : ListaAlpha) 
+            				ListaMayusculas.put(new String(namemini).toUpperCase(), namemini);
+						
+            			LinkedList<String> ListaAlpha2=new LinkedList<String>(ListaMayusculas.keySet());
+            			
+            			Collections.sort(ListaAlpha2);
+            			
+            			Grid gA = new Grid(ListaAlpha2.size(), 2);
             			
             			gA.setWidth("100%");
-            			for (int j = 0; j < ListaAlpha.size(); j++) {
-            				String termname = ListaAlpha.get(j);
+            			for (int j = 0; j < ListaAlpha2.size(); j++) {
+            				String termname = ListaMayusculas.get(ListaAlpha2.get(j));
             				TermProcesado termasoc = tablaTexto_valorAlpha.get(termname);
             				gA.setWidget(j, 0, new LabelUMLS(termasoc.getTerm(),termasoc.getCUI()));
             				
@@ -785,14 +791,18 @@ private void procesaUsed() {
             				
             				LinkedList<String> Lista = new LinkedList<String>(tablaTexto_valor.keySet());
 
-            				
-            				
-            				Collections.sort(Lista);
+            				HashMap<String, String> ListaMayusculasTabla=new HashMap<String, String>();
+                			for (String namemini : Lista) 
+                				ListaMayusculasTabla.put(new String(namemini).toUpperCase(), namemini);
+    						
+                			LinkedList<String> Lista2=new LinkedList<String>(ListaMayusculasTabla.keySet());
+                			
+                			Collections.sort(Lista2);
             			
-            				Grid g = new Grid(Lista.size(), 2);
+            				Grid g = new Grid(Lista2.size(), 2);
             				g.setWidth("100%");
-            				for (int j = 0; j < Lista.size(); j++) {
-            					String termname = Lista.get(j);
+            				for (int j = 0; j < Lista2.size(); j++) {
+            					String termname = ListaMayusculasTabla.get(Lista2.get(j));
             					TermProcesado termasoc = tablaTexto_valor.get(termname);
             					g.setWidget(j, 0, new LabelUMLS(termasoc.getTerm(),termasoc.getCUI()));
             					
