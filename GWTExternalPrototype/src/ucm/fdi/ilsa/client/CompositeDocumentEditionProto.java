@@ -640,6 +640,9 @@ private void procesaUsed() {
                     	 for (int i = 0; i < authorObject.size(); i++) {
                     		JSONObject Termino1 = authorObject.get(i).isObject();
                     		Window.alert("Error ->"+Termino1.get("Term"));
+                    		
+                    		
+                    		
                     	 }
                     	 
 					} catch (Exception e) {
@@ -2140,7 +2143,7 @@ eval($wnd.daletmp)
 				jsonSeman.set(j, new JSONString(jsonObject));
 			}
             
-            jsonAuthor.put("Seman", jsonSeman);
+            jsonAuthor.put("Semanticas", jsonSeman);
             
             authorList.add(jsonAuthor);
             lista.set(i, jsonAuthor);
