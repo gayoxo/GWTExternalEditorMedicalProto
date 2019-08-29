@@ -2,6 +2,9 @@ package ucm.fdi.ilsa.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.Request;
@@ -15,7 +18,10 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
+
+import fdi.ucm.server.interconect.model.StructureJSON;
 
 
 public class PushButtonUMLSImport extends PushButton {
@@ -25,7 +31,7 @@ public class PushButtonUMLSImport extends PushButton {
 	private String CUI;
 
 	public PushButtonUMLSImport(String name, String valor, CompositeDocumentEditionProto panelPrincipal) {
-		super(new Image("img/import.png"));
+		super(new Image("Proto/import.png"));
 		PanelPrincipal=panelPrincipal;
 		Name=name;
 		CUI=valor;
@@ -51,7 +57,9 @@ public class PushButtonUMLSImport extends PushButton {
 			                	TermInfo TF=new TermInfo();
 			                	
 			                	ArrayList<String> Semanticas=new ArrayList<String>();
-			                	HashMap<String, String> Descripciones=new HashMap<String, String>();
+			                	HashMap<String, String> Descripciones=new HashMap<String, String>();           
+			                	ArrayList<String> SemanticasRec=new ArrayList<String>();
+			                	
 			                	//TODO AQUI
 			                	 try {
 			                		 JSONValue value = JSONParser.parseLenient(response.getText());
@@ -67,6 +75,14 @@ public class PushButtonUMLSImport extends PushButton {
 			                    		 String Texto=desc.get(keyname).isString().stringValue();
 			                    		 if (!Texto.trim().isEmpty())
 			                    			 Descripciones.put(keyname,Texto.trim());
+			                    		 
+			                    		 
+			                    		 JSONArray semanRec=authorObject.get("SemanticTypesRec").isArray();
+				                    	 for (int i = 0; i < semanRec.size(); i++) {
+				                    		 String Texto2=semanRec.get(i).isString().stringValue();
+				                    		 if (!Texto2.trim().isEmpty())
+				                    			 SemanticasRec.add(Texto2.trim());
+				                    	 }	 
 									}
 			                    	 
 			                    	 
@@ -80,7 +96,109 @@ public class PushButtonUMLSImport extends PushButton {
 			                	 
 			                	 
 
-									
+			                	 LinkedList<StructureJSON> elementos_validos=PanelPrincipal.getTermElements();	
+			                	 
+			                	 StructureJSON valido=null;
+			            
+			                	 
+			                	 for (StructureJSON structureJSON : elementos_validos) {
+									if (structureJSON.getValue()==null||structureJSON.getValue().isEmpty())
+										{
+										valido=structureJSON;
+										break;
+										}
+										
+								}
+			                	 
+			                	 
+			                	 if (valido!=null)
+			                	 	{        
+			                		 
+			                		 
+			                		 //TODO Test de existencia y de posiciones
+			                		 StructureJSON CUIS=PanelPrincipal.getTermino_CUI().get(valido);
+			                		 StructureJSON DeleteS=PanelPrincipal.getTermino_Delete().get(valido);
+			                		 List<StructureJSON> PositionS=PanelPrincipal.getTermino_Posicion().get(valido);
+			                		 List<StructureJSON> SemanS=PanelPrincipal.getTermino_Seman().get(valido);
+			                		 
+			                		 boolean error=false;
+			                		 
+			                		 List<Integer> listaPosiciones=new LinkedList<Integer>();
+
+			                			 LinkedList<Label> SelectedT = PanelPrincipal.getActualSelected();
+			                		
+			                			 if (SelectedT.isEmpty())
+			                				 for (Label label : SelectedT) {
+												Integer PosicionLabel=PanelPrincipal.getPosicionTabla().get(label);
+												if (PosicionLabel!=null)
+													listaPosiciones.add(PosicionLabel);
+											
+											}
+			                				 
+			                				 if (listaPosiciones.isEmpty())
+			                					 {
+			                					 Window.alert(StringConstants.getInstance().get("selectionempty"));
+			                					 error=true;
+			                					 }
+			                		 	
+			                	 
+
+			                		 
+			                		 
+			                		 
+			                		 if (!error)
+			                		 
+			                		 {
+			                			 valido.setValue(Name);
+			                		
+			                		 
+			                		 if (CUIS!=null)
+			                			 CUIS.setValue(CUI);
+			                		 
+			                		 if (DeleteS!=null)
+			                			 DeleteS.setSelectedValue(false);
+			                		 
+			                		 if (PositionS!=null)
+			                		 	{
+			                			 
+			                			 if (PositionS.size()<listaPosiciones.size())
+			                				 Window.alert("Ampliar Posiciones");
+			                			 //TODO hay que ampliar casi seguro
+
+			                			 for (int i = 0; i < PositionS.size(); i++) 
+			                				 if (listaPosiciones.size()<i)
+			                					 PositionS.get(i).setValue(Integer.toString(listaPosiciones.get(i)));
+											
+										
+		
+			                		 	}
+			                		 
+			                		 
+			                		 if (SemanS!=null)
+			                		 	{
+			                			 
+			                			 if (SemanS.size()<SemanticasRec.size())
+			                				 Window.alert("Ampliar Semanticas");
+			                			 //TODO hay que ampliar casi seguro
+
+			                			 for (int i = 0; i < SemanS.size(); i++) 
+			                				 if (SemanticasRec.size()<i)
+			                					 SemanS.get(i).setValue(SemanticasRec.get(i));
+											
+										
+		
+			                		 	}
+			                		 
+			                		 
+			                		  
+			                		
+			                		 
+			                		 }
+			                	 	}
+			                	 else {
+			                		 Window.alert("Generar Nuevo ->"+Name);
+			                	 }
+			                		 
 //									boolean found=false;
 //									for (TermProcesado termino : actuales) {
 //										if (termino.getTerm().equals(Name.trim()))
@@ -114,7 +232,7 @@ public class PushButtonUMLSImport extends PushButton {
 //										}
 //									}
 			                	 
-			                	 Window.alert("Nuevo ->"+Name);
+			                	
 			                	
 			                	 
 			                	}

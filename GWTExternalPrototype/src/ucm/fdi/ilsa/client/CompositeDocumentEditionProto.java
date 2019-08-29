@@ -351,8 +351,7 @@ public class CompositeDocumentEditionProto{
 				CreaLosPaneles();
 				
 				
-				//TODO AQUI DARLE CAÑA
-				//AQUI SABEMOS QUE ES VALIDO
+
 				}
 				
 		
@@ -681,7 +680,7 @@ private void procesaUsed() {
                     		
                     		tablaListado.add(T);
                     		
-                    		Window.alert("Termino ->"+T.getTerm());
+//                    		Window.alert("Termino ->"+T.getTerm());
                     	 }
                     	 
                     	 
@@ -2506,8 +2505,30 @@ eval($wnd.daletmp)
 
 
 
+public LinkedList<StructureJSON> getTermElements() {
+	return TermElements;
+}
+
+public HashMap<StructureJSON, List<StructureJSON>> getTermino_Posicion() {
+	return Termino_Posicion;
+}
+
+public HashMap<StructureJSON, List<StructureJSON>> getTermino_Seman() {
+	return Termino_Seman;
+}
+
+public HashMap<StructureJSON, StructureJSON> getTermino_CUI() {
+	return Termino_CUI;
+}
 
 
+public HashMap<StructureJSON, StructureJSON> getTermino_Delete() {
+	return Termino_Delete;
+}
+
+public HashMap<Integer, Label> getPosicionTablaI() {
+	return posicionTablaI;
+}
 
 
 	public Long getCollectionNumber() {
