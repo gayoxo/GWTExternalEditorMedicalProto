@@ -119,9 +119,11 @@ public class CompositeDocumentEditionProto{
 	private ToggleButton toggleButton;
 	private ScrollPanel PanelAlphabetOrder;
 	private ScrollPanel PanelSemantycOrder;
+	private Image LoadMetaICO;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
+	private static final String PROTOICO = "Proto/medicine.png";
 	
 
 	public CompositeDocumentEditionProto(String randomIdVars, Long contextId, int Height, boolean Grammar) {
@@ -428,6 +430,7 @@ public class CompositeDocumentEditionProto{
 		PanelMetamap.setHeight("100%");
 //		PanelMetamap.setSize("100%", "100%");
 		LoadMeta=new Image(LOADINGGEN);
+		LoadMetaICO=new Image(PROTOICO);
 
 		
 		PanelUsed=new VerticalPanel();
@@ -549,7 +552,7 @@ protected void processActualDocumentContinue() {
 		ProcesaLabelRecuperar(true);		
 		procesaSentenciasPhrases(true);
 		processPaneles();
-//		procesaPanelMetamap();
+		procesaPanelMetamapDesc();
 //		procesaUsed();
 		processImage();
 		procesaTraduccion();			
@@ -570,6 +573,18 @@ protected void processActualDocumentContinue() {
 	procesaTraduccion();
 	}
 }
+
+
+
+
+private void procesaPanelMetamapDesc() {
+	PanelMetamap.clear();
+	PanelMetamap.add(LoadMetaICO);
+	
+}
+
+
+
 
 
 
