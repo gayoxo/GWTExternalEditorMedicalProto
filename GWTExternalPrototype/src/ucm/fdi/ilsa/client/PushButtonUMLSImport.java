@@ -127,7 +127,7 @@ public class PushButtonUMLSImport extends PushButton {
 
 			                			 LinkedList<Label> SelectedT = PanelPrincipal.getActualSelected();
 			                		
-			                			 if (SelectedT.isEmpty())
+			                			 if (!SelectedT.isEmpty())
 			                				 for (Label label : SelectedT) {
 												Integer PosicionLabel=PanelPrincipal.getPosicionTabla().get(label);
 												if (PosicionLabel!=null)
@@ -143,20 +143,22 @@ public class PushButtonUMLSImport extends PushButton {
 			                		 	
 			                	 
 
-			                		 
+			                				 Window.alert(listaPosiciones.size()+"");
 			                		 
 			                		 
 			                		 if (!error)
 			                		 
 			                		 {
 			                			 valido.setValue(Name);
-			                		
+			                			 
+			                			
 			                		 
 			                		 if (CUIS!=null)
 			                			 CUIS.setValue(CUI);
 			                		 
 			                		 if (DeleteS!=null)
 			                			 DeleteS.setSelectedValue(false);
+			                		 
 			                		 
 			                		 if (PositionS!=null)
 			                		 	{
@@ -166,13 +168,12 @@ public class PushButtonUMLSImport extends PushButton {
 			                			 //TODO hay que ampliar casi seguro
 
 			                			 for (int i = 0; i < PositionS.size(); i++) 
-			                				 if (listaPosiciones.size()<i)
+			                				 if (listaPosiciones.size()>i)
 			                					 PositionS.get(i).setValue(Integer.toString(listaPosiciones.get(i)));
 											
 										
 		
 			                		 	}
-			                		 
 			                		 
 			                		 if (SemanS!=null)
 			                		 	{
@@ -181,19 +182,25 @@ public class PushButtonUMLSImport extends PushButton {
 			                				 Window.alert("Ampliar Semanticas");
 			                			 //TODO hay que ampliar casi seguro
 
+			                			 Window.alert(SemanS.size()+"");
+			                			 
+			                			 Window.alert(SemanticasRec.size()+"");
+			                			 
 			                			 for (int i = 0; i < SemanS.size(); i++) 
-			                				 if (SemanticasRec.size()<i)
+			                				 if (SemanticasRec.size()>i)
 			                					 SemanS.get(i).setValue(SemanticasRec.get(i));
 											
 										
 		
 			                		 	}
 			                		 
-			                		 
-			                		  
+			                		 Window.alert("Hola3");
+			                		 PanelPrincipal.RefreshStatus();
 			                		
 			                		 
 			                		 }
+
+			                		 
 			                	 	}
 			                	 else {
 			                		 Window.alert("Generar Nuevo ->"+Name);
