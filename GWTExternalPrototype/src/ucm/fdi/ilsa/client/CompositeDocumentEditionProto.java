@@ -798,8 +798,6 @@ protected void processBusqueda() {
                     		Window.alert(authorObject.get(i)+value.isObject().get(authorObject.get(i)));
                     		arg0.put(authorObject.get(i), value.isObject().get(authorObject.get(i)).isString().stringValue());
                     		}
-                    	 
-	                	//TODO BOTON BUSCAR
 
 	                	PanelMetamapSol.clear();
 	        			Grid g = new Grid(arg0.keySet().size(), 2);

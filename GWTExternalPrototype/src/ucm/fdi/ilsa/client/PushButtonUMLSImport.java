@@ -131,7 +131,7 @@ public class PushButtonUMLSImport extends PushButton {
 			                				 for (Label label : SelectedT) {
 												Integer PosicionLabel=PanelPrincipal.getPosicionTabla().get(label);
 												if (PosicionLabel!=null)
-													listaPosiciones.add(PosicionLabel);
+													listaPosiciones.add(new Integer(PosicionLabel+1));
 											
 											}
 			                				 
@@ -143,7 +143,7 @@ public class PushButtonUMLSImport extends PushButton {
 			                		 	
 			                	 
 
-			                				 Window.alert(listaPosiciones.size()+"");
+//			                				 Window.alert(listaPosiciones.size()+"");
 			                		 
 			                		 
 			                		 if (!error)
@@ -182,9 +182,9 @@ public class PushButtonUMLSImport extends PushButton {
 			                				 Window.alert("Ampliar Semanticas");
 			                			 //TODO hay que ampliar casi seguro
 
-			                			 Window.alert(SemanS.size()+"");
-			                			 
-			                			 Window.alert(SemanticasRec.size()+"");
+//			                			 Window.alert(SemanS.size()+"");
+//			                			 
+//			                			 Window.alert(SemanticasRec.size()+"");
 			                			 
 			                			 for (int i = 0; i < SemanS.size(); i++) 
 			                				 if (SemanticasRec.size()>i)
@@ -194,7 +194,7 @@ public class PushButtonUMLSImport extends PushButton {
 		
 			                		 	}
 			                		 
-			                		 Window.alert("Hola3");
+//			                		 Window.alert("Hola3");
 			                		 PanelPrincipal.RefreshStatus();
 			                		
 			                		 
