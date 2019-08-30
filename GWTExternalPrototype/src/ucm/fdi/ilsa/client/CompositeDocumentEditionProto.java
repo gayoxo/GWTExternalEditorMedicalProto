@@ -596,7 +596,7 @@ private void procesaPanelMetamap() {
 	else
 	{
 		
-	Window.alert("Busqueda Metamap");
+//	Window.alert("Busqueda Metamap");
 	
 	PanelMetamap.clear();	
 	
@@ -795,7 +795,7 @@ protected void processBusqueda() {
                	
                     	 HashMap<String, String> arg0=new HashMap<>();
                     	 for (int i = 0; i < authorObject.size(); i++) {
-                    		Window.alert(authorObject.get(i)+value.isObject().get(authorObject.get(i)));
+//                    		Window.alert(authorObject.get(i)+" "+value.isObject().get(authorObject.get(i)).isString().stringValue());
                     		arg0.put(authorObject.get(i), value.isObject().get(authorObject.get(i)).isString().stringValue());
                     		}
 
