@@ -17,6 +17,9 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -41,6 +44,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.StackPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -50,8 +54,6 @@ import fdi.ucm.server.interconect.model.OperationalValueJSON;
 import fdi.ucm.server.interconect.model.OperationalValueTypeJSON;
 import fdi.ucm.server.interconect.model.StructureJSON;
 import fdi.ucm.server.interconect.model.StructureJSON.TypeOfStructureEnum;
-
-
 
 
 /**
@@ -120,6 +122,13 @@ public class CompositeDocumentEditionProto{
 	private ScrollPanel PanelAlphabetOrder;
 	private ScrollPanel PanelSemantycOrder;
 	private Image LoadMetaICO;
+	private HorizontalPanel PanelBottonMas;
+	private PushButton BotonBack;
+	private PushButton BotonForward;
+	private int posicionBuscador;
+	private VerticalPanel PanelMetamapSol;
+	private Image LoadIMGSearch=new Image(LOADINGGEN);
+	private TextBox Text;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
@@ -431,6 +440,7 @@ public class CompositeDocumentEditionProto{
 //		PanelMetamap.setSize("100%", "100%");
 		LoadMeta=new Image(LOADINGGEN);
 		LoadMetaICO=new Image(PROTOICO);
+		LoadMetaICO.addStyleName(".metamapZoneLogo");
 
 		
 		PanelUsed=new VerticalPanel();
@@ -552,7 +562,7 @@ protected void processActualDocumentContinue() {
 		ProcesaLabelRecuperar(true);		
 		procesaSentenciasPhrases(true);
 		processPaneles();
-		procesaPanelMetamapDesc();
+		procesaPanelMetamap();
 //		procesaUsed();
 		processImage();
 		procesaTraduccion();			
@@ -567,7 +577,7 @@ protected void processActualDocumentContinue() {
 	procesaManual();
 	procesaGlobalDelete();
 	procesaLocalDelete();
-//	procesaPanelMetamap();
+	procesaPanelMetamap();
 	procesaUsed();
 	processImage();
 	procesaTraduccion();
@@ -577,9 +587,262 @@ protected void processActualDocumentContinue() {
 
 
 
-private void procesaPanelMetamapDesc() {
+private void procesaPanelMetamap() {
+	if (!EditorMode())
+	{
 	PanelMetamap.clear();
 	PanelMetamap.add(LoadMetaICO);
+	}
+	else
+	{
+		
+	Window.alert("Busqueda Metamap");
+	
+	PanelMetamap.clear();	
+	
+	posicionBuscador=0;
+	
+	DockLayoutPanel DC=new DockLayoutPanel(Unit.PX);
+	DC.setHeight("100%");
+	DC.setWidth("268px");
+	
+	PanelMetamap.add(DC);
+	
+	HorizontalPanel PanelFindPer=new HorizontalPanel();
+	PanelFindPer.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+	PanelFindPer.setSpacing(2);
+	PanelFindPer.addStyleName("panelBotonesFinder");
+	DC.addNorth(PanelFindPer, 60);
+//	DC.add(PanelFindPer);
+	
+	PanelBottonMas=new HorizontalPanel();
+	PanelBottonMas.setSpacing(4);
+	DC.addSouth(PanelBottonMas, 60);
+	PanelBottonMas.setVisible(false);
+//	DC.add(PanelFindPer);
+	BotonBack = new PushButton(new Image("Proto/back.png"));
+	BotonForward = new PushButton(new Image("Proto/forward.png"));
+	PanelBottonMas.add(BotonBack);
+	PanelBottonMas.add(BotonForward);
+	BotonBack.setEnabled(false);
+	
+	BotonBack.addClickHandler(new ClickHandler() {
+		
+		@Override
+		public void onClick(ClickEvent arg0) {
+			posicionBuscador--;
+			processBusqueda();
+		}
+	});
+	
+	BotonForward.addClickHandler(new ClickHandler() {
+		
+		@Override
+		public void onClick(ClickEvent arg0) {
+			posicionBuscador++;
+			processBusqueda();
+		}
+	});
+	
+	ScrollPanel PenelMetamapScroll = new ScrollPanel();
+	DC.add(PenelMetamapScroll);
+	PanelMetamapSol=new VerticalPanel();
+	PenelMetamapScroll.add(PanelMetamapSol);
+	PanelMetamapSol.setVisible(false);
+	
+	generaPanelFindPer(PanelFindPer);
+	
+	}
+}
+
+
+
+
+
+
+
+private void generaPanelFindPer(HorizontalPanel panelFindPer) {
+	Text=new TextBox();
+	PushButton BotonFind = new PushButton(new Image("Proto/search.png"));
+	PushButton BotonAdd = new PushButton(new Image("Proto/import.png"));
+	
+	panelFindPer.add(Text);
+	panelFindPer.add(BotonFind);
+	panelFindPer.add(BotonAdd);
+	
+	
+	Text.addKeyPressHandler(new KeyPressHandler() {
+		
+		@Override
+		public void onKeyPress(KeyPressEvent arg0) {
+			if (arg0.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER){
+				if (Text.getValue().trim().isEmpty())
+					Window.alert(StringConstants.getInstance().get("cannotbeempty"));
+				else
+					{
+					PanelBottonMas.setVisible(true);
+					PanelMetamapSol.setVisible(true);
+					posicionBuscador=1;
+					processBusqueda();
+					}
+			}
+			
+		}
+	});
+	
+	BotonFind.addClickHandler(new ClickHandler() {
+		
+		
+
+		@Override
+		public void onClick(ClickEvent arg0) {
+			if (Text.getValue().trim().isEmpty())
+				Window.alert(StringConstants.getInstance().get("cannotbeempty"));
+			else
+				{
+				PanelBottonMas.setVisible(true);
+				PanelMetamapSol.setVisible(true);
+				posicionBuscador=1;
+				processBusqueda();
+				}
+			
+		}
+
+		
+	});
+	
+	
+	//TODO BOTON AÑADIR
+//	BotonAdd.addClickHandler(new ClickHandler() {
+//		
+//		@Override
+//		public void onClick(ClickEvent arg0) {
+//			if (Text.getValue().trim().isEmpty())
+//				Window.alert(StringConstants.getInstance().get("cannotbeempty"));
+//			else
+//				{
+//				String DocumenA = Estado.getPorRevisar().get(ActualDocument);
+//				List<TermProcesado> actuales = Estado.getDoc_Words_State_Add().get(DocumenA);
+//				if (actuales==null)
+//					actuales=new LinkedList<TermProcesado>();
+//				
+//				
+//				
+//				boolean found=false;
+//				for (TermProcesado termino : actuales) {
+//					if (termino.getTerm().equals(Text.getValue().trim()))
+//					{
+//					found=true;
+//					break;
+//					}
+//				}
+//				
+//				if (found)
+//					Window.alert(StringConstants.getInstance().get("termexist"));
+//				else
+//				{
+//				
+//					HashSet<Integer> INteLis=new HashSet<Integer>();
+//					
+//					for (Label labe : ActualSelected) {
+//						Integer a = posicionTabla.get(labe);
+//						if (a!=null)
+//							INteLis.add(a);
+//					}	
+//					
+//					if (INteLis.isEmpty())
+//						Window.alert(StringConstants.getInstance().get("selectionempty"));
+//					else
+//					{	
+//					TermProcesado Nuevo=new TermProcesado(Text.getValue(), INteLis);
+//					actuales.add(Nuevo);
+//					Estado.getDoc_Words_State_Add().put(DocumenA,actuales);
+//					RefreshStatus();
+//					}
+//				}
+//				}
+//			
+//		}
+//	});
+}
+
+
+
+
+
+
+
+protected void processBusqueda() {
+	PanelMetamapSol.clear();
+	PanelMetamapSol.add(LoadIMGSearch);
+	
+	//http://localhost:8080/ProtoEditorService/service/UMLSFind?q=lung&p=1
+	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/UMLSFind?q="+Text.getValue().trim()+"&p="+posicionBuscador);
+	
+	 try {
+	        builder.sendRequest(null, new RequestCallback() {
+	            public void onError(Request request, Throwable exception) {
+	            	 Window.alert("Error ->"+exception.getMessage());
+
+	            }
+
+	            public void onResponseReceived(Request request, Response response) {
+	                if (response.getStatusCode()!=0&&response.getStatusCode()==200)
+	                	{
+	                	
+	                	 JSONValue value = JSONParser.parseLenient(response.getText());
+                    	 LinkedList<String> authorObject = new LinkedList<String>(value.isObject().keySet());
+               	
+                    	 HashMap<String, String> arg0=new HashMap<>();
+                    	 for (int i = 0; i < authorObject.size(); i++) {
+                    		Window.alert(authorObject.get(i)+value.isObject().get(authorObject.get(i)));
+                    		arg0.put(authorObject.get(i), value.isObject().get(authorObject.get(i)).isString().stringValue());
+                    		}
+                    	 
+	                	//TODO BOTON BUSCAR
+
+	                	PanelMetamapSol.clear();
+	        			Grid g = new Grid(arg0.keySet().size(), 2);
+	        			g.setWidth("100%");
+	        			PanelMetamapSol.add(g);
+	        			List<String> Claves= new LinkedList<String>(arg0.keySet());
+	        			
+	        			for (int i = 0; i < Claves.size(); i++) {
+	        				String Name = Claves.get(i);
+	        				String Valor= arg0.get(Name);
+	        				Label nuevo = new LabelUMLS(Name,Valor);
+	        				g.setWidget(i, 0, nuevo);
+	        				PushButton AddFromUMLSGlobal = new PushButtonUMLSImport(Name,Valor,Yo);
+	        				g.setWidget(i, 1, AddFromUMLSGlobal);
+	        			}
+	        			
+	        			if (posicionBuscador>1)
+	        				BotonBack.setEnabled(true);
+	        			else
+	        				BotonBack.setEnabled(false);
+	        			
+	        			if (arg0.keySet().size()>1)
+	        				BotonForward.setEnabled(true);
+	        			else
+	        				BotonForward.setEnabled(false);
+	        			
+	        		
+	                	 
+	                	}
+	                else
+	                	{
+	                	Window.alert("Error ->"+response.getStatusCode() + "->"+response.getStatusText());
+	                	}
+	                
+	                
+	            }
+	        });
+	        
+	 } catch (RequestException e) {
+	       e.printStackTrace();
+	       Window.alert(e.getMessage());
+	    }
+	 
 	
 }
 
@@ -1070,7 +1333,7 @@ private void procesaGlobalDelete() {
 					autoTerm.put(N.getTerm(),N);
 					Term_dEL.put(N, Delete);
 					
-					//TODO FALTA LA CONDICION DEL GENERAKL
+					//TODO FALTA LA CONDICION DEL GENERAKL Parece reparado
 					if (Delete!=null&&remglob.contains(N.getTerm()))
 						ProcesarLimpio.add(N);
 
@@ -1316,7 +1579,7 @@ private void procesaLocalDelete() {
 					autoTerm.put(N.getTerm(),N);
 					Term_dEL.put(N, Delete);
 					
-					//TODO FALTA LA CONDICION DEL GENERAKL
+					//TODO FALTA LA CONDICION DEL GENERAKL parece reparado
 					if (Delete!=null&&Delete.isSelectedValue()&&!remglob.contains(N.getTerm()))
 						ProcesarLimpio.add(N);
 					else 
@@ -1463,7 +1726,7 @@ private void procesaAuto() {
 						autoTerm.put(N.getTerm(),N);
 						Term_St.put(N, termelem);
 						
-						//TODO FALTA LA CONDICION DEL GENERAKL
+						//TODO FALTA LA CONDICION DEL GENERAKL parece reparado
 						if ((Delete==null|| !Delete.isSelectedValue())&&!remglob.contains(N.getTerm()))
 							ProcesarLimpio.add(N);
 
