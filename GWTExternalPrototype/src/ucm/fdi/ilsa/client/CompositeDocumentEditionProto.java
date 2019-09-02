@@ -713,57 +713,269 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
 	
 	
 	//TODO BOTON AÑADIR
-//	BotonAdd.addClickHandler(new ClickHandler() {
-//		
-//		@Override
-//		public void onClick(ClickEvent arg0) {
-//			if (Text.getValue().trim().isEmpty())
-//				Window.alert(StringConstants.getInstance().get("cannotbeempty"));
-//			else
-//				{
-//				String DocumenA = Estado.getPorRevisar().get(ActualDocument);
-//				List<TermProcesado> actuales = Estado.getDoc_Words_State_Add().get(DocumenA);
-//				if (actuales==null)
-//					actuales=new LinkedList<TermProcesado>();
-//				
-//				
+	BotonAdd.addClickHandler(new ClickHandler() {
+		
+		@Override
+		public void onClick(ClickEvent arg0) {
+			if (Text.getValue().trim().isEmpty())
+				Window.alert(StringConstants.getInstance().get("cannotbeempty"));
+			else
+				{
+				
+				
+				
+				
+				LinkedList<StructureJSON> elementos_validos=getTermElements();	
+           	 
+           	 StructureJSON valido=null;
+       
+           	 List<String> ListaDeAnteriores=new LinkedList<>();
+           	 
+           	 for (StructureJSON structureJSON : elementos_validos) {
+					if (structureJSON.getValue()==null||structureJSON.getValue().trim().isEmpty())
+						valido=structureJSON;
+					else if (structureJSON.getValue()!=null&&!structureJSON.getValue().trim().isEmpty())
+						ListaDeAnteriores.add(structureJSON.getValue().trim());
+						
+				}
+           	 
+           	 
+           	 if (valido!=null)
+           	 	{        
+           		 
+
+           		 StructureJSON DeleteS=getTermino_Delete().get(valido);
+           		 List<StructureJSON> PositionS=getTermino_Posicion().get(valido);
+           		 
+           		 boolean error=false;
+           		 
+           		 List<Integer> listaPosiciones=new LinkedList<Integer>();
+
+           			 LinkedList<Label> SelectedT = getActualSelected();
+           		
+           			 if (!SelectedT.isEmpty())
+           				 for (Label label : SelectedT) {
+								Integer PosicionLabel=getPosicionTabla().get(label);
+								if (PosicionLabel!=null)
+									listaPosiciones.add(new Integer(PosicionLabel+1));
+							
+							}
+           				 
+           				 if (listaPosiciones.isEmpty())
+           					 {
+           					 Window.alert(StringConstants.getInstance().get("selectionempty"));
+           					 error=true;
+           					 }
+           		 	
+           	 
+           		for (String label : ListaDeAnteriores) {
+						if (label.toLowerCase().equals(Text.getValue().trim().toLowerCase()))
+       					 {
+       					 Window.alert(StringConstants.getInstance().get("termexist"));
+       					 error=true;
+       					 break;
+       					 }
+					}
+
+//           				 Window.alert(listaPosiciones.size()+"");
+           		 
+           		 
+           		 if (!error)
+           		 
+           		 {
+           			 valido.setValue(Text.getValue().trim());         		 
+           		 
+           		 if (DeleteS!=null)
+           			 DeleteS.setSelectedValue(false);
+           		 
+           		 
+           		 if (PositionS!=null)
+           		 	{
+           			 
+           			 if (PositionS.size()<listaPosiciones.size())
+           				 Window.alert("Ampliar Posiciones");
+           			 //TODO hay que ampliar casi seguro
+
+           			 for (int i = 0; i < PositionS.size(); i++) 
+           				 if (listaPosiciones.size()>i)
+           					 PositionS.get(i).setValue(Integer.toString(listaPosiciones.get(i)));
+							
+						
+
+           		 	}
+           		 
+           		 
+           		OperationalValueTypeJSON SourceAutoBienAqui=null;
+    			
+    			for (OperationalValueTypeJSON OperaValTyJSON : valido.getShows()) {
+    			if (OperaValTyJSON.getView().toLowerCase().equals("proto")
+    					&&OperaValTyJSON.getName().toLowerCase().equals("source")
+    					&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+    						SourceAutoBienAqui=OperaValTyJSON;
+    			} 
+           		 
+           		for (OperationalValueJSON termProcesado : valido.getOperationalValues()) {
+     				if ((SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId()))
+     					termProcesado.setValue("manual");
+     			}
+           		
+//           		 Window.alert("Hola3");
+           		 RefreshStatus();
+           		
+           		 
+           		 }
+
+           		 
+           	 	}
+           	 else {
+           		 //TODO GENERAR NUEVO ELEMENTO
+           		 Window.alert("Generar Nuevo ->"+Text.getValue());
+           	 }
+           		 
+
+           	 
+           	
+		
+				
+				
+//				//////////////////////////////////////////////////////////////////////
 //				
 //				boolean found=false;
-//				for (TermProcesado termino : actuales) {
-//					if (termino.getTerm().equals(Text.getValue().trim()))
-//					{
-//					found=true;
-//					break;
-//					}
-//				}
-//				
-//				if (found)
-//					Window.alert(StringConstants.getInstance().get("termexist"));
-//				else
-//				{
-//				
-//					HashSet<Integer> INteLis=new HashSet<Integer>();
-//					
-//					for (Label labe : ActualSelected) {
-//						Integer a = posicionTabla.get(labe);
-//						if (a!=null)
-//							INteLis.add(a);
-//					}	
-//					
-//					if (INteLis.isEmpty())
-//						Window.alert(StringConstants.getInstance().get("selectionempty"));
-//					else
-//					{	
-//					TermProcesado Nuevo=new TermProcesado(Text.getValue(), INteLis);
-//					actuales.add(Nuevo);
-//					Estado.getDoc_Words_State_Add().put(DocumenA,actuales);
-//					RefreshStatus();
-//					}
-//				}
-//				}
 //			
-//		}
-//	});
+//				LinkedList<StructureJSON> elementos_validos=getTermElements();	
+//           	 
+//           	 StructureJSON valido=null;
+//       
+//           	 List<String> ListaDeAnteriores=new LinkedList<>();
+//           	 
+//           	 for (StructureJSON structureJSON : elementos_validos) {
+//					if (structureJSON.getValue()==null||structureJSON.getValue().trim().isEmpty())
+//						valido=structureJSON;
+//					else if (structureJSON.getValue()!=null&&!structureJSON.getValue().trim().isEmpty())
+//						ListaDeAnteriores.add(structureJSON.getValue().trim());
+//						
+//				}
+//				
+//           	for (String label : ListaDeAnteriores) {
+//				if (label.toLowerCase().equals(Text.getValue().trim().toLowerCase()))
+//					 {
+//					 found=true;
+//					 break;
+//					 }
+//			}
+//				
+//				
+////				String DocumenA = Estado.getPorRevisar().get(ActualDocument);
+////				List<TermProcesado> actuales = Estado.getDoc_Words_State_Add().get(DocumenA);
+////				if (actuales==null)
+////					actuales=new LinkedList<TermProcesado>();
+////				
+////				
+////				
+////				boolean found=false;
+////				for (TermProcesado termino : actuales) {
+////					if (termino.getTerm().equals(Text.getValue().trim()))
+////					{
+////					found=true;
+////					break;
+////					}
+////				}
+//				
+//           		if (valido!=null)
+//           		{
+//           			
+//           		 StructureJSON CUIS=getTermino_CUI().get(valido);
+//        		 StructureJSON DeleteS=getTermino_Delete().get(valido);
+//        		 List<StructureJSON> PositionS=getTermino_Posicion().get(valido);
+//        		 List<StructureJSON> SemanS=getTermino_Seman().get(valido);
+//           			
+//           			
+//           			if (found)
+//    					Window.alert(StringConstants.getInstance().get("termexist"));
+//    				else
+//    				{
+//    				
+//    					
+//    					valido.setValue(Name);
+//           			 
+//            			
+//               		 
+//               		 if (CUIS!=null)
+//               			 CUIS.setValue("");
+//               		 
+//               		 if (DeleteS!=null)
+//               			 DeleteS.setSelectedValue(false);
+//               		 
+//               		 
+//               		 if (PositionS!=null)
+//               		 	{
+//               			 
+//               			 if (PositionS.size()<listaPosiciones.size())
+//               				 Window.alert("Ampliar Posiciones");
+//               			 //TODO hay que ampliar casi seguro
+//
+//               			 for (int i = 0; i < PositionS.size(); i++) 
+//               				 if (listaPosiciones.size()>i)
+//               					 PositionS.get(i).setValue(Integer.toString(listaPosiciones.get(i)));
+//								
+//							
+//
+//               		 	}
+//               		 
+//               		 if (SemanS!=null)
+//               		 	{
+//               			 
+//               			 if (SemanS.size()<SemanticasRec.size())
+//               				 Window.alert("Ampliar Semanticas");
+//               			 //TODO hay que ampliar casi seguro
+//
+////               			 Window.alert(SemanS.size()+"");
+////               			 
+////               			 Window.alert(SemanticasRec.size()+"");
+//               			 
+//               			 for (int i = 0; i < SemanS.size(); i++) 
+//               				 if (SemanticasRec.size()>i)
+//               					 SemanS.get(i).setValue(SemanticasRec.get(i));
+//								
+//							
+//
+//               		 	}
+//               		 
+////               		 Window.alert("Hola3");
+//               		 RefreshStatus();
+//               		
+//    					
+//    					
+////    					HashSet<Integer> INteLis=new HashSet<Integer>();
+////    					
+////    					for (Label labe : ActualSelected) {
+////    						Integer a = posicionTabla.get(labe);
+////    						if (a!=null)
+////    							INteLis.add(a);
+////    					}	
+////    					
+////    					if (INteLis.isEmpty())
+////    						Window.alert(StringConstants.getInstance().get("selectionempty"));
+////    					else
+////    					{	
+////    					TermProcesado Nuevo=new TermProcesado(Text.getValue(), INteLis);
+////    					actuales.add(Nuevo);
+////    					Estado.getDoc_Words_State_Add().put(DocumenA,actuales);
+////    					RefreshStatus();
+////    					}
+//    				}
+//           			
+//           		}
+//           		else {
+//           		 //TODO GENERAR NUEVO ELEMENTO
+//           		 Window.alert("Generar Nuevo ->"+Text.getValue().trim());
+//           	 }
+           			
+				
+				}
+			
+		}
+	});
 }
 
 
@@ -1269,10 +1481,19 @@ private void procesaGlobalDelete() {
 		if (!termelem.getValue().trim().isEmpty())
 		{
 			
+			OperationalValueTypeJSON SourceAutoBienAqui=null;
+			
+			for (OperationalValueTypeJSON OperaValTyJSON : termelem.getShows()) {
+			if (OperaValTyJSON.getView().toLowerCase().equals("proto")
+					&&OperaValTyJSON.getName().toLowerCase().equals("source")
+					&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+						SourceAutoBienAqui=OperaValTyJSON;
+			}
+			
 			
 			boolean AutoCorrecto = true;
 			for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
-				if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+				if ((SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
 				{
 					AutoCorrecto=false;
 					break;	
@@ -1390,10 +1611,18 @@ private void procesaManual() {
 		if (!termelem.getValue().trim().isEmpty())
 		{
 			
+			OperationalValueTypeJSON SourceAutoBienAqui=null;
+			
+			for (OperationalValueTypeJSON OperaValTyJSON : termelem.getShows()) {
+			if (OperaValTyJSON.getView().toLowerCase().equals("proto")
+					&&OperaValTyJSON.getName().toLowerCase().equals("source")
+					&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+						SourceAutoBienAqui=OperaValTyJSON;
+			}
 			
 			boolean AutoCorrecto = true;
 			for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
-				if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+				if ((SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
 				{
 					AutoCorrecto=false;
 					break;	
@@ -1515,10 +1744,19 @@ private void procesaLocalDelete() {
 		if (!termelem.getValue().trim().isEmpty())
 		{
 			
+			OperationalValueTypeJSON SourceAutoBienAqui=null;
+			
+			for (OperationalValueTypeJSON OperaValTyJSON : termelem.getShows()) {
+			if (OperaValTyJSON.getView().toLowerCase().equals("proto")
+					&&OperaValTyJSON.getName().toLowerCase().equals("source")
+					&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+						SourceAutoBienAqui=OperaValTyJSON;
+			}
+			
 			
 			boolean AutoCorrecto = true;
 			for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
-				if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+				if (SourceAutoBienAqui!=null&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
 				{
 					AutoCorrecto=false;
 					break;	
@@ -1663,10 +1901,20 @@ private void procesaAuto() {
 			if (!termelem.getValue().trim().isEmpty())
 			{
 				
-				
 				boolean AutoCorrecto = true;
+				
+				OperationalValueTypeJSON SourceAutoBienAqui=null;
+				
+				for (OperationalValueTypeJSON OperaValTyJSON : termelem.getShows()) {
+				if (OperaValTyJSON.getView().toLowerCase().equals("proto")
+						&&OperaValTyJSON.getName().toLowerCase().equals("source")
+						&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+							SourceAutoBienAqui=OperaValTyJSON;
+				}
+				
 				for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
-					if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+					
+					if ( (SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
 					{
 						AutoCorrecto=false;
 						break;	
@@ -2234,6 +2482,8 @@ private void procesaSentenciasPhrases(boolean borrado_) {
 			Errores.add("Term structure element should be text type");
 		
 		boolean TermBien = false;
+		
+		//TODO AQUI CADA UNO DEBE SER DIFERENTE
 		SourceAutoBien = null;
 		for (OperationalValueTypeJSON OperaValTyJSON : sS.getShows()) {
 			//REvisa las cosas de la vista, basicamente que pone term y auto
@@ -2317,8 +2567,6 @@ private void procesaSentenciasPhrases(boolean borrado_) {
 		Termino_Delete=new HashMap<StructureJSON, StructureJSON>();
 		
 		Termino_CUI=new HashMap<StructureJSON, StructureJSON>();
-		
-		
 		
 		for (StructureJSON termElem : TermElements) {
 			
@@ -2618,10 +2866,18 @@ eval($wnd.daletmp)
 			if (!termelem.getValue().trim().isEmpty())
 			{
 				
+				OperationalValueTypeJSON SourceAutoBienAqui=null;
+				
+				for (OperationalValueTypeJSON OperaValTyJSON : termelem.getShows()) {
+				if (OperaValTyJSON.getView().toLowerCase().equals("proto")
+						&&OperaValTyJSON.getName().toLowerCase().equals("source")
+						&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+							SourceAutoBienAqui=OperaValTyJSON;
+				}
 				
 				boolean AutoCorrecto = true;
 				for (OperationalValueJSON termProcesado : termelem.getOperationalValues()) {
-					if (SourceAutoBien.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
+					if (SourceAutoBienAqui!=null&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId())&&!termProcesado.getValue().toLowerCase().equals("auto"))
 					{
 						AutoCorrecto=false;
 						break;	
@@ -2805,6 +3061,7 @@ public HashMap<StructureJSON, StructureJSON> getTermino_Delete() {
 public HashMap<Integer, Label> getPosicionTablaI() {
 	return posicionTablaI;
 }
+
 
 
 	public Long getCollectionNumber() {

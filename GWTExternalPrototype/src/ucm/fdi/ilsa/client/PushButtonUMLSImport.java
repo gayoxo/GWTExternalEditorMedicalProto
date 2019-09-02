@@ -21,6 +21,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 
+import fdi.ucm.server.interconect.model.OperationalValueJSON;
+import fdi.ucm.server.interconect.model.OperationalValueTypeJSON;
 import fdi.ucm.server.interconect.model.StructureJSON;
 
 
@@ -100,13 +102,13 @@ public class PushButtonUMLSImport extends PushButton {
 			                	 
 			                	 StructureJSON valido=null;
 			            
+			                	 List<String> ListaDeAnteriores=new LinkedList<>();
 			                	 
 			                	 for (StructureJSON structureJSON : elementos_validos) {
-									if (structureJSON.getValue()==null||structureJSON.getValue().isEmpty())
-										{
+									if (structureJSON.getValue()==null||structureJSON.getValue().trim().isEmpty())
 										valido=structureJSON;
-										break;
-										}
+									else if (structureJSON.getValue()!=null&&!structureJSON.getValue().trim().isEmpty())
+										ListaDeAnteriores.add(structureJSON.getValue().trim());
 										
 								}
 			                	 
@@ -114,8 +116,7 @@ public class PushButtonUMLSImport extends PushButton {
 			                	 if (valido!=null)
 			                	 	{        
 			                		 
-			                		 
-			                		 //TODO Test de existencia y de posiciones
+
 			                		 StructureJSON CUIS=PanelPrincipal.getTermino_CUI().get(valido);
 			                		 StructureJSON DeleteS=PanelPrincipal.getTermino_Delete().get(valido);
 			                		 List<StructureJSON> PositionS=PanelPrincipal.getTermino_Posicion().get(valido);
@@ -142,6 +143,14 @@ public class PushButtonUMLSImport extends PushButton {
 			                					 }
 			                		 	
 			                	 
+			                		for (String label : ListaDeAnteriores) {
+										if (label.toLowerCase().equals(Name.trim().toLowerCase()))
+		                					 {
+		                					 Window.alert(StringConstants.getInstance().get("termexist"));
+		                					 error=true;
+		                					 break;
+		                					 }
+									}
 
 //			                				 Window.alert(listaPosiciones.size()+"");
 			                		 
@@ -149,7 +158,7 @@ public class PushButtonUMLSImport extends PushButton {
 			                		 if (!error)
 			                		 
 			                		 {
-			                			 valido.setValue(Name);
+			                			 valido.setValue(Name.trim());
 			                			 
 			                			
 			                		 
@@ -194,6 +203,28 @@ public class PushButtonUMLSImport extends PushButton {
 		
 			                		 	}
 			                		 
+			                		 
+			                		 
+			                    		OperationalValueTypeJSON SourceAutoBienAqui=null;
+			             			
+			             			for (OperationalValueTypeJSON OperaValTyJSON : valido.getShows()) {
+			             			if (OperaValTyJSON.getView().toLowerCase().equals("proto")
+			             					&&OperaValTyJSON.getName().toLowerCase().equals("source")
+			             					&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+			             						SourceAutoBienAqui=OperaValTyJSON;
+			             			} 
+			                    		 
+			                    		for (OperationalValueJSON termProcesado : valido.getOperationalValues()) {
+			              				if ((SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId()))
+			              					termProcesado.setValue("manual");
+			              			}
+			                		 
+			                		 
+//			                		 for (OperationalValueJSON termProcesado : valido.getOperationalValues()) {
+//			             				if (PanelPrincipal.getSourceAutoBien().getId().contains(termProcesado.getOperationalValueTypeId()))
+//			             					termProcesado.setValue("manual");
+//			             			}
+			                		 
 //			                		 Window.alert("Hola3");
 			                		 PanelPrincipal.RefreshStatus();
 			                		
@@ -203,6 +234,7 @@ public class PushButtonUMLSImport extends PushButton {
 			                		 
 			                	 	}
 			                	 else {
+			                		 //TODO GENERAR NUEVO ELEMENTO
 			                		 Window.alert("Generar Nuevo ->"+Name);
 			                	 }
 			                		 

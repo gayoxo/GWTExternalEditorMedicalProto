@@ -116,6 +116,22 @@ public class PushButtonEdit extends PushButton {
 					
 					}
 				
+				
+				OperationalValueTypeJSON SourceAutoBienAqui=null;
+				
+				for (OperationalValueTypeJSON OperaValTyJSON : Docum.getShows()) {
+				if (OperaValTyJSON.getView().toLowerCase().equals("proto")
+						&&OperaValTyJSON.getName().toLowerCase().equals("source")
+						&&OperaValTyJSON.getDefault().toLowerCase().equals("auto"))
+							SourceAutoBienAqui=OperaValTyJSON;
+				}
+				
+           		for (OperationalValueJSON termProcesado : Docum.getOperationalValues()) {
+     				if ((SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId()))
+     					termProcesado.setValue("manual");
+
+     			}
+           		
 
 				Padre.RefreshStatus();
 				
