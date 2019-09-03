@@ -440,7 +440,7 @@ public class CompositeDocumentEditionProto{
 //		PanelMetamap.setSize("100%", "100%");
 		LoadMeta=new Image(LOADINGGEN);
 		LoadMetaICO=new Image(PROTOICO);
-		LoadMetaICO.addStyleName(".metamapZoneLogo");
+		LoadMetaICO.addStyleName("metamapZoneLogo");
 
 		
 		PanelUsed=new VerticalPanel();
@@ -562,7 +562,7 @@ protected void processActualDocumentContinue() {
 		ProcesaLabelRecuperar(true);		
 		procesaSentenciasPhrases(true);
 		processPaneles();
-		procesaPanelMetamap();
+		procesaPanelMetamap(true);
 //		procesaUsed();
 		processImage();
 		procesaTraduccion();			
@@ -577,7 +577,7 @@ protected void processActualDocumentContinue() {
 	procesaManual();
 	procesaGlobalDelete();
 	procesaLocalDelete();
-	procesaPanelMetamap();
+	procesaPanelMetamap(false);
 	procesaUsed();
 	processImage();
 	procesaTraduccion();
@@ -587,8 +587,8 @@ protected void processActualDocumentContinue() {
 
 
 
-private void procesaPanelMetamap() {
-	if (!EditorMode())
+private void procesaPanelMetamap(boolean _isdeleted) {
+	if (!EditorMode()||_isdeleted)
 	{
 	PanelMetamap.clear();
 	PanelMetamap.add(LoadMetaICO);
@@ -733,7 +733,9 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            	 
            	 for (StructureJSON structureJSON : elementos_validos) {
 					if (structureJSON.getValue()==null||structureJSON.getValue().trim().isEmpty())
-						valido=structureJSON;
+						if (valido==null){
+							valido=structureJSON;
+						}else;			
 					else if (structureJSON.getValue()!=null&&!structureJSON.getValue().trim().isEmpty())
 						ListaDeAnteriores.add(structureJSON.getValue().trim());
 						
@@ -814,10 +816,22 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
     						SourceAutoBienAqui=OperaValTyJSON;
     			} 
            		 
+    			 Window.alert(valido.getOperationalValues()+"-Z OV -Z"+SourceAutoBienAqui);
+    			 boolean found=false;
            		for (OperationalValueJSON termProcesado : valido.getOperationalValues()) {
      				if ((SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId()))
+     					{
      					termProcesado.setValue("manual");
+     					Window.alert("found");
+     					found=true;
+     					}
      			}
+           		
+           		if (!found&&SourceAutoBienAqui!=null)
+           		{
+           			valido.getOperationalValues().add(new OperationalValueJSON(null, SourceAutoBienAqui.getId().get(0), "manual"));
+           			Window.alert("no found -Z Created");
+           		}
            		
 //           		 Window.alert("Hola3");
            		 RefreshStatus();
