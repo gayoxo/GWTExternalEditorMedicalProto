@@ -822,7 +822,7 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
      				if ((SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId()))
      					{
      					termProcesado.setValue("manual");
-     					Window.alert("found");
+//     					Window.alert("found");
      					found=true;
      					}
      			}
@@ -830,7 +830,7 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            		if (!found&&SourceAutoBienAqui!=null)
            		{
            			valido.getOperationalValues().add(new OperationalValueJSON(null, SourceAutoBienAqui.getId().get(0), "manual"));
-           			Window.alert("no found -Z Created");
+//           			Window.alert("no found -Z Created");
            		}
            		
 //           		 Window.alert("Hola3");

@@ -1,5 +1,7 @@
 package ucm.fdi.ilsa.client;
 
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
@@ -27,11 +29,32 @@ public class PushButtonDeleteManual extends PushButton {
 			public void onClick(ClickEvent arg0) {
 				
 				Docum.setValue("");
+				
+				StructureJSON DeleteS=Padre.getTermino_Delete().get(Docum);
+				StructureJSON CUIS=Padre.getTermino_CUI().get(Docum);
+				List<StructureJSON> SemansS=Padre.getTermino_Seman().get(Docum);
+          		List<StructureJSON> PositionS=Padre.getTermino_Posicion().get(Docum);
+				
+          		if (PositionS!=null)
+	       			 for (int i = 0; i < PositionS.size(); i++) 
+	       					 PositionS.get(i).setValue("");
+
+          		if (DeleteS!=null)
+          			 DeleteS.setSelectedValue(false);
+          		
+          		if (CUIS!=null)
+          				CUIS.setValue("");
+          		
+          		if (SemansS!=null)
+	       			 for (int i = 0; i < SemansS.size(); i++) 
+	       				SemansS.get(i).setValue("");
+          		
 //				List<TermProcesado> Dele = Padre.getEstado().getDoc_Words_State_Add().get(Docum);
 //				if (Dele==null)
 //					Dele=new LinkedList<TermProcesado>();
 //				Dele.remove(TermLabe);
 //				Padre.getEstado().getDoc_Words_State_Add().put(Docum, Dele);
+          		
 				Padre.RefreshStatus();
 				
 				
