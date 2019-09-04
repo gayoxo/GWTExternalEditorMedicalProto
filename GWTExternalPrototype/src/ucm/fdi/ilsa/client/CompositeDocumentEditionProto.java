@@ -3032,7 +3032,6 @@ eval($wnd.daletmp)
 		if (EsperandoPosicion!=null&&!update)
 		{
 			//AQUI EMPEZAMOS
-			EsperandoPosicion=null;
 			
 			
 			StructureJSON SS=null;
