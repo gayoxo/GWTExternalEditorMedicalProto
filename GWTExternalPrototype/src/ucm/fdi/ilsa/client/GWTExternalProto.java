@@ -66,7 +66,10 @@ public class GWTExternalProto implements EntryPoint {
 	}
     
     public static boolean isWaitingUpdate() {
-    	return false;
+    	if (Actual!=null)
+    		return Actual.isWaitingUpdate();
+    	else
+    		return false;
 		
 		
 	}
@@ -78,7 +81,8 @@ public class GWTExternalProto implements EntryPoint {
 	}
     
     public static void setWaitingUpdate(boolean update) {
-    	//NOTHIG TO DO
+    	if (Actual!=null)
+    		Actual.setWaitingUpdate(update);
     }
 
 

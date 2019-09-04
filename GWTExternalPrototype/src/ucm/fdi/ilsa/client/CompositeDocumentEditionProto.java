@@ -129,6 +129,9 @@ public class CompositeDocumentEditionProto{
 	private VerticalPanel PanelMetamapSol;
 	private Image LoadIMGSearch=new Image(LOADINGGEN);
 	private TextBox Text;
+	private boolean WaitingUpdate;
+	private PosicionEspera EsperandoPosicion;
+	private StructureJSON SS;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
@@ -144,6 +147,7 @@ public class CompositeDocumentEditionProto{
 //		actualpage=0;
 		
 		
+		EsperandoPosicion=null;
 		
 	int Variacion=315;
 		
@@ -229,7 +233,7 @@ public class CompositeDocumentEditionProto{
 		*/
 		CollectioNumber=Documento.getGramatica().get(0).getColeccion();
 		
-		StructureJSON SS=null;
+		SS=null;
 		for (GrammarJSON Gr : Documento.getGramatica()) 	
 		{
 			SS=gotContext(Gr.getListaS(), ContextId);
@@ -309,18 +313,7 @@ public class CompositeDocumentEditionProto{
 							
 							processActualDocument();
 							
-							//TODO ARREGLAR
-//							if (Estado!=null)
-//							{
-//								String Docu = Estado.getPorRevisar().get(ActualDocument);
-//								if (!Estado.getBorrados().contains(Docu))
-//									Estado.getBorrados().add(Docu);
-//								
-//								
-//								
-//								
-//								RefreshStatus();
-//							}
+						
 							
 						}
 					});
@@ -334,17 +327,7 @@ public class CompositeDocumentEditionProto{
 						public void onClick(ClickEvent arg0) {
 							
 							DeleteBien.setSelectedValue(false);
-							//TODO ARREGLAR
-//							if (Estado!=null)
-//							{
-//								String Docu = Estado.getPorRevisar().get(ActualDocument);
-//								if (Estado.getBorrados().contains(Docu))
-//									Estado.getBorrados().remove(Docu);
-//								
-//								
-//								
-//								RefreshStatus();
-//							}
+							
 							
 							processActualDocument();
 						}
@@ -712,7 +695,6 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
 	});
 	
 	
-	//TODO BOTON AÑADIR
 	BotonAdd.addClickHandler(new ClickHandler() {
 		
 		@Override
@@ -795,8 +777,18 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            		 	{
            			 
            			 if (PositionS.size()<listaPosiciones.size())
-           				 Window.alert("Ampliar Posiciones");
-           			 //TODO hay que ampliar casi seguro
+           				 {
+           				 Window.alert("Necesitas mas posiciones");
+           				EsperandoPosicion=new PosicionEspera(listaPosiciones,Yo);
+           				//TODO GENERAR NUEVO ELEMENTO
+           				setWaitingUpdate(true);
+    					createIterator(Long.toString(SS.getId().get(0)),Long.toString(Documento.getDocumento().getId()),"proto",false);
+
+           				
+           				 }
+           			 else
+           			 {
+           			 //TODO Sin ampliar
 
            			 for (int i = 0; i < PositionS.size(); i++) 
            				 if (listaPosiciones.size()>i)
@@ -804,7 +796,7 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
 							
 						
 
-           		 	}
+           		 	
            		 
            		 
            		OperationalValueTypeJSON SourceAutoBienAqui=null;
@@ -816,7 +808,7 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
     						SourceAutoBienAqui=OperaValTyJSON;
     			} 
            		 
-    			 Window.alert(valido.getOperationalValues()+"-Z OV -Z"+SourceAutoBienAqui);
+//    			 Window.alert(valido.getOperationalValues()+"-Z OV -Z"+SourceAutoBienAqui);
     			 boolean found=false;
            		for (OperationalValueJSON termProcesado : valido.getOperationalValues()) {
      				if ((SourceAutoBienAqui!=null)&&SourceAutoBienAqui.getId().contains(termProcesado.getOperationalValueTypeId()))
@@ -836,10 +828,10 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
 //           		 Window.alert("Hola3");
            		 RefreshStatus();
            		
-           		 
+           		 	}
            		 }
 
-           		 
+           		 }
            	 	}
            	 else {
            		 //TODO GENERAR NUEVO ELEMENTO
@@ -2998,7 +2990,6 @@ eval($wnd.daletmp)
 
 
 
-
 	public int getHeigh() {
 		return Heigh;
 	}
@@ -3015,7 +3006,7 @@ eval($wnd.daletmp)
 
 //	@Override
 	public boolean isWaitingUpdate() {
-		return false;
+		return WaitingUpdate;
 	}
 
 
@@ -3029,6 +3020,160 @@ eval($wnd.daletmp)
 	public void setWaitingUpdate(boolean update) {
 		
 		
+		String SDocumentoS =getVariableBaseJSONOBJS(RandomIdVars);
+			
+		JSONObject JSOSucion = (JSONObject) JSONParser.parseStrict(SDocumentoS);
+
+		Documento=CreateJSONObject.create(JSOSucion);
+		
+		GWT.log(Documento.getDocumento().getId()+"");
+		
+		
+		if (EsperandoPosicion!=null&&!update)
+		{
+			//AQUI EMPEZAMOS
+			EsperandoPosicion=null;
+			
+			
+			StructureJSON SS=null;
+			for (GrammarJSON Gr : Documento.getGramatica()) 	
+			{
+				SS=gotContext(Gr.getListaS(), ContextId);
+				if (SS!=null)
+					break;	
+				
+			}		
+			
+			
+			if (SS==null)
+			{
+				Label T4 = new Label();
+				T4.setText("Context not found");
+				PanelPrincipal.add(T4);
+			}else
+				{
+				
+				console("1:"+SS.getName());
+		
+			test(SS);
+			
+			LinkedList<StructureJSON> elementos_validos=getTermElements();	
+          	 
+          	 StructureJSON valido=null;
+      
+          	 List<String> ListaDeAnteriores=new LinkedList<>();
+          	 
+          	 for (StructureJSON structureJSON : elementos_validos) {
+					if (structureJSON.getValue()==null||structureJSON.getValue().trim().isEmpty())
+						if (valido==null){
+							valido=structureJSON;
+						}else;			
+					else if (structureJSON.getValue()!=null&&!structureJSON.getValue().trim().isEmpty())
+						ListaDeAnteriores.add(structureJSON.getValue().trim());
+						
+				}
+          	 
+          	GWT.log("PN -Z "+EsperandoPosicion.getPosicionesQueNecesito());
+	
+			List<StructureJSON> PositionS=getTermino_Posicion().get(valido);
+			
+			 if (PositionS.size()<EsperandoPosicion.getPosicionesQueNecesito().size())
+			{
+					createIterator(Long.toString(SS.getId().get(0)),Long.toString(Documento.getDocumento().getId()),"proto",false);
+				 
+			}
+			 else
+				 EsperandoPosicion.crea(valido,PositionS);
+			 
+				}
+			
+		}else
+			WaitingUpdate=update;
+		
+		
+//		if (TC!=null&&!update)
+//		{
+//			
+//		
+//			
+//			StructureJSON S=null;
+//			for (GrammarJSON gramarpos : Documento.getGramatica()) {
+//				S=gotContext(gramarpos.getListaS(),ContextId);
+//				
+//				if (S!=null)
+//					{
+//					
+//				
+//				if (!S.getClaseOf().equals(ContextId))
+//					{
+//					S=gotContext(gramarpos.getListaS(),S.getClaseOf());				
+//					ContextId=S.getClaseOf();
+//					ContextId=S.getClaseOf();
+//					}
+//				
+//				
+//				
+//					break;
+//					}
+//				
+//			}
+//				
+//				
+//				HashData=new HashMap<StructureJSON, HashMap<StructureJSON,HashMap<StructureJSON,HashMap<String, StructureJSON>>>>();
+//
+//				
+//				List<StructureJSON> S2 = null;
+//				for (GrammarJSON gramarpos : Documento.getGramatica()) {
+//					S2=gotMultivaluedContext(gramarpos.getListaS(),ContextId);
+//					if (S2!=null)
+//						break;
+//				}
+//				
+//				if (S2==null)
+//					{
+//					setError(ERROR_STRUCTURE);
+//					return;
+//					}
+//				
+//				for (StructureJSON punto : S2)
+//					procesaPoint(punto);
+//				
+//				
+//			lista=new ArrayList<StructureJSON>(HashData.keySet());
+//			refreshpage();
+//			
+//			
+//			
+//			HashMap<StructureJSON, HashMap<StructureJSON, HashMap<String, StructureJSON>>> TablaHoja = HashData.get(EE);
+//			for (Entry<StructureJSON, HashMap<StructureJSON, HashMap<String, StructureJSON>>> elementoClave : TablaHoja.entrySet()) {
+//				if (elementoClave.getKey().getValue()!=null&&elementoClave.getKey().getValue().isEmpty())
+//				{
+//					int necesario = TC.getTextSelector().size();
+//					int actual= elementoClave.getValue().keySet().size();
+//					if (necesario>actual)
+//						{
+//						
+//							createIterator(Long.toString(elementoClave.getValue().entrySet().iterator().next().getKey().getId().get(0)),Long.toString(Documento.getDocumento().getId()),"proto",false);
+//
+////							ControladorEditor.createIteration(Long.toString(elementoClave.getValue().entrySet().iterator().next().getKey().getId().get(0)),Long.toString(Documento.getDocumento().getId()),"anote",false);
+//							break;
+//						}
+//					else
+//					{
+//						TC.setLista(elementoClave.getKey(),elementoClave.getValue());					
+//						WaitingUpdate=update;
+//						break;
+//					}
+//				}
+//			}
+//			
+//			
+//				
+//			
+//			
+//		}
+//		else
+//			WaitingUpdate=update;
 	}
 
 
@@ -3050,6 +3195,10 @@ eval($wnd.daletmp)
 	}
 
 
+	
+	private static native String createIterator(String contextId, String documentId, String Editor, boolean isgrammar) /*-{
+	return window.parent.createIterator(contextId,documentId,Editor,isgrammar);
+	}-*/;
 
 public LinkedList<StructureJSON> getTermElements() {
 	return TermElements;
