@@ -311,7 +311,7 @@ public class CompositeDocumentEditionProto{
 					SimplePanel PanelID3= new SimplePanel();
 					PanelID3.addStyleName("simplePanel");
 					
-					NoAnnotButton = new PushButton(new Image("img/Notes-icon.png"));
+					NoAnnotButton = new PushButton(new Image("Proto/Notes-icon.png"));
 					NoAnnotButton.setTitle("Without Annotations");
 					
 					NoAnnotButton.addClickHandler(new ClickHandler() {
@@ -328,7 +328,7 @@ public class CompositeDocumentEditionProto{
 					});
 					
 					
-					SiAnnotButton = new PushButton(new Image("img/Notes-2-icon.png"));
+					SiAnnotButton = new PushButton(new Image("Proto/Notes-2-icon.png"));
 					
 					Annot=new PopupPanel(true);
 					SiAnnotButton.addMouseOutHandler(new MouseOutHandler() {
