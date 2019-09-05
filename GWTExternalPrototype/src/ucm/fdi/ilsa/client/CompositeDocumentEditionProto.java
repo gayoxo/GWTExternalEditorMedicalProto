@@ -20,6 +20,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -54,6 +58,7 @@ import fdi.ucm.server.interconect.model.OperationalValueJSON;
 import fdi.ucm.server.interconect.model.OperationalValueTypeJSON;
 import fdi.ucm.server.interconect.model.StructureJSON;
 import fdi.ucm.server.interconect.model.StructureJSON.TypeOfStructureEnum;
+
 
 
 /**
@@ -132,10 +137,14 @@ public class CompositeDocumentEditionProto{
 	private boolean WaitingUpdate;
 	private PosicionEspera EsperandoPosicion;
 	private StructureJSON SS;
+	private PushButton NoAnnotButton;
+	private PopupPanel Annot;
+	private StructureJSON Anotacion;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
 	private static final String PROTOICO = "Proto/medicine.png";
+	private static PushButton SiAnnotButton = null;
 	
 
 	public CompositeDocumentEditionProto(String randomIdVars, Long contextId, int Height, boolean Grammar) {
@@ -291,6 +300,89 @@ public class CompositeDocumentEditionProto{
 				    PanelBotones.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 //				    PanelBotones.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 				    dockLayoutPanel.addSouth(PanelBotones,80);
+				    
+				    
+				    
+				    HorizontalPanel PanelAnotacion=new HorizontalPanel();
+					PanelAnotacion.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+					PanelAnotacion.addStyleName("botoneraTAnnotation");
+					PanelAnotacion.setSpacing(3);
+					
+					SimplePanel PanelID3= new SimplePanel();
+					PanelID3.addStyleName("simplePanel");
+					
+					NoAnnotButton = new PushButton(new Image("img/Notes-icon.png"));
+					NoAnnotButton.setTitle("Without Annotations");
+					
+					NoAnnotButton.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent arg0) {
+
+							PopupPanel PanelAnotacion= new PanelAnotacionPopupPanel(Anotacion);
+							
+							if (Anotacion!=null&&!Anotacion.getValue().trim().isEmpty())
+								PanelAnotacion.center();
+							
+						}
+					});
+					
+					
+					SiAnnotButton = new PushButton(new Image("img/Notes-2-icon.png"));
+					
+					Annot=new PopupPanel(true);
+					SiAnnotButton.addMouseOutHandler(new MouseOutHandler() {
+						
+						@Override
+						public void onMouseOut(MouseOutEvent arg0) {
+							Annot.hide();
+							
+						}
+					});
+					SiAnnotButton.addMouseOverHandler(new MouseOverHandler() {
+						
+						private Label L;
+
+
+						@Override
+						public void onMouseOver(MouseOverEvent arg0) {
+			
+							if (L==null||Anotacion==null||Anotacion.getValue().trim().isEmpty())
+								L=new Label("No Anot");
+							else
+//							if (Anotacion!=null&&!Anotacion.getValue().trim().isEmpty())
+								L.setText(Anotacion.getValue());
+							
+							Annot.setWidget(L);
+							Annot.showRelativeTo(SiAnnotButton);
+							
+						}
+					});
+					
+					SiAnnotButton.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent arg0) {
+
+							
+							PopupPanel PanelAnotacion= new PanelAnotacionPopupPanel(Anotacion);
+							
+							if (Anotacion!=null&&!Anotacion.getValue().trim().isEmpty())
+								PanelAnotacion.center();
+							
+						}
+					});
+					
+					SiAnnotButton.setVisible(false);
+					
+					PanelAnotacion.add(PanelID3);
+					PanelAnotacion.add(NoAnnotButton);
+					PanelAnotacion.add(SiAnnotButton);
+					
+					PanelBotones.add(PanelAnotacion);
+				    
+				    
+				    
 				    
 				    
 				    HorizontalPanel PanelDelete=new HorizontalPanel();
@@ -521,20 +613,26 @@ private void processActualDocument() {
 		
 	}
 	
+private boolean procesaAnotado() {
+	if (Anotacion!=null&&!Anotacion.getValue().trim().isEmpty())
+		return true;
+	else
+		return false;
+}
 	
 	
 protected void processActualDocumentContinue() {
 	//TODO FALTA EL ANOTADO
-//	if (procesaAnotado())	
-//	{
-//		SiAnnotButton.setVisible(true);
-//		NoAnnotButton.setVisible(false);
-//	}
-//	else
-//	{
-//		SiAnnotButton.setVisible(false);
-//		NoAnnotButton.setVisible(true);
-//	}
+	if (procesaAnotado())	
+	{
+		SiAnnotButton.setVisible(true);
+		NoAnnotButton.setVisible(false);
+	}
+	else
+	{
+		SiAnnotButton.setVisible(false);
+		NoAnnotButton.setVisible(true);
+	}
 		
 
 	
@@ -767,22 +865,25 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            		 if (!error)
            		 
            		 {
-           			 valido.setValue(Text.getValue().trim());         		 
-           		 
-           		 if (DeleteS!=null)
-           			 DeleteS.setSelectedValue(false);
+           			
            		 
            		 
            		 if (PositionS!=null)
            		 	{
            			 
+           			 
            			 if (PositionS.size()<listaPosiciones.size())
            				 {
            				 Window.alert("Necesitas mas posiciones");
-           				EsperandoPosicion=new PosicionEspera(listaPosiciones,Yo);
-           				//TODO GENERAR NUEVO ELEMENTO
+           				EsperandoPosicion=new PosicionEspera(listaPosiciones,Yo,Text.getValue().trim());
            				setWaitingUpdate(true);
-    					createIterator(Long.toString(SS.getId().get(0)),Long.toString(Documento.getDocumento().getId()),"proto",false);
+           				
+           				
+           			 Long idPositionClone=PositionS.get(0).getClaseOf();
+// 				 	if (idPositionClone==null)
+ 				 		idPositionClone=PositionS.get(0).getId().get(0);
+           				
+    					createIterator(Long.toString(idPositionClone),Long.toString(Documento.getDocumento().getId()),"proto",false);
 
            				
            				 }
@@ -790,6 +891,13 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            			 {
            			 //TODO Sin ampliar
 
+           				 
+           				 valido.setValue(Text.getValue().trim());         		 
+                   		 
+                   		 if (DeleteS!=null)
+                   			 DeleteS.setSelectedValue(false);		 
+           				 
+           				 
            			 for (int i = 0; i < PositionS.size(); i++) 
            				 if (listaPosiciones.size()>i)
            					 PositionS.get(i).setValue(Integer.toString(listaPosiciones.get(i)));
@@ -3057,6 +3165,7 @@ eval($wnd.daletmp)
 			test(SS);
 			
 			LinkedList<StructureJSON> elementos_validos=getTermElements();	
+			
           	 
           	 StructureJSON valido=null;
       
@@ -3075,14 +3184,19 @@ eval($wnd.daletmp)
           	GWT.log("PN -Z "+EsperandoPosicion.getPosicionesQueNecesito());
 	
 			List<StructureJSON> PositionS=getTermino_Posicion().get(valido);
+			 StructureJSON DeleteS=getTermino_Delete().get(valido);
 			
 			 if (PositionS.size()<EsperandoPosicion.getPosicionesQueNecesito().size())
 			{
-					createIterator(Long.toString(SS.getId().get(0)),Long.toString(Documento.getDocumento().getId()),"proto",false);
+				 Long idPositionClone=PositionS.get(0).getClaseOf();
+//				 	if (idPositionClone==null)
+				 		idPositionClone=PositionS.get(0).getId().get(0);
+				 	
+					createIterator(Long.toString(idPositionClone),Long.toString(Documento.getDocumento().getId()),"proto",false);
 				 
 			}
 			 else
-				 EsperandoPosicion.crea(valido,PositionS);
+				 EsperandoPosicion.crea(valido,PositionS,DeleteS);
 			 
 				}
 			

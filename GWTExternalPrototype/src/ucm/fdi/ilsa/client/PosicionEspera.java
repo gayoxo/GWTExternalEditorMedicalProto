@@ -17,11 +17,13 @@ public class PosicionEspera {
 
 	private List<Integer> PosicionesQueNecesito;
 	private CompositeDocumentEditionProto Padre;
+	private String Valor;
 
-	public PosicionEspera(List<Integer> listaPosiciones, CompositeDocumentEditionProto padre) {
+	public PosicionEspera(List<Integer> listaPosiciones, CompositeDocumentEditionProto padre, String valor) {
 	
 		PosicionesQueNecesito=listaPosiciones;
 		Padre=padre;
+		Valor=valor;
 	}
 	
 	
@@ -35,7 +37,16 @@ public class PosicionEspera {
 	}
 
 
-	public void crea(StructureJSON PosicionActualSt, List<StructureJSON> PositionS) {
+	public void crea(StructureJSON PosicionActualSt, List<StructureJSON> PositionS, StructureJSON DeleteS) {
+		
+		
+		PosicionActualSt.setValue(Valor);         		 
+   		 
+   		 if (DeleteS!=null)
+   			 DeleteS.setSelectedValue(false);
+		
+		
+		
 		 for (int i = 0; i < PositionS.size(); i++) 
 				 if (PosicionesQueNecesito.size()>i)
 					 PositionS.get(i).setValue(Integer.toString(PosicionesQueNecesito.get(i)));
