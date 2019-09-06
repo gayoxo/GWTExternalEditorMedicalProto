@@ -140,6 +140,7 @@ public class CompositeDocumentEditionProto{
 	private PushButton NoAnnotButton;
 	private PopupPanel Annot;
 	private StructureJSON Anotacion;
+	private PosicionTermino EsperandoTermino;
 	
 	private static final String DEFAULTIMAGE = "default.png";
 	private static final String LOADINGGEN = "Loader.gif";
@@ -319,10 +320,14 @@ public class CompositeDocumentEditionProto{
 						@Override
 						public void onClick(ClickEvent arg0) {
 
-							PopupPanel PanelAnotacion= new PanelAnotacionPopupPanel(Anotacion);
 							
-							if (Anotacion!=null&&!Anotacion.getValue().trim().isEmpty())
+							
+							if (Anotacion!=null)
+								{
+								PopupPanel PanelAnotacion= new PanelAnotacionPopupPanel(Anotacion);
+								
 								PanelAnotacion.center();
+								}
 							
 						}
 					});
@@ -365,10 +370,13 @@ public class CompositeDocumentEditionProto{
 						public void onClick(ClickEvent arg0) {
 
 							
-							PopupPanel PanelAnotacion= new PanelAnotacionPopupPanel(Anotacion);
 							
-							if (Anotacion!=null&&!Anotacion.getValue().trim().isEmpty())
+							
+							if (Anotacion!=null)
+								{
+								PopupPanel PanelAnotacion= new PanelAnotacionPopupPanel(Anotacion);
 								PanelAnotacion.center();
+								}
 							
 						}
 					});
@@ -622,7 +630,6 @@ private boolean procesaAnotado() {
 	
 	
 protected void processActualDocumentContinue() {
-	//TODO FALTA EL ANOTADO
 	if (procesaAnotado())	
 	{
 		SiAnnotButton.setVisible(true);
@@ -795,6 +802,8 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
 	
 	BotonAdd.addClickHandler(new ClickHandler() {
 		
+
+
 		@Override
 		public void onClick(ClickEvent arg0) {
 			if (Text.getValue().trim().isEmpty())
@@ -822,6 +831,28 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
 				}
            	 
            	 
+           	 
+           	 boolean error=false;
+       		 
+       		 List<Integer> listaPosiciones=new LinkedList<Integer>();
+
+       			 LinkedList<Label> SelectedT = getActualSelected();
+       		
+       			 if (!SelectedT.isEmpty())
+       				 for (Label label : SelectedT) {
+							Integer PosicionLabel=getPosicionTabla().get(label);
+							if (PosicionLabel!=null)
+								listaPosiciones.add(new Integer(PosicionLabel+1));
+						
+						}
+       				 
+       				 if (listaPosiciones.isEmpty())
+       					 {
+       					 Window.alert(StringConstants.getInstance().get("selectionempty"));
+       					 error=true;
+       					 }
+           	 
+           	 
            	 if (valido!=null)
            	 	{        
            		 
@@ -829,25 +860,7 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            		 StructureJSON DeleteS=getTermino_Delete().get(valido);
            		 List<StructureJSON> PositionS=getTermino_Posicion().get(valido);
            		 
-           		 boolean error=false;
-           		 
-           		 List<Integer> listaPosiciones=new LinkedList<Integer>();
-
-           			 LinkedList<Label> SelectedT = getActualSelected();
            		
-           			 if (!SelectedT.isEmpty())
-           				 for (Label label : SelectedT) {
-								Integer PosicionLabel=getPosicionTabla().get(label);
-								if (PosicionLabel!=null)
-									listaPosiciones.add(new Integer(PosicionLabel+1));
-							
-							}
-           				 
-           				 if (listaPosiciones.isEmpty())
-           					 {
-           					 Window.alert(StringConstants.getInstance().get("selectionempty"));
-           					 error=true;
-           					 }
            		 	
            	 
            		for (String label : ListaDeAnteriores) {
@@ -874,7 +887,7 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            			 
            			 if (PositionS.size()<listaPosiciones.size())
            				 {
-           				 Window.alert("Necesitas mas posiciones");
+           			//	 Window.alert("Necesitas mas posiciones");
            				EsperandoPosicion=new PosicionEspera(listaPosiciones,Yo,Text.getValue().trim());
            				setWaitingUpdate(true);
            				
@@ -889,7 +902,7 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            				 }
            			 else
            			 {
-           			 //TODO Sin ampliar
+           			 // Sin ampliar
 
            				 
            				 valido.setValue(Text.getValue().trim());         		 
@@ -944,147 +957,18 @@ private void generaPanelFindPer(HorizontalPanel panelFindPer) {
            	 else {
            		 //TODO GENERAR NUEVO ELEMENTO
            		 Window.alert("Generar Nuevo ->"+Text.getValue());
+           		EsperandoTermino = new PosicionTermino(listaPosiciones,Yo,Text.getValue().trim());
+           		setWaitingUpdate(true);
+   				
+   				
+      			 Long idPositionClone=elementos_validos.get(0).getClaseOf();
+
+      				
+					createIterator(Long.toString(idPositionClone),Long.toString(Documento.getDocumento().getId()),"proto",false);
+           		 
            	 }
            		 
-
-           	 
-           	
-		
-				
-				
-//				//////////////////////////////////////////////////////////////////////
-//				
-//				boolean found=false;
-//			
-//				LinkedList<StructureJSON> elementos_validos=getTermElements();	
-//           	 
-//           	 StructureJSON valido=null;
-//       
-//           	 List<String> ListaDeAnteriores=new LinkedList<>();
-//           	 
-//           	 for (StructureJSON structureJSON : elementos_validos) {
-//					if (structureJSON.getValue()==null||structureJSON.getValue().trim().isEmpty())
-//						valido=structureJSON;
-//					else if (structureJSON.getValue()!=null&&!structureJSON.getValue().trim().isEmpty())
-//						ListaDeAnteriores.add(structureJSON.getValue().trim());
-//						
-//				}
-//				
-//           	for (String label : ListaDeAnteriores) {
-//				if (label.toLowerCase().equals(Text.getValue().trim().toLowerCase()))
-//					 {
-//					 found=true;
-//					 break;
-//					 }
-//			}
-//				
-//				
-////				String DocumenA = Estado.getPorRevisar().get(ActualDocument);
-////				List<TermProcesado> actuales = Estado.getDoc_Words_State_Add().get(DocumenA);
-////				if (actuales==null)
-////					actuales=new LinkedList<TermProcesado>();
-////				
-////				
-////				
-////				boolean found=false;
-////				for (TermProcesado termino : actuales) {
-////					if (termino.getTerm().equals(Text.getValue().trim()))
-////					{
-////					found=true;
-////					break;
-////					}
-////				}
-//				
-//           		if (valido!=null)
-//           		{
-//           			
-//           		 StructureJSON CUIS=getTermino_CUI().get(valido);
-//        		 StructureJSON DeleteS=getTermino_Delete().get(valido);
-//        		 List<StructureJSON> PositionS=getTermino_Posicion().get(valido);
-//        		 List<StructureJSON> SemanS=getTermino_Seman().get(valido);
-//           			
-//           			
-//           			if (found)
-//    					Window.alert(StringConstants.getInstance().get("termexist"));
-//    				else
-//    				{
-//    				
-//    					
-//    					valido.setValue(Name);
-//           			 
-//            			
-//               		 
-//               		 if (CUIS!=null)
-//               			 CUIS.setValue("");
-//               		 
-//               		 if (DeleteS!=null)
-//               			 DeleteS.setSelectedValue(false);
-//               		 
-//               		 
-//               		 if (PositionS!=null)
-//               		 	{
-//               			 
-//               			 if (PositionS.size()<listaPosiciones.size())
-//               				 Window.alert("Ampliar Posiciones");
-//               			 //TODO hay que ampliar casi seguro
-//
-//               			 for (int i = 0; i < PositionS.size(); i++) 
-//               				 if (listaPosiciones.size()>i)
-//               					 PositionS.get(i).setValue(Integer.toString(listaPosiciones.get(i)));
-//								
-//							
-//
-//               		 	}
-//               		 
-//               		 if (SemanS!=null)
-//               		 	{
-//               			 
-//               			 if (SemanS.size()<SemanticasRec.size())
-//               				 Window.alert("Ampliar Semanticas");
-//               			 //TODO hay que ampliar casi seguro
-//
-////               			 Window.alert(SemanS.size()+"");
-////               			 
-////               			 Window.alert(SemanticasRec.size()+"");
-//               			 
-//               			 for (int i = 0; i < SemanS.size(); i++) 
-//               				 if (SemanticasRec.size()>i)
-//               					 SemanS.get(i).setValue(SemanticasRec.get(i));
-//								
-//							
-//
-//               		 	}
-//               		 
-////               		 Window.alert("Hola3");
-//               		 RefreshStatus();
-//               		
-//    					
-//    					
-////    					HashSet<Integer> INteLis=new HashSet<Integer>();
-////    					
-////    					for (Label labe : ActualSelected) {
-////    						Integer a = posicionTabla.get(labe);
-////    						if (a!=null)
-////    							INteLis.add(a);
-////    					}	
-////    					
-////    					if (INteLis.isEmpty())
-////    						Window.alert(StringConstants.getInstance().get("selectionempty"));
-////    					else
-////    					{	
-////    					TermProcesado Nuevo=new TermProcesado(Text.getValue(), INteLis);
-////    					actuales.add(Nuevo);
-////    					Estado.getDoc_Words_State_Add().put(DocumenA,actuales);
-////    					RefreshStatus();
-////    					}
-//    				}
-//           			
-//           		}
-//           		else {
-//           		 //TODO GENERAR NUEVO ELEMENTO
-//           		 Window.alert("Generar Nuevo ->"+Text.getValue().trim());
-//           	 }
-           			
+	
 				
 				}
 			
@@ -2625,6 +2509,7 @@ private void procesaSentenciasPhrases(boolean borrado_) {
 		UteranciasBien=new LinkedList<StructureJSON>();
 		ImagenesBien=new LinkedList<StructureJSON>();
 		DeleteBien=null;
+		Anotacion=null;
 		
 		for (StructureJSON structureJSON : ZonaBUsqueda){ 
 			if (structureJSON.getId().equals(sS.getClaseOf())||structureJSON.getClaseOf().equals(sS.getClaseOf()))
@@ -2651,6 +2536,13 @@ private void procesaSentenciasPhrases(boolean borrado_) {
 					if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
 					ViewstructureJSON.getDefault().toLowerCase().equals("delete"))
 						DeleteBien=structureJSON;
+				}
+			
+			if (structureJSON.getTypeOfStructure()==TypeOfStructureEnum.Text)
+				for (OperationalValueTypeJSON ViewstructureJSON : structureJSON.getShows()) {
+					if (ViewstructureJSON.getView().toLowerCase().equals("proto")&&ViewstructureJSON.getName().toLowerCase().equals("type")&&
+					ViewstructureJSON.getDefault().toLowerCase().equals("annotation"))
+						Anotacion=structureJSON;
 				}
 			
 			
@@ -3137,7 +3029,7 @@ eval($wnd.daletmp)
 		GWT.log(Documento.getDocumento().getId()+"");
 		
 		
-		if (EsperandoPosicion!=null&&!update)
+		if ((EsperandoPosicion!=null||EsperandoTermino!=null)&&!update)
 		{
 			//AQUI EMPEZAMOS
 			
@@ -3182,10 +3074,24 @@ eval($wnd.daletmp)
 				}
           	 
           	GWT.log("PN -Z "+EsperandoPosicion.getPosicionesQueNecesito());
-	
+          	
+//          	if (EsperandoTermino!=null)
+
+          		
 			List<StructureJSON> PositionS=getTermino_Posicion().get(valido);
 			 StructureJSON DeleteS=getTermino_Delete().get(valido);
 			
+			 
+			 
+			 if (EsperandoTermino!=null)
+			 {
+				 EsperandoPosicion=new PosicionEspera(EsperandoTermino.getPosicionesQueNecesito(),
+						 EsperandoTermino.getPadre(),
+						 EsperandoTermino.getValor());
+				 EsperandoTermino=null;
+				 
+			 }
+			 
 			 if (PositionS.size()<EsperandoPosicion.getPosicionesQueNecesito().size())
 			{
 				 Long idPositionClone=PositionS.get(0).getClaseOf();
@@ -3197,8 +3103,9 @@ eval($wnd.daletmp)
 			}
 			 else
 				 EsperandoPosicion.crea(valido,PositionS,DeleteS);
-			 
+			 	EsperandoPosicion=null;
 				}
+          	
 			
 		}else
 			WaitingUpdate=update;
