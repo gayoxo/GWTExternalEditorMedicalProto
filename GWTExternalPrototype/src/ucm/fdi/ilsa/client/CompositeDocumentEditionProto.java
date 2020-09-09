@@ -2551,13 +2551,13 @@ private void procesaSentenciasPhrases(boolean borrado_) {
 		
 		
 		if (UteranciasBien.isEmpty())
-			Errores.add("I cant found Utterances structure element in this context father with view proto->type->utterance");
+			Errores.add("I cant found Utterances (Text Type) structure element in this context father with view proto->type->utterance");
 		
 		if (DeleteBien==null)
-			Errores.add("I cant found Delete structure element in this context father with view proto->type->delete");
+			Errores.add("I cant found Delete (Basic Type) structure element in this context father with view proto->type->delete");
 		
 		if (ImagenesBien.isEmpty())
-			Errores.add("I cant found Images structure element in this context father with view proto->type->image");
+			Errores.add("I cant found Images (Resource Type) structure element in this context father with view proto->type->image");
 			
 		if (!UteranciasBien.isEmpty()&&!UteranciasBien.get(0).isMultivalued())
 			Errores.add("Utterances structure element should be multivalued");
