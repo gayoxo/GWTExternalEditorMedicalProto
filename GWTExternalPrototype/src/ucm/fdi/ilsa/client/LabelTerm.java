@@ -107,7 +107,7 @@ public class LabelTerm extends Label {
 				
 				if (Termio.getCUI()!=null&&!Termio.getCUI().isEmpty())
 				{
-				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/UMLSDesc?q="+Termio.getCUI());
+				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.getServeruri()+"ProtoEditorService/service/UMLSDesc?q="+Termio.getCUI());
 				
 				try {
 			        builder.sendRequest(null, new RequestCallback() {

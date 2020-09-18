@@ -44,7 +44,7 @@ public class PushButtonUMLSImport extends PushButton {
 				
 				if (CUI!=null&&!CUI.isEmpty())
 				{
-				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/UMLSDesc?q="+CUI);
+				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.getServeruri()+"ProtoEditorService/service/UMLSDesc?q="+CUI);
 				
 				try {
 			        builder.sendRequest(null, new RequestCallback() {

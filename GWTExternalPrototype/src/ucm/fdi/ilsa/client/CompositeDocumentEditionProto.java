@@ -570,7 +570,7 @@ public class CompositeDocumentEditionProto{
 
 private void processActualDocument() {
 	
-	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/getDelete/"+getCollectionNumber());
+	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.getServeruri()+"ProtoEditorService/service/getDelete/"+getCollectionNumber());
 
     try {
         builder.sendRequest(null, new RequestCallback() {
@@ -987,7 +987,7 @@ protected void processBusqueda() {
 	PanelMetamapSol.add(LoadIMGSearch);
 	
 	//http://localhost:8080/ProtoEditorService/service/UMLSFind?q=lung&p=1
-	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/UMLSFind?q="+Text.getValue().trim()+"&p="+posicionBuscador);
+	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.getServeruri()+"ProtoEditorService/service/UMLSFind?q="+Text.getValue().trim()+"&p="+posicionBuscador);
 	
 	 try {
 	        builder.sendRequest(null, new RequestCallback() {
@@ -1066,7 +1066,7 @@ private void procesaUsed() {
 	
 	if (EditorMode())
 	{
-	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/getUsedTerms/"+getCollectionNumber());
+	RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.getServeruri()+"ProtoEditorService/service/getUsedTerms/"+getCollectionNumber());
 	try {
         builder.sendRequest(null, new RequestCallback() {
 
@@ -1351,7 +1351,7 @@ private void procesaTraduccion() {
 	PanelTra.add(LoadIMG);
 	String Entrada = getDocumentText();
 	
-	RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, ServerINFO.ServerURI+"ProtoEditorService/service/translade/"+getCollectionNumber());
+	RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, ServerINFO.getServeruri()+"ProtoEditorService/service/translade/"+getCollectionNumber());
 	builder.setHeader("Content-type", "text/plain");
 	
 	try {
@@ -2798,7 +2798,7 @@ eval($wnd.daletmp)
 	
 	private void sendtoused(List<TermProcesado> getUsedTerms) {
 		
-		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, ServerINFO.ServerURI+"ProtoEditorService/service/setUsedTerms/"+getCollectionNumber()+"/"+Documento.getDocumento().getId());
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, ServerINFO.getServeruri()+"ProtoEditorService/service/setUsedTerms/"+getCollectionNumber()+"/"+Documento.getDocumento().getId());
 		builder.setHeader("Content-type", "application/json");
 		
 		

@@ -28,7 +28,7 @@ public class PushButtonGlobal extends PushButton {
 			@Override
 			public void onClick(ClickEvent arg0) {
 				
-				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.ServerURI+"ProtoEditorService/service/setDelete/"+Padre.getCollectionNumber()+"/?term="+TermLabe.getTermio().getTerm());
+				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, ServerINFO.getServeruri()+"ProtoEditorService/service/setDelete/"+Padre.getCollectionNumber()+"/?term="+TermLabe.getTermio().getTerm());
 
 		        try {
 		            builder.sendRequest(null, new RequestCallback() {

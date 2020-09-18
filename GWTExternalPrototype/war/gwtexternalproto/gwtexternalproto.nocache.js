@@ -374,11 +374,11 @@ function gwtexternalproto(){
     }
     var strongName;
     try {
-      unflattenKeylistIntoAnswers(['safari'], '112DC1B5621E9F9F6162AA8842C3AC08');
-      unflattenKeylistIntoAnswers(['ie10'], '433C968B9D2CB2D0E13A647F626172B8');
-      unflattenKeylistIntoAnswers(['gecko1_8'], '706AC97EDE87DFA506A912929076EAED');
-      unflattenKeylistIntoAnswers(['ie9'], '9D19C9EC0B12A270363F089A892B636A');
-      unflattenKeylistIntoAnswers(['ie8'], 'B829FF926FDD0A83611B276E00C85EE7');
+      unflattenKeylistIntoAnswers(['safari'], '04A6C55647E5382F741967EA4E3CC33D');
+      unflattenKeylistIntoAnswers(['gecko1_8'], '6852FA29FCEF689CB549F74FF8F21037');
+      unflattenKeylistIntoAnswers(['ie10'], '9C7075DFBD6BF06818E6E7A6595E5257');
+      unflattenKeylistIntoAnswers(['ie9'], 'AFC79D040580709111D1B527692B645D');
+      unflattenKeylistIntoAnswers(['ie8'], 'C34FAD5E43C81CB131EF573A9352E929');
       strongName = answers[computePropValue('user.agent')];
       var idx = strongName.indexOf(':');
       if (idx != -1) {
